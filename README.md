@@ -25,9 +25,11 @@ the server is using **cors** library for achieving a correctly secured connectio
 
 ## /test-get
 returns a random whole number on a GET request in the following json format: 
-```{
+```
+{
   "test": <random whole number between 0-1000>
-}```
+}
+```
 
 ## /test-combined
 a test for hosting multiple methods on a single URL and further sorting the request by Content-Type header.
