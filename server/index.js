@@ -18,7 +18,7 @@ app.listen(PORT);
 app.get('/test-get', (req, res) => {
 
     const count = getRandWholeNum(0,1000);
-    res.status(200).send({test: ""+(count), input: ""+(req)});
+    res.status(200).send({test: ""+(count)});
 
 });
 
