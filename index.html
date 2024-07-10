@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <label for="method_selector">Select a method:</label>
+    <select name="method_selector" id="method_selector">     
+        <option value="GET">    GET    </option>
+        <option value="POST">   POST   </option>
+        <option value="PUT">    PUT    </option>
+        <option value="DELETE"> DELETE </option>
+        <option value="PATCH">  PATCH  </option>
+    </select>
+    <br>
+    <textarea id="payload_input" style="height: 10em"> </textarea>
+    <br>
+    <input type="button" value="comunicate" onclick="update()">
+
+
+    <script src="basicFunctions.js"></script>
+    <script>
+        function update(){
+            var method = document.getElementById("method_selector").value;
+            var payload = document.getElementById("payload_input").value;
+
+            console.log(method);
+            console.log(payload);
+
+            switch(method){
+                case "GET":
+                    break;
+
+                default:
+                    readData("http://localhost:8080/test-combined");
+                    break;
+            }
+        }
+    </script>
+
+</body>
+</html>
