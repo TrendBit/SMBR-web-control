@@ -3,43 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>PhenoBottle</title>
+    <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
+    <div id="HOTBAR">
+        <button>Menu</button>
+        <h1>PhenoBottle</h1>
+        <div>
+            <p>16:22</p>
+            <p>11.07.2024</p>
+        </div>
+        <h2>Standby</h2>
+    </div>
+    <div class="container">
+
+        <div id="SIDEBAR">
+            <ul>
+                <li onclick="changeContext(0)"><img src="UI/LogoPlaceholder.svg">Dashboard</li>
+                <li onclick="changeContext(1)"><img src="UI/LogoPlaceholder.svg">Program</li>
+                <li onclick="changeContext(2)"><img src="UI/LogoPlaceholder.svg">Info</li>
+            </ul>
+        </div>
+        <div id="CONTENT">
+            
+            <div id="DashBoard-Panel" class="container">
+                <div id="SimpleSensors-Widget" class="widget">
+                    <h1>Base stats</h1>
+                    <ul class="sensorList">
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Temperature</span></span><span>15°</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Difference</span></span><span>45%</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Lorem</span></span><span>2500RPM</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Ipsum</span></span><span>...</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Vitae</span></span><span>...</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Leviosa</span></span><span>...</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Temperature</span></span><span>15°</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Difference</span></span><span>45%</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Lorem</span></span><span>2500RPM</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Ipsum</span></span><span>...</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Vitae</span></span><span>...</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Leviosa</span></span><span>...</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Temperature</span></span><span>15°</span></li>
+                    </ul>
+                    <div>
+                        <canvas id="BaseStatsGraph" class="graph">
+                            GRAPH
+                        </canvas>
+                    </div>
+                </div>
+                <div id="QuickSettings-Widget" class="widget">
+                    <h1>Quick settings</h1>
+                    <div>
+                        <h2>Motor control</h2>
+                        <label for="pumpControl">Pump</label>
+                        <input id="pumpControl" type="number" min="0" max="100" step="0.5">
+                    </div>
+                    <div>
+                        <h2>Temp control</h2>
+                        <label for="heaterControl">desiredTemperature</label>
+                        <input id="heaterControl" type="number" min="0" max="100" step="0.5">
+                    </div>
+                    <div>
+                        <h2>Utilities</h2>
+                        <label for="stirrerControl">stirrer</label>
+                        <input id="stirrerControl" type="checkbox">
+                    </div>
+                </div>
+                <div id="ProgramOverview-Widget" class="widget">
+                    <h1>Program overview</h1>
+                    <div id="ProgramThumbnail">
+                        <h2>Program name <span>65%</span></h2>
+                        <div>
+
+                        </div>
+                        <h2 id="lastAction">
+                            Last action: <span>Set stir to 100% </span>                                        
+                        </h2>
+                    </div>
+                    <div id="ProgramOverview">
+                        <ul>
+                            <li>Set light</li>
+                            <li>Test for something</li>
+                            <li>Stir</li>
+                            <li>Run</li>
+                            <li>Hide</li>
+                            <li>Set motor speed to 2500RPM</li>
+                            <li>Set light</li>
+                            <li>Test for something</li>
+                            <li>Stir</li>
+                            <li>Run</li>
+                            <li>Hide</li>
+                            <li>Set motor speed to 2500RPM</li>
+                            <li>Set light</li>
+                            <li>Test for something</li>
+                            <li>Stir</li>
+                            <li>Run</li>
+                            <li>Hide</li>
+                            <li>Set motor speed to 2500RPM</li>
+                            <li>Set light</li>
+                            <li>Test for something</li>
+                            <li>Stir</li>
+                            <li>Run</li>
+                            <li>Hide</li>
+                            <li>Set motor speed to 2500RPM</li>
+                        </ul>
+                    </div>
+                    
+                </div>
+                <div id="ComplexSensors-Widget" class="widget">
+                    <h1>Complex sensors</h1>
+                    <div class="container">
+                        <div class="graph">
+                            <canvas id="ComplStatsGraph">
+                                GRAPH
+                            </canvas>
+                        </div>
+                    </div>                    
+                </div>
+                <div id="Console-Widget" class="widget">
+                    <h1>History</h1>
+                    <div class="container">
+                        <ul>
+                            <li>StartedSession...</li>
+                            <li>Status update</li>
+                            <li>Updating config</li>
+                            <li>Lorem ipsum</li>
+                            <li>Lorem ipsum</li>
+                            <li>Lorem ipsum</li>
+                            <li>Lorem ipsum</li>
+                            <li>Lorem ipsum</li>
+                        </ul>   
+                    </div>
+                                    
+                </div>
+            </div>  
+
+
+            <div id="Program-Panel" style="display: none;" class="container">
+            </div>
+            <div id="Info-Panel" style="display: none;" class="container">
     
-    <label for="method_selector">Select a method:</label>
-    <select name="method_selector" id="method_selector">     
-        <option value="GET">    GET    </option>
-        <option value="POST">   POST   </option>
-        <option value="PUT">    PUT    </option>
-        <option value="DELETE"> DELETE </option>
-        <option value="PATCH">  PATCH  </option>
-    </select>
-    <br>
-    <textarea id="payload_input" style="height: 10em"> </textarea>
-    <br>
-    <input type="button" value="comunicate" onclick="update()">
+            </div>
+        </div>
 
+    </div>
 
-    <script src="basicFunctions.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js" integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        function update(){
-            var method = document.getElementById("method_selector").value;
-            var payload = document.getElementById("payload_input").value;
-
-            console.log(method);
-            console.log(payload);
-
-            switch(method){
-                case "GET":
-                    break;
-
-                default:
-                    readData("http://localhost:8080/test-combined");
-                    break;
+        const data = {
+            labels: [1,2,3,4,5,6,7,8,9,10,11],
+            datasets: [
+            {
+                data: [1,5,3,4,8,2,2,0,1,1,2,3,4],
+                borderColor: "red",
+                fill: false,
+                cubicInterpolationMode: 'monotone',
+                tension: 0.4
+            },
+            {
+                data: [4,5,6,7,8,9,4,5,3,2,1,5,8],
+                borderColor: "green",
+                fill: false,
+                cubicInterpolationMode: 'monotone',
+                tension: 0.4
+            },
+            {
+                data: [6,4,2,4,5,3,1,2,4,2,4,8,9],
+                borderColor: "blue",
+                fill: false,
+                cubicInterpolationMode: 'monotone',
+                tension: 0.4
             }
+            ]
+        };
+        const ctx = document.getElementById('BaseStatsGraph');
+        const myChart = new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: {
+            responsive: true,
+            animations: false,
+            interaction: {
+                intersect: false,
+            },
+            scales: {
+                x: {
+                display: true,
+                title: {
+                    display: false
+                }
+                },
+                y: {
+                display: true,
+                title: {
+                    display: false,
+                }
+                }
+            }
+            },
+        });
+
+
+        const data2 = {
+            labels: [
+                'Red',
+                'Blue',
+                'Yellow'
+            ],
+            datasets: [{
+                label: 'My First Dataset',
+                data: [300, 50, 100],
+                backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+        };
+        const config2 = {
+            type: 'doughnut',
+            data: data2,
+        };
+        const ctx2 = document.getElementById('ComplStatsGraph');
+        const myChart2 = new Chart(ctx2, config2)
+
+    </script>
+    <script>
+        let currContext = 0;
+        function changeContext(whereTo){
+            if(currContext!=whereTo){
+                currContext = whereTo;
+                const contentPanels = document.getElementById("CONTENT").children;
+                console.log(contentPanels);
+                for(let i=0; i<contentPanels.length; i++){
+                    contentPanels[i].style.display = "none";
+                }
+                contentPanels[whereTo].style.display = "grid";
+            }   
         }
     </script>
-
 </body>
 </html>

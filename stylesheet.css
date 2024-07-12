@@ -1,0 +1,333 @@
+:root{
+    --bg-color-1: #201B1A;
+    --bg-color-2: #5A4E48;
+    --bg-color-3: #948076;
+    --bg-color-4: #B1958F;
+
+    --acc-color-1: #50683B;
+    --acc-color-2: #7DA35D;
+    --acc-color-3: #7DA35D;
+    --acc-color-4: #FAA284;
+    
+    --background-color: #C9936E;
+    --sidebar-color: #282729;
+    --foreground-clr: #F7F4F1;
+    --foreground-dark-clr: #33333d;
+    --text-color-light: #fcf9f7;
+    --text-color-dark: #1c1a19;
+    --border-width: 1px;
+}
+
+
+*{
+    font-family: Verdana ;
+}
+
+h1{
+    font-size: medium;
+    font-weight: bold;
+}
+
+h2{
+    font-size: medium;
+}
+
+*{
+    font-size: small;
+}
+
+
+html, body{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    color: var(--text-clr);
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--bg-color-1);
+
+    > *.container{
+        display: flex;
+        align-items: start;
+        justify-content: start;
+        
+    }
+}
+
+.container{
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+#HOTBAR{
+    width: 100%;
+    height: 50px;
+    display: flex;
+    
+    background-color: var(--bg-color-3);
+    
+    color: var(--text-color-light);
+    
+    h1{
+        margin: auto auto  auto 0;
+    }
+    h2{
+        margin: auto 0 auto 0;
+    }
+    >div{
+        margin: auto 0 auto 0;
+        p{
+            margin: 0;
+            width: 100%;
+            text-align: center;
+        }
+    }
+}
+
+#SIDEBAR{
+    min-width: min-content;
+    max-width: 300px;
+    height: 100%;
+    
+    color: var(--text-color-light);
+    
+    background-color: var(--bg-color-2);
+    
+    ul{
+        list-style: none;
+        padding-left: 0;
+        margin: 0;
+        padding: 5px;
+        li{
+            font-size: medium;
+            margin-bottom: 5px;
+            
+            width: max-content;
+            
+            transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out ;
+            cursor: pointer;
+            
+            img{
+                height: 1em;
+                margin-right: 5px;
+            }
+        }
+        
+        li:hover{
+            
+            background-color: var(--bg-color-1);
+            
+        }
+    }
+    
+}
+
+#CONTENT{
+    width: 100%;
+    height: 100%;
+
+    *.widget{
+        display: flex;
+        flex-direction: column;
+        background-color: var(--foreground-clr);
+        /*border-radius: 0.5vw;*/
+        
+        min-height: min-content;
+        height: 100%;
+            
+        
+        overflow: hidden;
+        
+        
+        /*! border: var(--foreground-dark-clr) var(--border-width) solid; */
+        >*{
+            padding: 10px;
+        }
+        h1{
+            margin: 0;
+            border-bottom: var(--foreground-dark-clr) 2px dashed;
+            background-color: var(--acc-color-4);
+        }
+    }
+    
+    >*{
+        box-sizing: border-box;
+        padding: 10px;   
+    }
+
+    #DashBoard-Panel{
+        display: grid;
+        grid-template-areas: 
+        "a a b e e "
+        "a a b c c "
+        "d d d c c "
+        "d d d c c";
+        grid-auto-columns: 1fr;
+        gap: 5px;
+
+        min-height: min-content;
+        max-height: unset;
+        height: 100%;
+
+        #SimpleSensors-Widget{
+            grid-area: a;
+
+            .sensorList{
+                list-style: none;
+                margin:0;
+                height: 100%;
+
+                li{
+                    display: flex;
+                    border-bottom: var(--bg-color-4) 1px solid;
+
+                    align-items: center;
+                    justify-content: center;
+                    
+                    img{
+                        height: 1em;
+                    }
+                    span:nth-child(2){
+                        width: 100%;
+                        margin-left: 5px;
+                    }
+                }
+                li:last-child{
+                    border-bottom: none;
+                }
+                
+            }
+
+            div{
+                width: 100%;
+                box-sizing: border-box;
+                
+                border-top: var(--bg-color-1) 2px solid;
+
+                img{
+                    width: 100%;
+                }
+
+                >canvas{
+                    width: 99%;
+                }
+                
+            }
+        }
+        #QuickSettings-Widget{
+            grid-area: b;
+        }
+        #ProgramOverview-Widget{
+            grid-area: c;
+            div#ProgramThumbnail{
+                background-image: url("UI/LogoPlaceholder.svg");
+                background-position: center;
+                background-repeat: no-repeat;
+                height: 100%;
+                padding: 0;
+
+                display: flex;
+                flex-direction: column;
+
+                border-bottom: var(--bg-color-1) 1px solid;
+
+                
+
+
+                h2{
+                    margin: 0;
+                    background-color: rgba(250, 152, 132,0.7);
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    span{
+                        float: right;
+                        margin-left: 5px;
+                        border-left: var(--bg-color-2) 2px solid;
+                        padding-left: 5px;
+                    }
+                }
+                >div{
+                    height: 100%;
+                }
+            }
+            div#ProgramOverview{
+                max-height: 20%;
+                
+                ul{
+                    height: 100%;
+                    list-style: decimal;
+                    overflow-y: scroll;
+                    margin: 0;
+                }
+                li{
+                    
+                   line-height: 1em;
+                }
+                li:nth-of-type(3){
+                    list-style: disclosure-closed;
+                    padding: 2px;
+                    font-weight: bold;
+                }
+            }
+            
+        }
+        #ComplexSensors-Widget{
+            grid-area: d;
+            
+            *{
+                box-sizing:border-box ;
+            }
+            
+            >div{
+                display: flex;
+                
+                >div.graph{
+                    height: 80%;
+                }
+            }
+            
+            
+        }
+        #Console-Widget{
+            grid-area: e;
+            ul{
+                height: 100%;
+                margin: 0;
+                display: flex;
+                flex-direction: column-reverse;
+                min-height: 5em;
+                max-height: 7em;
+                background-color: rgba(250, 152, 132,0.3);
+
+                border: var(--bg-color-1) 1px solid;
+
+                overflow-y: scroll;
+
+                list-style: "21:05: ";
+                li{
+                    margin-left: 12px;
+                }
+                li::marker{
+                    color: var(--bg-color-2);
+                    font-weight: bold;
+                }
+            }
+        }
+        min-height: min-content;
+        max-height: unset;
+        height: 100%;
+    }
+}
