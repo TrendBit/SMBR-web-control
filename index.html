@@ -7,27 +7,30 @@
     <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
-    <div id="HOTBAR">
-        <button>Menu</button>
+    <header id="HOTBAR">
+        <button><img src="UI/Menu-icon.svg"></button>
         <h1>PhenoBottle</h1>
         <div>
-            <p>16:22</p>
-            <p>11.07.2024</p>
+            <p id="hotbar-clock">16:22</p>
+            <p id="hotbar-date">11.07.2024</p>
         </div>
-        <h2>Standby</h2>
-    </div>
+        <div id="Status-Indicator" onclick="changeStatus(this)">
+            <h2>Error</h2>
+        </div>
+        
+    </header    >
     <div class="container">
 
         <div id="SIDEBAR">
             <ul>
-                <li onclick="changeContext(0)"><img src="UI/LogoPlaceholder.svg">Dashboard</li>
+                <li class="active" onclick="changeContext(0)"><img src="UI/LogoPlaceholder.svg">Dashboard</li>
                 <li onclick="changeContext(1)"><img src="UI/LogoPlaceholder.svg">Program</li>
                 <li onclick="changeContext(2)"><img src="UI/LogoPlaceholder.svg">Info</li>
             </ul>
         </div>
         <div id="CONTENT">
             
-            <div id="DashBoard-Panel" class="container">
+            <div id="DashBoard-Panel" class="content-panel container">
                 <div id="SimpleSensors-Widget" class="widget">
                     <h1>Base stats</h1>
                     <ul class="sensorList">
@@ -80,7 +83,7 @@
                             Last action: <span>Set stir to 100% </span>                                        
                         </h2>
                     </div>
-                    <div id="ProgramOverview">
+                    <div id="ProgramOverview" class="container">
                         <ul>
                             <li>Set light</li>
                             <li>Test for something</li>
@@ -106,6 +109,11 @@
                             <li>Run</li>
                             <li>Hide</li>
                             <li>Set motor speed to 2500RPM</li>
+                        </ul>
+                        <ul>
+                            <li><span>Time left</span><span>15h 5m 3s</span></li>
+                            <li><span>Time active</span><span>15h 5m 3s</span></li>
+                            <li><span>Completed procedures</span><span>14 / 55</span></li>
                         </ul>
                     </div>
                     
@@ -139,9 +147,9 @@
             </div>  
 
 
-            <div id="Program-Panel" style="display: none;" class="container">
+            <div id="Program-Panel" class="content-panel container hidden">
             </div>
-            <div id="Info-Panel" style="display: none;" class="container">
+            <div id="Info-Panel" class="content-panel container hidden">
     
             </div>
         </div>
@@ -207,16 +215,15 @@
 
         const data2 = {
             labels: [
-                'Red',
-                'Blue',
-                'Yellow'
+                'Water',
+                'Biomaterial',
+                'Sodium'
             ],
             datasets: [{
-                label: 'My First Dataset',
                 data: [300, 50, 100],
                 backgroundColor: [
-                'rgb(255, 99, 132)',
                 'rgb(54, 162, 235)',
+                'rgb(125, 163, 93)',
                 'rgb(255, 205, 86)'
                 ],
                 hoverOffset: 4
@@ -225,6 +232,16 @@
         const config2 = {
             type: 'doughnut',
             data: data2,
+            options:{
+                cutout: '50%',
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        align: 'start'
+                    }
+                }
+            }
+            
         };
         const ctx2 = document.getElementById('ComplStatsGraph');
         const myChart2 = new Chart(ctx2, config2)
@@ -236,13 +253,61 @@
             if(currContext!=whereTo){
                 currContext = whereTo;
                 const contentPanels = document.getElementById("CONTENT").children;
-                console.log(contentPanels);
                 for(let i=0; i<contentPanels.length; i++){
-                    contentPanels[i].style.display = "none";
+                    contentPanels[i].classList.add("hidden");
+                    
                 }
-                contentPanels[whereTo].style.display = "grid";
+
+                const contentPanelsList = document.getElementById("SIDEBAR").children[0].children;
+                for(let i=0; i<contentPanelsList.length; i++){
+                    contentPanelsList[i].classList.remove("active");
+                }
+                contentPanels[whereTo].classList.remove("hidden");
+                contentPanelsList[whereTo].classList.add("active");
             }   
         }
+
+        
+        const currentDateTime = new Date();
+        setInterval(() => {
+            const newTime = currentDateTime.getDate() + "." + (currentDateTime.getMonth()+1) + " " + currentDateTime.getFullYear();
+            if(newTime != document.getElementById("hotbar-date").innerHTML){
+                document.getElementById("hotbar-date").innerHTML = newTime;
+            }
+            
+        }, 1000);
+        function changeStatus(element){
+            console.log(element.children[0].innerHTML);
+            switch (element.children[0].innerHTML){
+                case "Standby": {
+                    element.children[0].innerHTML = "Error";
+                    break;
+                }
+                case "Running": {
+                    element.children[0].innerHTML = "Standby";
+                    break;
+                }
+                case "Error": {
+                    element.children[0].innerHTML = "Running";
+                    break;
+                }
+            }
+            switch (element.children[0].innerHTML){
+                case "Standby": {
+                    element.style.backgroundColor = "green";
+                    break;
+                }
+                case "Running": {
+                    element.style.backgroundColor = "orange";
+                    break;
+                }
+                case "Error": {
+                    element.style.backgroundColor = "red";
+                    break;  
+                }
+            }
+        }
+        document.getElementById("hotbar-clock").innerHTML = currentDateTime.getHours() + ":" + currentDateTime.getMinutes(); 
     </script>
 </body>
 </html>
