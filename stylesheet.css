@@ -1,4 +1,4 @@
-:root {
+:root { /*COLORS*/
   --bg-color-1: rgb(23, 23, 23);
   --bg-color-1-rgb: 23, 23, 23;
   --bg-color-2: rgb(30, 30, 30);
@@ -7,20 +7,27 @@
   --bg-color-3-rgb: 45, 45, 45;
   --bg-color-4: rgb(60, 60, 60);
   --bg-color-4-rgb: 60, 60, 60;
-  --acc-color-1: #334326;
-  --acc-color-1-rgb: 51, 67, 38;
-  --acc-color-2: rgb(80, 104, 59);
-  --acc-color-2-rgb: 80, 104, 59;
-  --acc-color-3: rgb(125, 163, 93);
-  --acc-color-3-rgb: 125, 163, 93;
-  --acc-color-4: rgb(222, 222, 222);
-  --acc-color-4-rgb: 222, 222, 222;
+
+
+  --acc-color-1: rgb(41, 64, 0);
+  --acc-color-1-rgb: 41, 64, 0;
+  --acc-color-2: rgb(80, 122, 0);
+  --acc-color-2-rgb: 80, 122, 0;
+  --acc-color-3: rgb(110, 170, 0);
+  --acc-color-3-rgb: 110, 170, 0;
+  --acc-color-4: rgb(154, 219, 0);
+  --acc-color-4-rgb: 154, 219, 0;
+
+  
   --text-color-light: rgb(252, 249, 247);
   --text-color-light-rgb: 252, 249, 247;
   --text-color-dark: rgb(28, 26, 25);
   --text-color-dark-rgb: 28, 26, 25;
   --border-width: 1px;
 }
+
+/*html default overrides*/
+
 * {
   font-family: Verdana ;
 }
@@ -41,6 +48,9 @@ body {
   padding: 0;
   color: var(--text-clr);
 }
+
+/*global class rules*/
+
 body {
   display: flex;
   flex-direction: column;
@@ -60,6 +70,24 @@ body {
   margin: 0;
   box-sizing: border-box;
 }
+
+.button1{
+  background-color: var(--bg-color-1);
+  
+  border: var(--bg-color-4) 1px solid;
+  padding: 5px;
+  border-radius: 2px;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.button1:hover{
+  background-color: var(--bg-color-3);
+  border-color: var(--acc-color-3); 
+}
+
+
+/*local rules*/
+
 #HOTBAR {
   width: 100%;
   height: 50px;
@@ -145,6 +173,9 @@ body {
     box-sizing: border-box;
   }
 }
+
+
+
 #CONTENT {
   width: 100%;
   height: 100%;
@@ -171,7 +202,7 @@ body {
     }
     h1 {
       margin: 0;
-      border-bottom: var(--bg-color-4) 1px solid;
+      border-bottom: var(--acc-color-1) 2px solid;
       background-color: var(--bg-color-3);
             /*! color: var(--text-color-dark); */
     }
@@ -191,6 +222,52 @@ body {
     gap: 15px;
     min-height: min-content;
     max-height: unset;
+    #Temperature-Widget{
+
+      table{
+        thead{
+          *{
+            font-size: smaller;
+            font-weight: normal;
+          }
+        }
+        tbody{
+          tr{
+            border-bottom: var(--bg-color-4) 1px solid;
+
+            img{
+              height: 1.5em;
+            }
+            input{
+              width: 100%;
+            }
+            td>*{
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+            td.table-name{
+              width: 100%;
+            }
+            td.table-current{
+              min-width: 60px;
+            }
+            td.table-target{
+              min-width: 60px;
+            }
+
+            span.collapse{
+              float: right;
+              cursor: pointer;
+
+              padding: 0 5px 0 5px;
+            }
+          }
+        }
+      }
+      
+    }
+
     #SimpleSensors-Widget {
       grid-area: a;
       .sensorList {
