@@ -1,10 +1,12 @@
+# index.html
+html for the website. It also has some utility functions in javascript.
+
+- can be opened from any browser
+
 # graphTest.html
 a simple test that spams the API (curently has the URL written into code) with get requests and graphs the "test" attribute in returned json object. The site graphs the last 900 values
 
 - can be run from browser while the node.js testing api is running on 127.0.0.1:8080
-
-# index.html
-for now useless
 
 # basicFunctions.js
 has basic functions for comunicating with the API from client
@@ -13,17 +15,25 @@ has basic functions for comunicating with the API from client
 initializes a simple chart.js chart
 
 # /UI/*
-holds sketches of what the UI could look like
+Icons, scetches, ui elements 
 
 # /server/*
 a node.js server that uses the "express" package to host an api used for teting. 
 
 - can be run using `node .` command in the */server/* directory
+- uses the 8080 port
 
 ## libraries
-the server is using **cors** library for achieving a correctly secured connection and **express** for hosting the API
+**cors** for achieving a correctly secured connection 
+**express** for hosting the API
 
-## /test-get
+## licenses
+the licenses will be added in future updates
+**simple-code-editor**   (MIT)
+**VUE.js**               (MIT)
+
+
+## /test-get (API)
 returns a random whole number on a GET request in the following json format: 
 ```
 {
@@ -31,7 +41,7 @@ returns a random whole number on a GET request in the following json format:
 }
 ```
 
-## /test-combined
+## /test-combined (API)
 a test for hosting multiple methods on a single URL and further sorting the request by Content-Type header.
 
 - can be tested using a REST-API tester (for example SoapUI)

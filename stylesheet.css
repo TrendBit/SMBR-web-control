@@ -1,12 +1,12 @@
 :root { /*COLORS*/
-  --bg-color-1: rgb(23, 23, 23);
-  --bg-color-1-rgb: 23, 23, 23;
-  --bg-color-2: rgb(30, 30, 30);
-  --bg-color-2-rgb: 30, 30, 30;
-  --bg-color-3: rgb(45, 45, 45);
-  --bg-color-3-rgb: 45, 45, 45;
-  --bg-color-4: rgb(60, 60, 60);
-  --bg-color-4-rgb: 60, 60, 60;
+  --bg-color-1: rgb(15, 15, 15);
+  --bg-color-1-rgb: 15, 15, 15;
+  --bg-color-2: rgb(25, 25, 25);
+  --bg-color-2-rgb: 25, 25, 25;
+  --bg-color-3: rgb(50, 50, 50);
+  --bg-color-3-rgb: 50, 50, 50;
+  --bg-color-4: rgb(70, 70 ,70);
+  --bg-color-4-rgb: 70, 70 ,70;
 
 
   --acc-color-1: rgb(41, 64, 0);
@@ -152,7 +152,7 @@ body {
       transition:border 0.5s ease-in-out, background-color 0.2s ease-in-out, transform 0.2s ease-in-out ;
       cursor: pointer;
       img {
-        height: 1em;
+        height: 2em;
         margin-right: 5px;
       }
       padding: 12px;
@@ -160,6 +160,9 @@ body {
       border-right: var(--acc-color-1) 2px solid;
       box-sizing: border-box;
       margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: start;
     }
     li:hover {
       background-color: var(--bg-color-1);
