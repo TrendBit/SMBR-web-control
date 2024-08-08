@@ -227,12 +227,12 @@
 
 
             <div id="Experiments-Panel" class="content-panel container hidden">
-                <div>
-                    <div class="searchBar">
-                        searchBar
-                        <img src="UI/LogoPlaceholder.svg" alt="searchIcon" class="icon">
+                <div class="file-browser">
+                    <div class="search-bar">
+                        <input type="text">
+                        <img src="UI/icons/search_icon.svg" alt="searchIcon" class="icon">
                     </div>
-                    <ul class="fileList">
+                    <ul class="file-list">
                         <li>File.yaml</li>
                         <li>Experiments.yaml</li>
                         <li>container.yaml</li>
@@ -247,140 +247,106 @@
                         <li>Experiments.yaml</li>
                         <li>container.yaml</li>
                         <li>div.yaml</li>
-                        <li>DWADHJKWHA.yaml</li>
+                        <li>DWADHJKWHA.yaml</li>    
                     </ul>
-                    <div class="fileDetails">
+                    <div class="file-details">
                         <h2>File.yaml</h2>
                         <ul>
                             <li>created: <span>sdaddw</span></li>
                             <li>last-edited: <span>sdaddw</span></li>
                             <li>size: <span>sdaddw</span></li>
                         </ul>
-                        <button>Activate <img src="UI/icons/activate_icon.svg" alt="activateIcon" class="icon"></button>
-                        <button>Remove <img src="UI/icons/trashbin_icon.svg" alt="removeIcon" class="icon"></button>
+                        <div>
+                            <button id="activate-button"><span>Activate</span><img src="UI/icons/activate_icon.svg" alt="activateIcon" class="icon"></button>
+                            <button id="remove-button">  <span>Remove</span>  <img src="UI/icons/trashbin_icon.svg" alt="removeIcon" class="icon">  </button>
+                        </div>
+                        
                     </div>
                 </div>
-                <div>
-                    <ul class="lineNumbers">
-                        <li>1</li>
-                        <li>2</li>
-                        <li>3</li>
-                        <li>4</li>
-                        <li>5</li>
-                        <li>6</li>
-                        <li>7</li>
-                        <li>8</li>
-                        <li>9</li>
-                        <li>10</li>
-                        <li>11</li>
-                        <li>12</li>
-                        <li>13</li>
-                        <li>14</li>
-                        <li>15</li>
-                        <li>16</li>
-                        <li>17</li>
-                        <li>18</li>
-                        <li>19</li>
-                        <li>20</li>
-                        <li>21</li>
-                        <li>22</li>
-                        <li>23</li>
-                        <li>24</li>
-                        <li>25</li>
-                        <li>26</li>
-                        <li>27</li>
-                        <li>28</li>
-                        <li>29</li>
-                        <li>30</li>
-                        <li>31</li>
-                        <li>32</li>
-                        <li>33</li>
-                        <li>34</li>
-                        <li>35</li>
-                        <li>36</li>
-                        <li>37</li>
-                        <li>38</li>
-                        <li>39</li>
-                        <li>40</li>
-                        <li>41</li>
-                        <li>42</li>
-                        <li>43</li>
-                        <li>44</li>
-                        <li>45</li>
-                        <li>46</li>
-                        <li>47</li>
-                        <li>48</li>
-                        <li>49</li>
-                        <li>50</li>
-                        <li>51</li>
-                        <li>52</li>
-                        <li>53</li>
-                        <li>54</li>
-                        <li>55</li>
-                        <li>56</li>
-                        <li>57</li>
-                        <li>58</li>
-                        <li>59</li>
-                        <li>60</li>
-                        <li>61</li>
-                        <li>62</li>
-                        <li>63</li>
-                        <li>64</li>
-                        <li>65</li>
-                        <li>66</li>
-                        <li>67</li>
-                        <li>68</li>
-                        <li>69</li>
-                        <li>70</li>
-                        <li>71</li>
-                        <li>72</li>
-                        <li>73</li>
-                        <li>74</li>
-                        <li>75</li>
-                        <li>76</li>
-                        <li>77</li>
-                        <li>78</li>
-                        <li>79</li>
-                        <li>80</li>
-                        <li>81</li>
-                        <li>82</li>
-                        <li>83</li>
-                        <li>84</li>
-                        <li>85</li>
-                        <li>86</li>
-                        <li>87</li>
-                        <li>88</li>
-                        <li>89</li>
-                        <li>90</li>
-                        <li>91</li>
-                        <li>92</li>
-                        <li>93</li>
-                        <li>94</li>
-                        <li>95</li>
-                        <li>96</li>
-                        <li>97</li>
-                        <li>98</li>
-                    </ul>
-                    <code-editor></code-editor>
+                <div class="file-editor">
+                    
+                    <textarea id="experiments-codeditor" name="experiments-codeditor">
+                        [experiment]
+                        period: 600
+                        init:
+                        lights_on
+                        procedure:
+                        wait
+                        measure_transmitance
+                        measure_fluorescence
+                        stir
+                        air
+                        pump
+
+                        [stirrer]
+                        intensity: 0.2
+                        length: 10
+
+                        [aerator]
+                        intensity: 0.2
+                        length: 10
+
+                        [pump]
+                        intensity: 0.2
+                        volume: 10
+                    </textarea>
                     <button>Save changes <img src="UI/icons/save_icon.svg" alt="saveChangesIcon" class="icon"></button>
                 </div>
             </div>
             <div id="Config-Panel" class="content-panel container hidden">
-    
+                <div class="file-browser">
+                    <div class="search-bar">
+                        <input type="text">
+                        <img src="UI/icons/search_icon.svg" alt="searchIcon" class="icon">
+                    </div>
+                    <ul class="file-list">
+                        <li>File.yaml</li>
+                        <li>Experiments.yaml</li>   
+                    </ul>
+                    <div class="file-details">
+                        <h2>File.yaml</h2>
+                        <ul>
+                            <li>created: <span>sdaddw</span></li>
+                            <li>last-edited: <span>sdaddw</span></li>
+                            <li>size: <span>sdaddw</span></li>
+                        </ul>
+                        <div>
+                            <button id="activate-button"><span>Activate</span><img src="UI/icons/activate_icon.svg" alt="activateIcon" class="icon"></button>
+                            <button id="remove-button">  <span>Remove</span>  <img src="UI/icons/trashbin_icon.svg" alt="removeIcon" class="icon">  </button>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="file-editor">
+                    
+                    <textarea id="config-codeditor" name="config-codeditor">
+                    </textarea>
+                    <button>Save changes <img src="UI/icons/save_icon.svg" alt="saveChangesIcon" class="icon"></button>
+                </div>
             </div>
         </div>
 
     </div>
-    <script src="vue.global.js"></script>
-    <script src="highlight.min.js"></script>
-    <script src="simple-code-editor.js"></script>
+    <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
+    <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/perl/perl.min.js"></script>
+    
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css"></link>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/abbott.min.css"></link>
+    
     <script>
-        const app = Vue.createApp({
-            components: {
-                'code-editor': CodeEditor
-            }
-        })
+        var editor_experiments = CodeMirror.fromTextArea(document.getElementById('experiments-codeditor'), {
+            lineNumbers: true,
+            mode: 'text/x-toml'
+        });
+        editor_experiments.refresh();
+        var editor_config = CodeMirror.fromTextArea(document.getElementById('config-codeditor'), {
+            lineNumbers: true,
+            mode: 'text/x-toml'
+        });
+        editor_config.refresh();
     </script>
+
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js" integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
@@ -490,6 +456,8 @@
                 contentPanels[whereTo].classList.remove("hidden");
                 contentPanelsList[whereTo].classList.add("active");
             }   
+            editor_config.refresh();
+            editor_experiments.refresh();
         }
 
         
