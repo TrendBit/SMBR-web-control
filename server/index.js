@@ -1,11 +1,20 @@
-const app = require('express')();
+const express = require('express');
+const app = express();
+const path = require('path');
 const cors = require('cors');
-const fs = require('fs')
 const PORT = 8080;
 
 
 app.use(cors()); //opravuje Error fetching data: TypeError: NetworkError when attempting to fetch resource, v tuto chvíli bez omezení která doména smí přistupovat k API, teoreticky nebezpečné.
+app.use(express.static(path.join(__dirname, 'public')));
 app.listen(PORT);
+
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+
 
 
 /*

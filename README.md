@@ -1,4 +1,15 @@
-# index.html
+# how to run
+run server from /server/* (more info in /server/* chapter)
+connect to your server via 8080 port
+
+
+# /server/*
+a node.js server that uses the "express" package to host an api and the web server 
+
+- can be run using `node .` command in the */server/* directory
+- uses the 8080 port
+
+# /server/public/index.html
 html for the website. It also has some utility functions in javascript.
 
 - can be opened from any browser
@@ -8,20 +19,16 @@ a simple test that spams the API (curently has the URL written into code) with g
 
 - can be run from browser while the node.js testing api is running on 127.0.0.1:8080
 
-# basicFunctions.js
+# /server/public/basicFunctions.js
 has basic functions for comunicating with the API from client
 
-# chart.js
+# /server/public/chart.js
 initializes a simple chart.js chart
 
-# /UI/*
+# /server/public/UI/*
 Icons, scetches, ui elements 
 
-# /server/*
-a node.js server that uses the "express" package to host an api used for teting. 
 
-- can be run using `node .` command in the */server/* directory
-- uses the 8080 port
 
 ## libraries
 **cors** for achieving a correctly secured connection 
@@ -33,7 +40,7 @@ the licenses will be added in future updates
 **VUE.js**               (MIT)
 
 
-## /test-get (API)
+## (API)/test-get 
 returns a random whole number on a GET request in the following json format: 
 ```
 {
@@ -41,7 +48,7 @@ returns a random whole number on a GET request in the following json format:
 }
 ```
 
-## /test-combined (API)
+## (API)/test-combined 
 a test for hosting multiple methods on a single URL and further sorting the request by Content-Type header.
 
 - can be tested using a REST-API tester (for example SoapUI)
