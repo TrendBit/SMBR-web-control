@@ -1,0 +1,11 @@
+[[stats]]
+name="microchip"
+source_device="node"
+source="/test-get"
+unit="°C"
+
+[[stats]]
+name="random"
+source_device="node"
+source="/test-get"
+unit=":D"

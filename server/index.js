@@ -2,19 +2,33 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const cors = require('cors');
+
 const PORT = 8080;
+const apiTestUtilities = require('./apiTestUtilities.js');
 
+//fixes the "TypeError: NetworkError when attempting to fetch resource" error by allowing anyone to use the api: 
+app.use(cors()); 
 
-app.use(cors()); //opravuje Error fetching data: TypeError: NetworkError when attempting to fetch resource, v tuto chvíli bez omezení která doména smí přistupovat k API, teoreticky nebezpečné.
+//opens the ./public/ directory for outer connections
 app.use(express.static(path.join(__dirname, 'public')));
+//starts the server on port PORT
 app.listen(PORT);
 
 
+app.set('views', './views');
+app.set('view engine', 'ejs');
+
+
+//API endpoint for the index file
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    //res.sendFile(path.join(__dirname, 'public', 'index.html'));  //version that uses standart .html
+    res.render('index', {})
 });
 
-
+//API endpoint for the api Test
+app.get('/test', (req, res) => {
+    res.render('apiTest', apiTestUtilities.parseConfig());
+});
 
 
 /*
@@ -24,10 +38,12 @@ app.get('/', (req, res) => {
     "input": <nothing>
     }
 */
+
+
 app.get('/test-get', (req, res) => {
 
     const count = getRandWholeNum(0,1000);
-    res.status(200).send({test: ""+(count)});
+    res.status(200).send({value: ""+(count)});
 
 });
 

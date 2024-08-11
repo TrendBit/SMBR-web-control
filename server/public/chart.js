@@ -29,7 +29,7 @@ const myChart = new Chart(ctx, {
             display: false
           },
           suggestedMin: 0,
-          suggestedMax: 100,
+          suggestedMax: 10,
         },
         y: {
           display: true,
@@ -37,7 +37,7 @@ const myChart = new Chart(ctx, {
             display: false,
           },
           suggestedMin: 0,
-          suggestedMax: 1000
+          suggestedMax: 100
         }
       }
     },

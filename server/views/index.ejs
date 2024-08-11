@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhenoBottle</title>
+    <link rel="stylesheet" href="stylesheet.css">
+</head>
+<body>
+    <header id="HOTBAR">
+        <button><img src="UI/icons/Menu-icon.svg"></button>
+        <h1>PhenoBottle</h1>
+        <div>
+            <p id="hotbar-clock">16:22</p>
+            <p id="hotbar-date">11.07.2024</p>
+        </div>
+        <div id="Status-Indicator" onclick="changeStatus(this)">
+            <h2>Error</h2>
+        </div>
+        
+    </header    >
+    <div class="container">
+
+        <div id="SIDEBAR">
+            <ul>
+                <li class="active" onclick="changeContext(0)"><img src="UI/icons/dashboard_icon.svg">Dashboard</li>
+                <li onclick="changeContext(1)"><img src="UI/icons/experiments_icon.svg" >Experiments</li>
+                <li onclick="changeContext(2)"><img src="UI/icons/config_icon.svg" >Config</li>
+            </ul>
+        </div>
+        <div id="CONTENT">
+            
+            <div id="DashBoard-Panel" class="content-panel container">
+
+                <div id="Temperature-Widget" class="widget ">
+                    <h1>Temperature</h1>
+                    <table class="table-widget-segment">
+                        <thead>
+                            <tr>
+                                <th>color</th>
+                                <th>name</th>
+                                <th>current</th>
+                                <th>target</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-master">
+                                <td class="table-color"><img src="UI/icons/bottle_icon.svg" alt="bottleIcon"></td>
+                                <td class="table-name">Bottle<span class="collapse button1">v</span></td>
+                                <td class="table-current">50°C</td>
+                                <td class="table-target"><input type="number"> </td>
+                            </tr>
+                            <tr class="table-sub">
+                                <td class="table-color"><img src="UI/UI-elements/subElement.svg" alt=""></td>
+                                <td class="table-name">Top</td>
+                                <td class="table-current">100°C</td>
+                                <td class="table-target"></td>
+                            </tr>
+                            <tr class="table-sub">
+                                <td class="table-color"><img src="UI/UI-elements/subElement-last.svg" alt=""></td>
+                                <td class="table-name">Bottom</td>
+                                <td class="table-current">0°C</td>
+                                <td class="table-target"></td>
+                            </tr>
+                            <tr>
+                                <td class="table-color"><img src="UI/icons/led_icon.svg" alt="ledIcon"></td>
+                                <td class="table-name">LED array</td>
+                                <td class="table-current">50°C</td>
+                                <td class="table-target"></td>
+                            </tr>
+                            <tr>
+                                <td class="table-color"><img src="UI/icons/boards_icon.svg" alt="boardIcon"></td>
+                                <td class="table-name">Boards<span class="collapse button1">v</span></td>
+                                <td class="table-current"></td>
+                                <td class="table-target"></td>
+                            </tr>
+                            <tr>
+                                <td class="table-color"><img src="UI/UI-elements/subElement.svg" alt=""></td>
+                                <td class="table-name">Board1</td>
+                                <td class="table-current">50°C</td>
+                                <td class="table-target"></td>
+                            </tr>
+                            <tr>
+                                <td class="table-color"><img src="UI/UI-elements/subElement.svg" alt=""></td>
+                                <td class="table-name">Board2</td>
+                                <td class="table-current">50°C</td>
+                                <td class="table-target"></td>
+                            </tr>
+                            <tr>
+                                <td class="table-color"><img src="UI/UI-elements/subElement-last.svg" alt=""></td>
+                                <td class="table-name">Board3</td>
+                                <td class="table-current">50°C</td>
+                                <td class="table-target"></td>
+                            </tr>
+                            <tr>
+                                <td class="table-color"><img src="UI/icons/temperature_ambient_icon.svg" alt="ambientIcon"></td>
+                                <td class="table-name">Ambient</td>
+                                <td class="table-current">50°C</td>
+                                <td class="table-target"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div>
+
+                    </div>
+                </div>
+
+
+
+                <!--<div id="SimpleSensors-Widget" class="widget">
+                    <h1>Base stats</h1>
+                    <ul class="sensorList">
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Temperature</span></span><span>15°</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Difference</span></span><span>45%</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Lorem</span></span><span>2500RPM</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Ipsum</span></span><span>...</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Vitae</span></span><span>...</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Leviosa</span></span><span>...</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Temperature</span></span><span>15°</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Difference</span></span><span>45%</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Lorem</span></span><span>2500RPM</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Ipsum</span></span><span>...</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Vitae</span></span><span>...</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Leviosa</span></span><span>...</span></li>
+                        <li><img src="UI/LogoPlaceholder.svg"><span>Temperature</span></span><span>15°</span></li>
+                    </ul>
+                    <div>
+                        <canvas id="BaseStatsGraph" class="graph">
+                            GRAPH
+                        </canvas>
+                    </div>
+                </div>
+                <div id="QuickSettings-Widget" class="widget">
+                    <h1>Quick settings</h1>
+                    <div>
+                        <h2>Motor control</h2>
+                        <label for="pumpControl">Pump</label>
+                        <input id="pumpControl" type="number" min="0" max="100" step="0.5">
+                    </div>
+                    <div>
+                        <h2>Temp control</h2>
+                        <label for="heaterControl">desiredTemperature</label>
+                        <input id="heaterControl" type="number" min="0" max="100" step="0.5">
+                    </div>
+                    <div>
+                        <h2>Utilities</h2>
+                        <label for="stirrerControl">stirrer</label>
+                        <input id="stirrerControl" type="checkbox">
+                    </div>
+                </div>
+                <div id="ProgramOverview-Widget" class="widget">
+                    <h1>Program overview</h1>
+                    <div id="ProgramThumbnail">
+                        <h2>Program name <span>65%</span></h2>
+                        <div>
+
+                        </div>
+                        <h2 id="lastAction">
+                            Last action: <span>Set stir to 100% </span>                                        
+                        </h2>
+                    </div>
+                    <div id="ProgramOverview" class="container">
+                        <ul>
+                            <li>Set light</li>
+                            <li>Test for something</li>
+                            <li>Stir</li>
+                            <li>Run</li>
+                            <li>Hide</li>
+                            <li>Set motor speed to 2500RPM</li>
+                            <li>Set light</li>
+                            <li>Test for something</li>
+                            <li>Stir</li>
+                            <li>Run</li>
+                            <li>Hide</li>
+                            <li>Set motor speed to 2500RPM</li>
+                            <li>Set light</li>
+                            <li>Test for something</li>
+                            <li>Stir</li>
+                            <li>Run</li>
+                            <li>Hide</li>
+                            <li>Set motor speed to 2500RPM</li>
+                            <li>Set light</li>
+                            <li>Test for something</li>
+                            <li>Stir</li>
+                            <li>Run</li>
+                            <li>Hide</li>
+                            <li>Set motor speed to 2500RPM</li>
+                        </ul>
+                        <ul>
+                            <li><span>Time left</span><span>15h 5m 3s</span></li>
+                            <li><span>Time active</span><span>15h 5m 3s</span></li>
+                            <li><span>Completed procedures</span><span>14 / 55</span></li>
+                        </ul>
+                    </div>
+                    
+                </div>
+                <div id="ComplexSensors-Widget" class="widget">
+                    <h1>Complex sensors</h1>
+                    <div class="container">
+                        <div class="graph">
+                            <canvas id="ComplStatsGraph">
+                                GRAPH
+                            </canvas>
+                        </div>
+                    </div>                    
+                </div>
+                <div id="Console-Widget" class="widget">
+                    <h1>History</h1>
+                    <div class="container">
+                        <ul>
+                            <li>StartedSession...</li>
+                            <li>Status update</li>
+                            <li>Updating config</li>
+                            <li>Lorem ipsum</li>
+                            <li>Lorem ipsum</li>
+                            <li>Lorem ipsum</li>
+                            <li>Lorem ipsum</li>
+                            <li>Lorem ipsum</li>
+                        </ul>   
+                    </div>
+                                    
+                </div>-->
+            </div>  
+
+
+            <div id="Experiments-Panel" class="content-panel container hidden">
+                <div class="file-browser">
+                    <div class="search-bar">
+                        <input type="text">
+                        <img src="UI/icons/search_icon.svg" alt="searchIcon" class="icon">
+                    </div>
+                    <ul class="file-list">
+                        <li>File.yaml</li>
+                        <li>Experiments.yaml</li>
+                        <li>container.yaml</li>
+                        <li>div.yaml</li>
+                        <li>DWADHJKWHA.yaml</li>
+                        <li>File.yaml</li>
+                        <li>Experiments.yaml</li>
+                        <li>container.yaml</li>
+                        <li>div.yaml</li>
+                        <li>DWADHJKWHA.yaml</li>
+                        <li>File.yaml</li>
+                        <li>Experiments.yaml</li>
+                        <li>container.yaml</li>
+                        <li>div.yaml</li>
+                        <li>DWADHJKWHA.yaml</li>    
+                    </ul>
+                    <div class="file-details">
+                        <h2>File.yaml</h2>
+                        <ul>
+                            <li>created: <span>sdaddw</span></li>
+                            <li>last-edited: <span>sdaddw</span></li>
+                            <li>size: <span>sdaddw</span></li>
+                        </ul>
+                        <div>
+                            <button id="activate-button"><span>Activate</span><img src="UI/icons/activate_icon.svg" alt="activateIcon" class="icon"></button>
+                            <button id="remove-button">  <span>Remove</span>  <img src="UI/icons/trashbin_icon.svg" alt="removeIcon" class="icon">  </button>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="file-editor">
+                    
+                    <textarea id="experiments-codeditor" name="experiments-codeditor">
+                        [experiment]
+                        period: 600
+                        init:
+                        lights_on
+                        procedure:
+                        wait
+                        measure_transmitance
+                        measure_fluorescence
+                        stir
+                        air
+                        pump
+
+                        [stirrer]
+                        intensity: 0.2
+                        length: 10
+
+                        [aerator]
+                        intensity: 0.2
+                        length: 10
+
+                        [pump]
+                        intensity: 0.2
+                        volume: 10
+                    </textarea>
+                    <button>Save changes <img src="UI/icons/save_icon.svg" alt="saveChangesIcon" class="icon"></button>
+                </div>
+            </div>
+            <div id="Config-Panel" class="content-panel container hidden">
+                <div class="file-browser">
+                    <div class="search-bar">
+                        <input type="text">
+                        <img src="UI/icons/search_icon.svg" alt="searchIcon" class="icon">
+                    </div>
+                    <ul class="file-list">
+                        <li>File.yaml</li>
+                        <li>Experiments.yaml</li>   
+                    </ul>
+                    <div class="file-details">
+                        <h2>File.yaml</h2>
+                        <ul>
+                            <li>created: <span>sdaddw</span></li>
+                            <li>last-edited: <span>sdaddw</span></li>
+                            <li>size: <span>sdaddw</span></li>
+                        </ul>
+                        <div>
+                            <button id="activate-button"><span>Activate</span><img src="UI/icons/activate_icon.svg" alt="activateIcon" class="icon"></button>
+                            <button id="remove-button">  <span>Remove</span>  <img src="UI/icons/trashbin_icon.svg" alt="removeIcon" class="icon">  </button>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="file-editor">
+                    
+                    <textarea id="config-codeditor" name="config-codeditor">
+                    </textarea>
+                    <button>Save changes <img src="UI/icons/save_icon.svg" alt="saveChangesIcon" class="icon"></button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
+    <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/perl/perl.min.js"></script>
+    
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css"></link>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/abbott.min.css"></link>
+    
+    <script>
+        var editor_experiments = CodeMirror.fromTextArea(document.getElementById('experiments-codeditor'), {
+            lineNumbers: true,
+            mode: 'text/x-toml'
+        });
+        editor_experiments.refresh();
+        var editor_config = CodeMirror.fromTextArea(document.getElementById('config-codeditor'), {
+            lineNumbers: true,
+            mode: 'text/x-toml'
+        });
+        editor_config.refresh();
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js" integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        const data = {
+            labels: [1,2,3,4,5,6,7,8,9,10,11],
+            datasets: [
+            {
+                data: [1,5,3,4,8,2,2,0,1,1,2,3,4],
+                borderColor: "red",
+                fill: false,
+                cubicInterpolationMode: 'monotone',
+                tension: 0.4
+            },
+            {
+                data: [4,5,6,7,8,9,4,5,3,2,1,5,8],
+                borderColor: "green",
+                fill: false,
+                cubicInterpolationMode: 'monotone',
+                tension: 0.4
+            },
+            {
+                data: [6,4,2,4,5,3,1,2,4,2,4,8,9],
+                borderColor: "blue",
+                fill: false,
+                cubicInterpolationMode: 'monotone',
+                tension: 0.4
+            }
+            ]
+        };
+        const ctx = document.getElementById('BaseStatsGraph');
+        const myChart = new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: {
+            responsive: true,
+            animations: false,
+            interaction: {
+                intersect: false,
+            },
+            scales: {
+                x: {
+                display: true,
+                title: {
+                    display: false
+                }
+                },
+                y: {
+                display: true,
+                title: {
+                    display: false,
+                }
+                }
+            }
+            },
+        });
+
+
+        const data2 = {
+            labels: [
+                'Water',
+                'Biomaterial',
+                'Sodium'
+            ],
+            datasets: [{
+                data: [300, 50, 100],
+                backgroundColor: [
+                'rgb(54, 162, 235)',
+                'rgb(125, 163, 93)',
+                'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+        };
+        const config2 = {
+            type: 'doughnut',
+            data: data2,
+            options:{
+                cutout: '50%',
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        align: 'start'
+                    }
+                }
+            }
+            
+        };
+        const ctx2 = document.getElementById('ComplStatsGraph');
+        const myChart2 = new Chart(ctx2, config2)
+
+    </script>
+    <script>
+        let currContext = 0;
+        function changeContext(whereTo){
+            if(currContext!=whereTo){
+                currContext = whereTo;
+                const contentPanels = document.getElementById("CONTENT").children;
+                for(let i=0; i<contentPanels.length; i++){
+                    contentPanels[i].classList.add("hidden");
+                    
+                }
+
+                const contentPanelsList = document.getElementById("SIDEBAR").children[0].children;
+                for(let i=0; i<contentPanelsList.length; i++){
+                    contentPanelsList[i].classList.remove("active");
+                }
+                contentPanels[whereTo].classList.remove("hidden");
+                contentPanelsList[whereTo].classList.add("active");
+            }   
+            editor_config.refresh();
+            editor_experiments.refresh();
+        }
+
+        
+        const currentDateTime = new Date();
+        setInterval(() => {
+            const newTime = currentDateTime.getDate() + "." + (currentDateTime.getMonth()+1) + " " + currentDateTime.getFullYear();
+            if(newTime != document.getElementById("hotbar-date").innerHTML){
+                document.getElementById("hotbar-date").innerHTML = newTime;
+            }
+            
+        }, 1000);
+        function changeStatus(element){
+            console.log(element.children[0].innerHTML);
+            switch (element.children[0].innerHTML){
+                case "Standby": {
+                    element.children[0].innerHTML = "Error";
+                    break;
+                }
+                case "Running": {
+                    element.children[0].innerHTML = "Standby";
+                    break;
+                }
+                case "Error": {
+                    element.children[0].innerHTML = "Running";
+                    break;
+                }
+            }
+            switch (element.children[0].innerHTML){
+                case "Standby": {
+                    element.style.backgroundColor = "green";
+                    break;
+                }
+                case "Running": {
+                    element.style.backgroundColor = "orange";
+                    break;
+                }
+                case "Error": {
+                    element.style.backgroundColor = "red";
+                    break;  
+                }
+            }
+        }
+        document.getElementById("hotbar-clock").innerHTML = currentDateTime.getHours() + ":" + currentDateTime.getMinutes(); 
+    </script>
+</body>
+</html>

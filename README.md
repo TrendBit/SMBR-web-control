@@ -9,15 +9,10 @@ a node.js server that uses the "express" package to host an api and the web serv
 - can be run using `node .` command in the */server/* directory
 - uses the 8080 port
 
-# /server/public/index.html
-html for the website. It also has some utility functions in javascript.
+# /server/views/index.ejs
+the website. It also has some utility functions in javascript.
 
 - can be opened from any browser
-
-# graphTest.html
-a simple test that spams the API (curently has the URL written into code) with get requests and graphs the "test" attribute in returned json object. The site graphs the last 900 values
-
-- can be run from browser while the node.js testing api is running on 127.0.0.1:8080
 
 # /server/public/basicFunctions.js
 has basic functions for comunicating with the API from client
@@ -28,11 +23,28 @@ initializes a simple chart.js chart
 # /server/public/UI/*
 Icons, scetches, ui elements 
 
+# /server/configs/*
+contains config toml files for dynamic websites
+
+# /server/apiTestUtilities.js 
+runs when the /test api endpoint gets called and returns a json object containing the configs
+
+- tries to read the test-config.toml file and tries to parse it to json format, if any of that fails, returns a coresponding error
+
+# /server/views/apiTest.ejs
+a simple test for different way to interact with the APIs
+
+- is configured with the test-config.toml
+
+
+
 
 
 ## libraries
 **cors** for achieving a correctly secured connection 
 **express** for hosting the API
+**ejs** for creating dynamic sites
+**toml** for converting toml to json
 
 ## licenses
 the licenses will be added in future updates
@@ -69,3 +81,7 @@ a test for hosting multiple methods on a single URL and further sorting the requ
 		- returns text "put"
 	- PATCH
 		- returns text "patch"
+
+
+
+
