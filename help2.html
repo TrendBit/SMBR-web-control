@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <script>
+        import 'regenerator-runtime/runtime';
+        import axios from 'axios';
+
+
+        axios.get('https://jsonplaceholder.typicode.com/todos/1')
+            .then(response => {
+                const responseData = response.data;
+                console.log("ahoj");
+            })
+            .catch(error => {
+                // Handle any errors
+            });
+    </script>
+</body>
+</html>

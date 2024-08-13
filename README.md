@@ -1,6 +1,18 @@
+# how to install
+clone this repository
+```git clone https://github.com/Kulihrasek456/PB-UI-prototype```
+or move files into your directory
+
+## dependecies
+only npm and node.js are required, rest of the packages are inside the server files.
+```sudo apt-get install npm```
+
+
 # how to run
 run server from /server/* (more info in /server/* chapter)
 connect to your server via 8080 port
+
+
 
 
 # /server/*
