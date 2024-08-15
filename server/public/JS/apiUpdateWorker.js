@@ -1,6 +1,4 @@
 setInterval(updateSite, 5000);
-const nodePort = 8080;
-const restPort = 8089;
 
 updateSite();
 
@@ -11,34 +9,19 @@ async function updateSite(){
     for (let i = 0; i < apiFetchers.length; i++) {
         const element = apiFetchers[i];
         //console.log(element);
-        if (element.getAttribute("source") != null) {
-            switch(element.getAttribute("source_device")){
-                case "node":{
-                    element.innerHTML = 
-                        (await 
-                            fetchData(url+":"+nodePort+element.getAttribute("source"))
-                        )[element.getAttribute("component")] 
+        if (element.getAttribute("resource")!="") {
+            try{
+                element.innerHTML = 
+                        Math.round((await 
+                            fetchData(url+":"+element.getAttribute("port")+element.getAttribute("resource"))
+                        )[element.getAttribute("component")])
                         + " " 
                         + element.getAttribute("unit");
-
-                    break;
-                }
-                case "device":{
-                    element.innerHTML = 
-                        (await 
-                            fetchData("http://192.168.1.188"+":"+restPort+element.getAttribute("source"))
-                        )[element.getAttribute("component")] 
-                        + " " 
-                        + element.getAttribute("unit");
-
-                    break;
-                }
-                default:{
-                    console.error("invalid api-fetcher format: " + element.getAttribute("source_device"));
-                }
             }
-        }else{
-            console.error("invalid api-fetcher format: " + element.getAttribute("source") );
+            catch(err){
+                console.error(err);
+            }
+            
         }
     }
 }

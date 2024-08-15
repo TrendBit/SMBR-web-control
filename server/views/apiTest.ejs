@@ -1,3 +1,8 @@
+<% 
+    function printOK(){
+        console.log("OK");
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,13 +32,13 @@
             <td>name</td> 
             <td>value</td> 
         </tr>
-        <% for( let i = 0; i < stats.length; i++ ) { %>
+        <% for( let i = 0; i < stats.length; i++ ) {printOK() %>
             <tr>
                 <td><%= stats[i].name %></td> 
                 <td 
-                    source_device="<%= stats[i].source_device %>" 
+                    port="<%= stats[i].port %>" 
                     unit="<%= stats[i].unit %>" 
-                    source="<%= stats[i].source %>" 
+                    resource="<%= stats[i].resource %>" 
                     class="api-fetcher"
                     component="<%= stats[i].component %>"
                 >

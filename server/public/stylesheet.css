@@ -48,7 +48,17 @@ body {
   width: 100%;
   margin: 0;
   padding: 0;
-  color: var(--text-clr);
+  color: var(--text-color-light);
+}
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button { /*hides input buttons*/
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 /*global class rules*/
@@ -76,7 +86,7 @@ body {
 
 .button1{
   background-color: var(--bg-color-1);
-  
+  cursor: pointer;
   border: var(--bg-color-4) 1px solid;
   padding: 5px;
   border-radius: 2px;
@@ -257,7 +267,7 @@ img{
               height: 1.5em;
             }
             input{
-              width: 100%;
+              color: var(--text-color-light);
             }
             td>*{
               display: flex;
@@ -272,6 +282,20 @@ img{
             }
             td.table-target{
               min-width: 60px;
+              display: flex;
+
+              input[type="number"]{
+                width: 100%;
+                background: var(--bg-color-1);
+                border: var(--bg-color-4) 1px solid;
+                border-radius: 3px 0 0 3px;
+                color: var(--text-color-light);
+                border-right: none;
+                cursor: text;
+              }
+              input[type="button"]{
+                border-radius: 0 3px 3px 0;
+              }
             }
 
             span.collapse{
@@ -280,6 +304,8 @@ img{
 
               padding: 0 5px 0 5px;
             }
+            
+            
           }
         }
       }

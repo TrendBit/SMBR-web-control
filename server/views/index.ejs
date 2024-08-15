@@ -1,3 +1,55 @@
+<% 
+
+function getIcon(name){
+    switch(name){
+        case "activate":
+            return "./UI/icons/activate_icon.svg"
+        case "board":
+            return "./UI/icons/boards_icon.svg"
+        case "bottle":
+            return "./UI/icons/bottle_icon.svg"
+        case "config":
+            return "./UI/icons/config_icon.svg"
+        case "controls":
+            return "./UI/icons/controls_icon.svg"
+        case "dashboard":
+            return "./UI/icons/dashboard_icon.svg"
+        case "experiments":
+            return "./UI/icons/experiments_icon.svg"
+        case "leds":
+            return "./UI/icons/led_icon.svg"
+        case "lightbulb":
+            return "./UI/icons/lightbulb_icon.svg"
+        case "logo":
+            return "./UI/icons/logo_icon.svg"
+        case "menu":
+            return "./UI/icons/menu_icon.svg"
+        case "save":
+            return "./UI/icons/save_icon.svg"
+        case "search":
+            return "./UI/icons/search_icon.svg"
+        case "temperature_ambient":
+            return "./UI/icons/temperature_ambient_icon.svg"
+        case "temperature":
+            return "./UI/icons/temperature_icon.svg"
+        case "trashbin":
+            return "./UI/icons/trashbin_icon.svg"
+        case "subElement":
+            return "./UI/UI-elements/subElement.svg"
+        case "subElement-last":
+            return "./UI/UI-elements/subElement-last.svg"
+        default:
+            return "./UI/LogoPlaceholder.png"
+    }
+}
+
+var currNumOfCharts = 0;
+%>
+<script>
+    var chartUpdaterArray = [];
+    var chartArray = [];
+</script>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,64 +96,70 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="table-master">
-                                <td class="table-color"><img src="UI/icons/bottle_icon.svg" alt="bottleIcon"></td>
-                                <td class="table-name">Bottle<span class="collapse button1">v</span></td>
-                                <td class="table-current">50°C</td>
-                                <td class="table-target"><input type="number"> </td>
-                            </tr>
-                            <tr class="table-sub">
-                                <td class="table-color"><img src="UI/UI-elements/subElement.svg" alt=""></td>
-                                <td class="table-name">Top</td>
-                                <td class="table-current">100°C</td>
-                                <td class="table-target"></td>
-                            </tr>
-                            <tr class="table-sub">
-                                <td class="table-color"><img src="UI/UI-elements/subElement-last.svg" alt=""></td>
-                                <td class="table-name">Bottom</td>
-                                <td class="table-current">0°C</td>
-                                <td class="table-target"></td>
-                            </tr>
-                            <tr>
-                                <td class="table-color"><img src="UI/icons/led_icon.svg" alt="ledIcon"></td>
-                                <td class="table-name">LED array</td>
-                                <td class="table-current">50°C</td>
-                                <td class="table-target"></td>
-                            </tr>
-                            <tr>
-                                <td class="table-color"><img src="UI/icons/boards_icon.svg" alt="boardIcon"></td>
-                                <td class="table-name">Boards<span class="collapse button1">v</span></td>
-                                <td class="table-current"></td>
-                                <td class="table-target"></td>
-                            </tr>
-                            <tr>
-                                <td class="table-color"><img src="UI/UI-elements/subElement.svg" alt=""></td>
-                                <td class="table-name">Board1</td>
-                                <td class="table-current">50°C</td>
-                                <td class="table-target"></td>
-                            </tr>
-                            <tr>
-                                <td class="table-color"><img src="UI/UI-elements/subElement.svg" alt=""></td>
-                                <td class="table-name">Board2</td>
-                                <td class="table-current">50°C</td>
-                                <td class="table-target"></td>
-                            </tr>
-                            <tr>
-                                <td class="table-color"><img src="UI/UI-elements/subElement-last.svg" alt=""></td>
-                                <td class="table-name">Board3</td>
-                                <td class="table-current">50°C</td>
-                                <td class="table-target"></td>
-                            </tr>
-                            <tr>
-                                <td class="table-color"><img src="UI/icons/temperature_ambient_icon.svg" alt="ambientIcon"></td>
-                                <td class="table-name">Ambient</td>
-                                <td class="table-current">50°C</td>
-                                <td class="table-target"></td>
-                            </tr>
+
+                            <% 	for( let i = 0; i < Temperature_widget.rows.length; i++ ) { let element = Temperature_widget.rows[i]; console.log(JSON.stringify(element));%>
+                                <tr class="table-master">
+                                    <td class="table-color">
+                                        <img src="<%= getIcon(element.icon) %>" alt="<%= element.icon %>">
+                                    </td>
+
+                                    <td class="table-name">
+                                        <%= element.name %>
+                                        <% if(element.sub_rows) { %> 
+                                            <span class="collapse button1">v</span> 
+                                        <% } %>
+                                    </td>
+
+                                    <td class="table-current api-fetcher"
+                                        port="<% if(element.port){%><%=element.port%><%}else{%><%="8089"%><%} %>" 
+                                        unit="<% if(element.unit){%><%=element.unit%><%}else{%><%="°C"%><%} %>" 
+                                        resource="<%= element.resource %>" 
+                                        component="<%= element.component %>"
+                                        pull_period="<%= element.pull_period %>"
+                                    >
+                                    </td>
+                                    
+                                    <td class="table-target">
+                                        <% if(element.input) {%> 
+                                            <input type='number' class="button1" min="<%= element.input.min %>" max="<%= element.input.max %>" placeholder="nan"> 
+                                            <input type="button" class="button1" value=">">
+                                        <% } %>
+                                    </td>
+                                </tr>
+
+                                <% if(element.sub_rows){numOfSubRows=element.sub_rows.length; for( let u = 0; u < numOfSubRows; u++ ) { let sub_element = element.sub_rows[u];%>
+                                    <tr class="table-sub">
+                                        <td class="table-color">
+                                            <img src="<% if((u+1)<numOfSubRows){%><%=getIcon("subElement")%><%}else{%><%=getIcon("subElement-last")%><%} %>" alt="sub_element">
+                                        </td>
+    
+                                        <td class="table-name">
+                                            <%= sub_element.name %>
+                                        </td>
+    
+                                        <td class="table-current api-fetcher"
+                                            port="<% if(sub_element.port){%><%=sub_element.port%><%}else{%><%="8089"%><%} %>" 
+                                            unit="<% if(sub_element.unit){%><%=sub_element.unit%><%}else{%><%="°C"%><%} %>" 
+                                            resource="<%= sub_element.resource %>" 
+                                            component="<%= sub_element.component %>"
+                                            pull_period="<%= sub_element.pull_period %>"
+                                        >
+                                        </td>
+                                        
+                                        <td class="table-target">
+                                            <% if(sub_element.input) {%> 
+                                                <input type='number' class="button1" min="<%= sub_element.input.min %>" max="<%= sub_element.input.max %>"> 
+                                                <input type="button" class="button1" value=">">
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                <% }} %>
+
+                            <% } %>
                         </tbody>
                     </table>
-                    <div>
-
+                    <div class="apiChart" chartIndex="<%= currNumOfCharts %>">
+                        
                     </div>
                 </div>
 
@@ -499,5 +557,6 @@
         }
         document.getElementById("hotbar-clock").innerHTML = currentDateTime.getHours() + ":" + currentDateTime.getMinutes(); 
     </script>
+    <script src="JS/apiUpdateWorker.js"></script>
 </body>
 </html>

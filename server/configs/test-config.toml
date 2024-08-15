@@ -7,14 +7,14 @@
 
 [[stats]]
 name="microchip"
-source_device="device"
-source="/temperature"
+port=8089
+resource="/temperature"
 component="temperature"
 unit="°C"
 
 [[stats]]
 name="random"
-source_device="node"
-source="/test-get"
+port=8080
+resource="/test-get"
 component="value"
 unit="rpm"

@@ -5,6 +5,7 @@ const cors = require('cors');
 
 const PORT = 8080;
 const apiTestUtilities = require('./apiTestUtilities.js');
+const indexUtilities = require('./indexUtilities.js');
 
 //fixes the "TypeError: NetworkError when attempting to fetch resource" error by allowing anyone to use the api: 
 app.use(cors()); 
@@ -22,7 +23,7 @@ app.set('view engine', 'ejs');
 //API endpoint for the index file
 app.get('/', (req, res) => {
     //res.sendFile(path.join(__dirname, 'public', 'index.html'));  //version that uses standart .html
-    res.render('index', {})
+    res.render('index', indexUtilities.parseConfig())
 });
 
 //API endpoint for the api Test
