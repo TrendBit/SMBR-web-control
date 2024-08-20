@@ -21,7 +21,7 @@
 #       input{}
 #           max
 #           min
-#graphs
+#graph
 #   
 
 [[Temperature_widget.rows]]
@@ -31,6 +31,7 @@ port=8080
 resource="/test-get"
 component="value"
 pull_period=5
+charted=true
 
 [[Temperature_widget.rows]]
 name="Bottle"
@@ -39,6 +40,7 @@ port=8080
 resource="/test-get"
 component="value"
 pull_period=5
+charted=true
 
     [Temperature_widget.rows.input]
     min=0
@@ -50,6 +52,7 @@ pull_period=5
     resource="/test-get"
     component="value"
     pull_period=5
+    charted=true
 
     [[Temperature_widget.rows.sub_rows]]
     name="Bottom"
@@ -57,6 +60,7 @@ pull_period=5
     resource="/test-get"
     component="value"
     pull_period=5
+    charted=true
 
 [[Temperature_widget.rows]]
 name="LED array"
@@ -65,6 +69,7 @@ port=8080
 resource="/test-get"
 component="value"
 pull_period=5
+charted=true
 
 [[Temperature_widget.rows]]
 name="Boards"
@@ -78,6 +83,7 @@ pull_period=5
     resource="/temperature"
     component="temperature"
     pull_period=5
+    charted=true
 
     [[Temperature_widget.rows.sub_rows]]
     name="Board2"
@@ -85,6 +91,7 @@ pull_period=5
     resource="/test-get"
     component="value"
     pull_period=5
+    charted=true
 
     [[Temperature_widget.rows.sub_rows]]
     name="Board3"
@@ -107,10 +114,8 @@ port=8080
 resource="/test-get"
 component="value"
 pull_period=5
+charted=true
 
 
-[[Temperature_widget.chart]]
-history=15
-    [[Temperature_widget.chart.dataset]]
-    name="test1"
+
 

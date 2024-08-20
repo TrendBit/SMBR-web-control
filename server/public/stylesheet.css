@@ -49,6 +49,7 @@ body {
   margin: 0;
   padding: 0;
   color: var(--text-color-light);
+  height: 100%;
 }
 
 
@@ -153,6 +154,7 @@ body {
   height: 100%;
   color: var(--text-color-light);
   background-color: var(--bg-color-2);
+  
   ul {
     list-style: none;
     padding-left: 0;
@@ -167,6 +169,7 @@ body {
       img {
         height: 2em;
         margin-right: 5px;
+        transition: margin 0.5s ease-in-out;
       }
       padding: 12px;
             /*! padding-top: 0; */
@@ -187,6 +190,27 @@ body {
     }
     width: max-content;
     box-sizing: border-box;
+  }
+  span{
+    transition: width 0.5s ease-in-out;
+    width: 100px;
+    overflow: hidden;
+  }
+
+  
+  height: 100%;
+  background: linear-gradient(0deg, rgba(0,0,0,0.4) 0%, var(--bg-color-2) 30%), url(UI/Phenobottle_logo.svg) no-repeat bottom, var(--bg-color-2);
+}
+
+#SIDEBAR.collapsed{
+  
+  ul{
+    img{
+      margin: 0;
+    }
+    span{
+      width: 0px;
+    }
   }
 }
 

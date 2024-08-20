@@ -48,7 +48,27 @@ var currNumOfCharts = 0;
 <script>
     var chartUpdaterArray = [];
     var chartArray = [];
+
+    function getCountdownArray(length){
+        result = [];
+        for (let i = 0; i < length; i++) {
+            result.add(i);
+        }
+        return result;
+    }
+    function getEmptyDatasets(qantity){
+        reuslt = [];
+        for (let i = 0; i < qantity; i++) {
+            result.add({
+                data: [],
+                cubicInterpolationMode: 'monotone',
+                tension: 0.4
+            })
+        }
+        return result;
+    }
 </script>
+<script src="JS/helperFunctions.js"></script>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -60,7 +80,7 @@ var currNumOfCharts = 0;
 </head>
 <body>
     <header id="HOTBAR">
-        <button><img src="UI/icons/Menu-icon.svg"></button>
+        <button onclick="toggleClass_ByID('SIDEBAR', 'collapsed')"><img src="UI/icons/Menu-icon.svg"></button>
         <h1>PhenoBottle</h1>
         <div>
             <p id="hotbar-clock">16:22</p>
@@ -75,9 +95,9 @@ var currNumOfCharts = 0;
 
         <div id="SIDEBAR">
             <ul>
-                <li class="active" onclick="changeContext(0)"><img src="UI/icons/dashboard_icon.svg">Dashboard</li>
-                <li onclick="changeContext(1)"><img src="UI/icons/experiments_icon.svg" >Experiments</li>
-                <li onclick="changeContext(2)"><img src="UI/icons/config_icon.svg" >Config</li>
+                <li class="active" onclick="changeContext(0)"><img src="UI/icons/dashboard_icon.svg"><span>Dashboard</span></li>
+                <li onclick="changeContext(1)"><img src="UI/icons/experiments_icon.svg" ><span>Experiments</span></li>
+                <li onclick="changeContext(2)"><img src="UI/icons/config_icon.svg" ><span>Config</span></li>
             </ul>
         </div>
         <div id="CONTENT">
@@ -95,7 +115,7 @@ var currNumOfCharts = 0;
                                 <th>target</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="Temperature-Widget-Table">
 
                             <% 	for( let i = 0; i < Temperature_widget.rows.length; i++ ) { let element = Temperature_widget.rows[i]; console.log(JSON.stringify(element));%>
                                 <tr class="table-master">
@@ -158,9 +178,46 @@ var currNumOfCharts = 0;
                             <% } %>
                         </tbody>
                     </table>
-                    <div class="apiChart" chartIndex="<%= currNumOfCharts %>">
-                        
+                    <div class="apiChart">
+                        <div style="display: none;">
+                            <% 	for( let i = 0; i < Temperature_widget.rows.length; i++ ) { let element = Temperature_widget.rows[i];%>
+                            
+                                
+
+                            <% } %>
+                        </div>
+                        <canvas id="Temperature-Widget-Chart"></canvas>
                     </div>
+                    <script>
+                        chartUpdaterArray.add(() =>{ //updater
+                            
+                        })  
+                        const chart = document.getElementById("Temperature-Widget-Chart")
+                        const possibleApiFetchers = document.getElementById("Temperature-Widget-Table").getElementsByClassName("api-fetcher");
+                        const apiFetchers = [];
+                        for(let i = 0; i< possibleApiFetchers.length; i++){
+                            if(possibleApiFetchers[i].getAttribute("charted")){
+                                apiFetchers.add(possibleApiFetchers[i]);
+                            }
+                        }
+                        document.getElementById("Temperature-Widget-Table").getElementsByClassName("api-fetcher")
+                        chartArray.add( new Chart(
+                            chart,
+                            {
+                                type: 'line',
+                                data: {
+                                    labels: getCountdownArray(chart.getAttribute("history")),
+                                    datasets: getEmptyDatasets(apiFetchers.length),
+                                },
+                                options: {
+                                    responsive: true,
+                                    animations: false,
+                                    
+                                }
+                            }
+                        ) )                   
+
+                    </script>
                 </div>
 
 

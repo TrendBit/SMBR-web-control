@@ -1,4 +1,6 @@
 
+const fs = require('node:fs');
+const toml = require('toml');
 module.exports = {
     parseConfig: function () {
       try{
@@ -19,7 +21,6 @@ module.exports = {
       return config;
     },
 };
-const fs = require('node:fs');
-const toml = require('toml');
+
 
 
