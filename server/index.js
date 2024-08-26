@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const cors = require('cors');
+const fs = require('node:fs');
 
 const PORT = 8080;
 const apiTestUtilities = require('./apiTestUtilities.js');
@@ -12,6 +13,10 @@ app.use(cors());
 
 //opens the ./public/ directory for outer connections
 app.use(express.static(path.join(__dirname, 'public')));
+app.use("/experiments" ,express.static(path.join(__dirname, 'experiments')));
+app.use("/configs" ,express.static(path.join(__dirname, 'configs')));
+
+app.use(express.text());
 //starts the server on port PORT
 app.listen(PORT);
 
@@ -31,6 +36,39 @@ app.get('/test', (req, res) => {
     res.render('apiTest', apiTestUtilities.parseConfig());
 });
 
+
+
+app.post('/send-file', (req, res) => {
+    const allowedDirectories = ["experiments","configs"];
+    const fileDir = req.headers['target-directory'];
+    const fileName = req.headers['file-name'];
+    //console.log("send-file api activated\n----------------\nfileDir: "+fileDir+"\nfileName: "+fileName);
+    if(fileDir && fileName){
+        if(allowedDirectories.includes(fileDir)){
+            var fileData = "";
+        
+            if(req.body != undefined){
+                fileData = req.body;
+            }
+
+            
+            //console.log("file data: =\n"+fileData+"\n=");
+            //console.log("request body: =\n"+req.body+"\n=");
+            fs.writeFileSync("./"+fileDir + "/" +fileName, fileData);
+            res.status(200).send("file transfer successfull");
+            //console.log("successfull\n----------------");
+        }
+        else{
+            res.status(403).send("you don't have permisions to write to this directory");
+            //console.log("unsuccessfull (403)\n----------------");
+        }
+    }
+    else{
+        res.status(400).send("missing headers");
+        //console.log("unsuccessfull (400)\n----------------");
+    }
+    
+})
 
 /*
     returns

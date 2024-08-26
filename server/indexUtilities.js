@@ -18,6 +18,11 @@ module.exports = {
       }
       
       //console.log(config);
+      config.Editor = {
+        "experiments": fs.readdirSync("./experiments/"),
+        "configs": fs.readdirSync("./configs/")
+      };
+      fs.writeFileSync('output.json',JSON.stringify(config));
       return config;
     },
 };

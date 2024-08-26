@@ -30,6 +30,9 @@
 
 /*html default overrides*/
 
+img{
+  height: 1.5em;
+}
 * {
   font-family: Verdana ;
 }
@@ -52,9 +55,10 @@ body {
   height: 100%;
 }
 
+/*hides input buttons*/
 
 input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button { /*hides input buttons*/
+input::-webkit-inner-spin-button { 
   -webkit-appearance: none;
   margin: 0;
 }
@@ -214,10 +218,6 @@ body {
   }
 }
 
-img{
-  height: 1.5em;
-}
-
 
 
 #CONTENT {
@@ -265,12 +265,7 @@ img{
   }
   #DashBoard-Panel {
     display: grid;
-    grid-template-areas: 
-        "a b e e "
-        "a b c c "
-        "a b c c "
-        "d d c c";
-    grid-auto-columns: 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 400px));
     gap: 15px;
     min-height: min-content;
     max-height: unset;
@@ -337,13 +332,13 @@ img{
     }
 
     #SimpleSensors-Widget {
-      grid-area: a;
       .sensorList {
         list-style: none;
         margin: 0;
         height: 100%;
         display: flex;
         flex-direction: column;
+        
         li {
           display: flex;
           border-bottom: var(--bg-color-4) 1px solid;
@@ -491,7 +486,7 @@ img{
     height: min-content;
   }
   
-  #Experiments-Panel, #Config-Panel{
+  #experiments-Panel, #configs-Panel{
     display: flex;
     padding: 0;
     
@@ -518,9 +513,24 @@ img{
         }
       }
       
+      .add-button{
+        width: 100%;
+        display: flex;
+        
+        
+        button{
+          width: 100%;
+          margin: 0 5px 0 5px;
+          border-top: none;
+          border-radius: 0px 0px 2px 2px;
+          padding: 2px;
+        }
+      }
+      
       .file-list{
         list-style: none;
         padding: 5px;
+        margin: 0;
 
         li:nth-of-type(1){
           border-top: var(--bg-color-4) 1px solid;
@@ -553,6 +563,8 @@ img{
           margin: 0;
           margin-top: 5px;
           padding: 5px;
+
+          white-space: nowrap;
           
           border-bottom:var(--bg-color-3) 2px solid; 
         }
@@ -577,6 +589,8 @@ img{
               display: inline-block;
               margin: auto;
               width: 99%;
+
+              white-space: wrap;
             }
             
           }
