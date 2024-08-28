@@ -34,7 +34,7 @@ img{
   height: 1.5em;
 }
 * {
-  font-family: Verdana ;
+  font-family: Roboto, Arial ;
 }
 h1 {
   font-size: medium;
@@ -666,6 +666,10 @@ body {
         margin: 0;
         width: min-content;
       }
+      .CodeMirror * {
+        font-family: "Fira Code", monospace;
+      }
+
       .CodeMirror{
         height: 100%;
         width: 100%;
