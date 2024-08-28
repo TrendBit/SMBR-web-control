@@ -37,13 +37,30 @@ app.get('/test', (req, res) => {
 });
 
 
+const allowedDirectories = ["experiments","configs"];
+
+app.get('/file-list', (req, res) => {
+    const fileDir = req.headers['target-directory'];
+    if(allowedDirectories.includes(fileDir)){
+        res.status(200).send(JSON.stringify(fs.readdirSync(fileDir)));
+    }
+    else{
+        res.status(403).send("you don't have permisions to view to this directory");
+    }
+
+})
 
 app.post('/send-file', (req, res) => {
-    const allowedDirectories = ["experiments","configs"];
     const fileDir = req.headers['target-directory'];
     const fileName = req.headers['file-name'];
+    const maxBodySize = 50000;
+
+    const textEncoder = new TextEncoder();
+    if(textEncoder.encode(req.body).length > maxBodySize){
+        res.status(413).send("body too large (max size: "+maxBodySize+" bytes)");
+    }
     //console.log("send-file api activated\n----------------\nfileDir: "+fileDir+"\nfileName: "+fileName);
-    if(fileDir && fileName){
+    if(fileName){
         if(allowedDirectories.includes(fileDir)){
             var fileData = "";
         
@@ -69,6 +86,8 @@ app.post('/send-file', (req, res) => {
     }
     
 })
+
+
 
 /*
     returns

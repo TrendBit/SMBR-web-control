@@ -25,6 +25,8 @@ module.exports = {
       fs.writeFileSync('output.json',JSON.stringify(config));
       return config;
     },
+
+    
 };
 
 

@@ -28,6 +28,7 @@
   --border-width: 1px;
 }
 
+
 /*html default overrides*/
 
 img{
@@ -89,20 +90,37 @@ body {
   box-sizing: border-box;
 }
 
-.button1{
+.button1, .button2{
   background-color: var(--bg-color-1);
   cursor: pointer;
   border: var(--bg-color-4) 1px solid;
   padding: 5px;
   border-radius: 2px;
-  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  transition: background-color 0.1s cubic-bezier(.22,.61,.36,1), border-color 0.1s ease-in-out;
+  color: var(--text-color-light);
 }
 
-.button1:hover{
+.button1:hover, .button2:hover{
   background-color: var(--bg-color-3);
   border-color: var(--acc-color-3); 
 }
 
+.button2container{
+  width: min-content;
+  padding: 0;
+  display: flex;
+  gap: 0;
+}
+.button2.right{
+  border-radius: 0 2px 2px 0;
+  width: min-content;
+  
+}
+.button2.left{
+  border-radius: 2px 0 0 2px;
+  border-right: none;
+  width: 100%;
+}
 
 /*local rules*/
 
@@ -507,6 +525,7 @@ body {
           background: var(--bg-color-1);
           border: var(--bg-color-3) 1px solid;
           color: var(--bg-color-5);
+          width: 100%;
         }
         input:focus{
           color: var(--text-color-light);
@@ -517,13 +536,43 @@ body {
         width: 100%;
         display: flex;
         
+        *{
+          transition: all 0.2s ease-in-out;
+        }
         
-        button{
+        > div{
+          display: flex;
           width: 100%;
           margin: 0 5px 0 5px;
           border-top: none;
           border-radius: 0px 0px 2px 2px;
           padding: 2px;
+
+  
+          .button2container{
+            width: 0px;
+            overflow: hidden;
+          }
+          justify-content: center;
+          align-items: center;
+        }
+        > div:hover{
+          background-color: unset;
+        }
+        >div:has(img:hover){
+          background-color: var(--bg-color-3);
+        }
+        
+
+        > div.activated{
+          .button2container{
+            width: 100%;
+            overflow: hidden;
+          }
+          img{
+            transform: rotate(45deg);
+            margin: 7px;
+          }
         }
       }
       
@@ -538,14 +587,20 @@ body {
 
         li{
           font-size: small;
-          padding: 8px;
+          padding: 8px 10px 8px 10px;
           border-bottom: var(--bg-color-4) 1px solid;
-          transition: background-color 0.2s ease-in;
+          transition: background-color 0.2s ease-in, border-color 0.2s ease-in;
         }
         
         li:hover{
           background-color: var(--acc-color-2);
           cursor: pointer;
+          
+        }
+        li.active{
+          border-right: var(--acc-color-4) 2px solid;
+          border-left: var(--acc-color-4) 2px solid;
+          padding: 8px;
         }
         /*! margin: ; */
         overflow: scroll;
@@ -567,6 +622,8 @@ body {
           white-space: nowrap;
           
           border-bottom:var(--bg-color-3) 2px solid; 
+          overflow-y: scroll;
+          /*! width: min-content; */
         }
         ul{
           background: var(--bg-color-1);
@@ -607,13 +664,10 @@ body {
           padding: 1px;
 
           button{
-            border:none;
+
             width: 100%;
             height: 2.5em;
-            padding: 0;
-            /*! transition: background-size 0.5s cubic-bezier(.19,1,.22,1); */
-            
-            
+
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -623,30 +677,37 @@ body {
 
             img{
               height: 100%;
-              background-color: rgba(0, 0, 0, 0.2);
-            }
-            span{
-              padding: 5px;
+              /*! background-color: rgba(0, 0, 0, 0.2); */
             }
           }
           
           button:hover{
             filter: brightness(0.9);
             cursor: pointer;
+            border-color: red;
           }
           
           
           
           #remove-button{
-            background-color: #F02B00;            
+            background-color:#a31919; 
+                      
+          }
+          #remove-button:hover{
+            border-color: red;  
           }
           #activate-button{
-            background-color: var(--acc-color-3);
+            background-color: var(--acc-color-2);
+          }
+          #activate-button:hover{
+            border-color: var(--acc-color-4);
           }
         }
       }
       display: flex;
       flex-direction: column;
+      width: 300px;
+      min-width: 200px;
     }
     .file-editor{
       width: 100%;
@@ -683,6 +744,8 @@ body {
         .CodeMirror-gutters{
           background-color: var(--bg-color-3);
           border-right: var(--bg-color-5) 1px solid;
+          min-width: 35px;
+          text-align: right;
         }
 
         .CodeMirror-cursor {
@@ -709,6 +772,10 @@ body {
         right: 10px;
         top: 10px;
         
+        color: var(--text-color-light);
+        display: flex;
+        justify-content: center;
+        align-content: center;
       }
     }
     height: calc(100vh - 50px);

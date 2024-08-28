@@ -64,6 +64,26 @@ the licenses will be added in future updates
 **VUE.js**               (MIT)
 
 
+## (API)/send-file
+enables the user to send and overwrite files to the node server by sending a special request
+creates a new file if it doesn't exist
+
+__headers__
+**target-directory** sets the target directory, can only be one of the allowed directories set in the endpoint functions and returns a 403 error if its not.
+**file-name** sets the file name, must not be blank and returns a 400 error if not used correctly
+
+
+__body__
+**contains the file data in utf8 text format**
+
+
+## (API)/file-list
+returns an JSON array of file names in the requested directory
+
+__headers__ 
+**target-directory** sets the target directory, can only be one of the allowed directories set in the endpoint functions and returns a 403 error if its not.
+
+
 ## (API)/test-get 
 returns a random whole number on a GET request in the following json format: 
 ```
