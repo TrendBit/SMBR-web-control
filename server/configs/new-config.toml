@@ -1,0 +1,20 @@
+#STATS
+#name          = display name on the page
+#source_device = "device" or "node", changes the used port 
+#source        = path to the API enpoint (/temperature, /test-get, etc.)
+#component     = the json attribute that holds the value
+#unit          = unit (°C, rpm, lm)
+
+[[stats]]
+name="microchip"
+port=8089
+resource="/temperature"
+component="temperature"
+unit="°C"
+
+[[stats]]
+name="random"
+port=8080
+resource="/test-get"
+component="value"
+unit="rpm"

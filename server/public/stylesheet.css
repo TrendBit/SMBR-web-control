@@ -294,6 +294,8 @@ body {
           *{
             font-size: smaller;
             font-weight: normal;
+            border: var(--bg-color-3) 1px solid;
+            border-style: dashed solid none;
           }
         }
         tbody{
@@ -776,6 +778,12 @@ body {
         display: flex;
         justify-content: center;
         align-content: center;
+
+        span{
+          margin: auto auto auto 0;
+          white-space: nowrap;
+        }
+        width: 120px;
       }
     }
     height: calc(100vh - 50px);

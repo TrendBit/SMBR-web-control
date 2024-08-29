@@ -251,7 +251,7 @@ var currNumOfCharts = 0;
                         </ul>
                         <div class="file-details-buttons">
                             <button id="activate-button"  class="button1"><span>Activate</span><img src="UI/icons/activate_icon.svg" alt="activateIcon" class="icon"></button>
-                            <button id="remove-button"    class="button1">  <span>Remove</span>  <img src="UI/icons/trashbin_icon.svg" alt="removeIcon" class="icon">  </button>
+                            <button id="remove-button"    class="button1" onclick="deleteFileOnServer('experiments')">  <span>Remove</span>  <img src="UI/icons/trashbin_icon.svg" alt="removeIcon" class="icon">  </button>
                         </div>
                         
                     </div>
@@ -259,7 +259,7 @@ var currNumOfCharts = 0;
                 <div class="file-editor">
                     
                     <textarea id="experiments-codeditor" name="experiments-codeditor"></textarea>
-                    <button class="button1" onclick="saveFileOntoServer('experiments')">Save changes <img src="UI/icons/save_icon.svg" alt="saveChangesIcon" class="icon"></button>
+                    <button class="button1" onclick="saveFileOntoServer('experiments')"><span>Save changes</span> <img src="UI/icons/save_icon.svg" alt="saveChangesIcon" class="icon"></button>
                 </div>
             </div>
             <div id="configs-Panel" class="content-panel container hidden">
@@ -290,7 +290,7 @@ var currNumOfCharts = 0;
                         </ul>
                         <div class="file-details-buttons">
                             <button id="activate-button" class="button1"><span>Activate</span><img src="UI/icons/activate_icon.svg" alt="activateIcon" class="icon"></button>
-                            <button id="remove-button"   class="button1">  <span>Remove</span>  <img src="UI/icons/trashbin_icon.svg" alt="removeIcon" class="icon">  </button>
+                            <button id="remove-button"   class="button1" onclick="deleteFileOnServer('configs')">  <span>Remove</span>  <img src="UI/icons/trashbin_icon.svg" alt="removeIcon" class="icon">  </button>
                         </div>
                         
                     </div>
@@ -299,7 +299,7 @@ var currNumOfCharts = 0;
                     
                     <textarea id="configs-codeditor" name="configs-codeditor">
                     </textarea>
-                    <button class="button1" onclick="saveFileOntoServer('configs')">Save changes <img src="UI/icons/save_icon.svg" alt="saveChangesIcon" class="icon"></button>
+                    <button class="button1" onclick="saveFileOntoServer('configs')"><span>Save changes</span> <img src="UI/icons/save_icon.svg" alt="saveChangesIcon" class="icon"></button>
                 </div>
             </div>
         </div>
@@ -416,10 +416,33 @@ var currNumOfCharts = 0;
             
         }
 
+        async function deleteFileOnServer(type) {
+            var rootPanelElement = document.getElementById(type+"-Panel");
+            var fileName = rootPanelElement.getElementsByClassName("file-details-name")[0].innerHTML;
+            
+            try {
+                const response = await fetch("/delete-file", {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'text/plain',
+                            'file-name': fileName,
+                            'target-directory': type
+                        }
+                });
+
+                const result = await response.text();
+            } catch (error) {
+                console.error('Error while sending data:', error);
+            }
+            
+            reloadFileList(type);
+        }
 
         async function createNewFileOnServer(caller, type) {
             const rootPanelElement = document.getElementById(type+"-Panel");
             rootPanelElement.getElementsByClassName("file-details-name")[0].innerHTML = caller.parentElement.getElementsByClassName("add-button-fileName")[0].value;
+            caller.parentElement.getElementsByClassName("add-button-fileName")[0].value = "";
+            rootPanelElement.getElementsByClassName("add-button")[0].children[0].classList.remove("activated");
             await saveFileOntoServer(type);
             reloadFileList(type);
         }

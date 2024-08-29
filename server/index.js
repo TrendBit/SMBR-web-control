@@ -47,7 +47,42 @@ app.get('/file-list', (req, res) => {
     else{
         res.status(403).send("you don't have permisions to view to this directory");
     }
+})
 
+app.delete('/delete-file', (req,res) => {
+    const fileDir = req.headers['target-directory'];
+    const fileName = req.headers['file-name'];
+
+    if(fileName){
+        if(allowedDirectories.includes(fileDir)){
+            if(fs.readdirSync(fileDir).includes(fileName)){
+                try {
+                    fs.unlinkSync(path.join(fileDir, fileName));
+                } catch (error) {
+                    console.error("File delete error",error);
+                    res.status(500).send("internal error");
+                    return
+                }
+                res.status(200).send("file deleted successfully");
+                return
+            }            
+            else{
+                res.status(122).send("file does not exist");
+                return
+            }
+        }
+        else{
+            res.status(403).send("you don't have permisions to write to this directory");
+            return
+            //console.log("unsuccessfull (403)\n----------------");
+        }
+    }
+    else{
+        res.status(400).send("missing headers");
+        return
+        //console.log("unsuccessfull (400)\n----------------");
+    }
+    
 })
 
 app.post('/send-file', (req, res) => {
