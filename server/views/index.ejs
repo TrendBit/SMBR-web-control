@@ -21,7 +21,9 @@ function getIcon(name){
         case "lightbulb":
             return "./UI/icons/lightbulb_icon.svg"
         case "logo":
-            return "./UI/icons/logo_icon.svg"
+            return "./UI/logo/logo_icon.svg"
+        case "mini_logo":
+            return "./UI/logo/PB_minilogo.svg"
         case "menu":
             return "./UI/icons/menu_icon.svg"
         case "save":
@@ -39,7 +41,7 @@ function getIcon(name){
         case "subElement-last":
             return "./UI/UI-elements/subElement-last.svg"
         default:
-            return "./UI/LogoPlaceholder.png"
+            return "./UI/logo/LogoPlaceholder.svg"
     }
 }
 
@@ -86,7 +88,7 @@ var currNumOfCharts = 0;
 </head>
 <body>
     <header id="HOTBAR">
-        <button onclick="toggleClass_ByID('SIDEBAR', 'collapsed')"><img src="UI/icons/Menu-icon.svg"></button>
+        <button onclick="toggleClass_ByID('SIDEBAR', 'collapsed')"><img src="<%= getIcon("mini_logo") %>"></button>
         <h1>PhenoBottle</h1>
         <div>
             <p id="hotbar-clock">16:22</p>

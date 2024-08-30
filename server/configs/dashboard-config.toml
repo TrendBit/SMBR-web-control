@@ -28,7 +28,7 @@
 name="TimeOut test"
 icon="fhahekfa"
 port=80
-resource="/timeout-test"
+resource="/test-get"
 component="value"
 pull_period=5
 charted=true

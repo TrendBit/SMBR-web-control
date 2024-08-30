@@ -3,6 +3,7 @@ const app = express();
 const path = require('path');
 const cors = require('cors');
 const fs = require('node:fs');
+const favicon = require('serve-favicon');
 
 const PORT = 80;
 const indexUtilities = require('./indexUtilities.js');
@@ -14,6 +15,10 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use("/experiments" ,express.static(path.join(__dirname, 'experiments')));
 app.use("/configs" ,express.static(path.join(__dirname, 'configs')));
+
+//sets the favicon resource
+app.use(favicon(path.join(__dirname, 'public','UI','logo','favicon.png')));
+
 
 app.use(express.text());
 //starts the server on port PORT

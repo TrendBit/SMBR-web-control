@@ -37,6 +37,7 @@ a simple test for different way to interact with the APIs
 **express** for hosting the API
 **ejs** for creating dynamic sites
 **toml** for converting toml to json
+**serve-favicon** for serving the favicon icon
 
 ___
 # API
