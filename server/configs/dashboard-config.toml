@@ -25,10 +25,10 @@
 #   
 
 [[Temperature_widget.rows]]
-name="Bottle"
-icon="bottle"
-port=8080
-resource="/test-get"
+name="TimeOut test"
+icon="fhahekfa"
+port=80
+resource="/timeout-test"
 component="value"
 pull_period=5
 charted=true
@@ -36,7 +36,7 @@ charted=true
 [[Temperature_widget.rows]]
 name="Bottle"
 icon="bottle"
-port=8080
+port=80
 resource="/test-get"
 component="value"
 pull_period=5
@@ -48,7 +48,7 @@ charted=true
 
     [[Temperature_widget.rows.sub_rows]]
     name="Top"
-    port=8080
+    port=80
     resource="/test-get"
     component="value"
     pull_period=5
@@ -56,7 +56,7 @@ charted=true
 
     [[Temperature_widget.rows.sub_rows]]
     name="Bottom"
-    port=8080
+    port=80
     resource="/test-get"
     component="value"
     pull_period=5
@@ -65,7 +65,7 @@ charted=true
 [[Temperature_widget.rows]]
 name="LED array"
 icon="leds"
-port=8080
+port=80
 resource="/test-get"
 component="value"
 pull_period=5
@@ -87,7 +87,7 @@ pull_period=5
 
     [[Temperature_widget.rows.sub_rows]]
     name="Board2"
-    port=8080
+    port=80
     resource="/test-get"
     component="value"
     pull_period=5
@@ -95,14 +95,14 @@ pull_period=5
 
     [[Temperature_widget.rows.sub_rows]]
     name="Board3"
-    port=8080
+    port=80
     resource="/test-get"
     component="value"
     pull_period=5
 
     [[Temperature_widget.rows.sub_rows]]
     name="Board4"
-    port=8080
+    port=80
     resource="/test-get"
     component="value"
     pull_period=5
@@ -110,7 +110,7 @@ pull_period=5
 [[Temperature_widget.rows]]
 name="Ambient"
 icon="temperature_ambient"
-port=8080
+port=80
 resource="/test-get"
 component="value"
 pull_period=5

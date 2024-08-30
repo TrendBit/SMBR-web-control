@@ -1,12 +1,12 @@
 {
-  "name": "phenobottle",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "smbr-web-control",
+  "version": "0.6.0",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ."
   },
   "keywords": [],
-  "author": "",
+  "author": "TrendBit",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",

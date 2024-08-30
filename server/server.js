@@ -4,8 +4,7 @@ const path = require('path');
 const cors = require('cors');
 const fs = require('node:fs');
 
-const PORT = 8080;
-const apiTestUtilities = require('./apiTestUtilities.js');
+const PORT = 80;
 const indexUtilities = require('./indexUtilities.js');
 
 //fixes the "TypeError: NetworkError when attempting to fetch resource" error by allowing anyone to use the api: 
@@ -31,10 +30,6 @@ app.get('/', (req, res) => {
     res.render('index', indexUtilities.parseConfig())
 });
 
-//API endpoint for the api Test
-app.get('/test', (req, res) => {
-    res.render('apiTest', apiTestUtilities.parseConfig());
-});
 
 
 const allowedDirectories = ["experiments","configs"];
@@ -134,10 +129,8 @@ app.post('/send-file', (req, res) => {
 
 
 app.get('/test-get', (req, res) => {
-
     const count = getRandWholeNum(0,1000);
     res.status(200).send({value: ""+(count)});
-
 });
 
 app.post('/test-post',(req, res) => {
@@ -189,6 +182,12 @@ app.patch('/test-combined', (req, res) => {
     console.log("get-test");
     res.status(200).send("patch");
 });
+
+
+app.get('/timeout-test', (req, res) => {
+    console.log("recievew a timeout test request, the server will NOT send a response");
+})
+
 
 
 
