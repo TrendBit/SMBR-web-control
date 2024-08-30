@@ -1,5 +1,3 @@
-const { response } = require("express");
-
 setInterval(updateSite, 5000);
 
 updateSite();
@@ -13,7 +11,6 @@ async function updateSite(){
             const element = apiFetchers[i];
             //console.log(element);
             if (element.getAttribute("resource")!="") {
-
                 fetchDataAsJson(url+":"+element.getAttribute("port")+element.getAttribute("resource"))
                 .then(response => {
                     element.innerHTML = Math.round(response[element.getAttribute("component")]) + " " + element.getAttribute("unit")
@@ -50,7 +47,8 @@ async function fetchDataAsJson(url) {
                                 method: "GET",
                                 headers: {
                                     'Content-Type': 'text/plain', //it has to be plain text else it will send a complex request with an additional OPTIONS request
-                                }
+                                },
+                                signal: AbortSignal.timeout( 1000 )                           
                             }
                         );
     //console.log(response);
