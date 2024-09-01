@@ -4,9 +4,15 @@ const path = require('path');
 const cors = require('cors');
 const fs = require('node:fs');
 const favicon = require('serve-favicon');
+const yaml = require('js-yaml');
+const ajv = require('ajv'); //another json validator
+const toml = require('toml');
+
 
 const PORT = 80;
 const indexUtilities = require('./indexUtilities.js');
+const { default: def } = require('ajv/dist/vocabularies/applicator/additionalItems.js');
+const configFilesPath = path.join("..","..","SMBR-config-files");
 
 //fixes the "TypeError: NetworkError when attempting to fetch resource" error by allowing anyone to use the api: 
 app.use(cors()); 
@@ -35,7 +41,10 @@ app.get('/', (req, res) => {
     res.render('index', indexUtilities.parseConfig())
 });
 
-
+console.log(validateFile(
+    parseFileToJson(path.join(configFilesPath,"experiments", "default.yaml")), 
+    parseFileToJson(path.join(configFilesPath, "schemas", "experiments_schema.yaml")))
+);
 
 const allowedDirectories = ["experiments","configs"];
 
@@ -98,16 +107,32 @@ app.post('/send-file', (req, res) => {
     if(fileName){
         if(allowedDirectories.includes(fileDir)){
             var fileData = "";
-        
-            if(req.body != undefined){
-                fileData = req.body;
+            var validation = {result: 1};
+            try{
+                if(req.body != ""){
+                    fileData = req.body;
+                    validation = validateFile(
+                        yaml.load(fileData), 
+                        parseFileToJson(path.join(configFilesPath, "schemas", "experiments_schema.yaml"))
+                     )
+                }
+    
+                 
+                if(validation.result){
+                    fs.writeFileSync("./"+fileDir + "/" +fileName, fileData);
+                    res.status(200).send("file transfer successfull");
+                }else{
+                    res.status(400).send("invalid file, errors: \n" + JSON.stringify(validation.errors));
+                }
+            }
+            catch(err){
+                console.log("errerew: ",err);
             }
 
             
             //console.log("file data: =\n"+fileData+"\n=");
             //console.log("request body: =\n"+req.body+"\n=");
-            fs.writeFileSync("./"+fileDir + "/" +fileName, fileData);
-            res.status(200).send("file transfer successfull");
+            
             //console.log("successfull\n----------------");
         }
         else{
@@ -121,7 +146,6 @@ app.post('/send-file', (req, res) => {
     }
     
 })
-
 
 
 /*
@@ -216,3 +240,53 @@ function censor(censor) { //stolen from https://stackoverflow.com/questions/4816
       return value;  
     }
   }
+
+
+function parseFileToJson(filePath){
+    var fileData = "";
+    try {fileData = fs.readFileSync(filePath);} catch (error) {
+        console.error("error while trying to read the config file","("+filePath+")",error);
+        return {};
+    }
+    const fileType = filePath.split(".").pop();
+
+    var fileDataParsed = {};
+    switch(fileType){
+        case "yaml":
+            try {
+                fileDataParsed = yaml.load(fileData);
+            } catch (error) {
+                console.error("error while trying to parse a TOML config file","("+filePath+")",error);
+                return {};
+            }
+            break;
+        case "toml":
+            try {
+                fileDataParsed = toml.parse(fileData);
+            } catch (error) {
+                console.error("error while trying to parse a TOML config file","("+filePath+")",error);
+                return {};
+            }
+            break;
+        default:
+            console.error("invalid fileType in configs: ",fileType,"("+filePath+")");
+            return {};
+    }
+    return fileDataParsed;
+}
+/*
+returns
+{result: 0, errors: []} = file is invalid
+{result: 1} = file is valid
+*/
+function validateFile(fileDataParsed, jsonSchemaDataParsed){
+    const ajv_worker = new ajv();
+    const validate = ajv_worker.compile(jsonSchemaDataParsed);
+    if(validate(fileDataParsed)){
+        return {result: 1};
+    }
+    else{
+        console.log("the config file is invalid: ",validate.errors);
+        return {result: 0, errors: validate.errors};
+    }
+}

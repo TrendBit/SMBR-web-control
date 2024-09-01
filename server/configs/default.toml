@@ -1,0 +1,35 @@
+experiment:
+  cycle_length: 600
+  initialization_order:
+    - heater_on
+    - illumination_on
+    - pump
+  cycle_order:
+    - measure_fluorescence
+    - measure_transmittance
+    - mix
+    - air
+    - pump
+    - wait
+
+stirrer:
+  speed: 0.1
+  length: 20
+
+aerator:
+  intensity: 0.1
+  length: 10
+
+heater:
+  temperature: 22
+
+pump:
+  intensity: 0.1
+  volume: 10
+
+illumination:
+  variant: "Basic RGBW"
+  channel_0: 0.2
+  channel_1: 0.3
+  channel_2: 0.0
+  channel_3: 0.0

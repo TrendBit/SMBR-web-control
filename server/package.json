@@ -9,9 +9,11 @@
   "author": "TrendBit",
   "license": "GPL_v3",
   "dependencies": {
+    "ajv": "^8.17.1",
     "cors": "^2.8.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
+    "js-yaml": "^4.1.0",
     "serve-favicon": "^2.5.0",
     "toml": "^3.0.0"
   },
