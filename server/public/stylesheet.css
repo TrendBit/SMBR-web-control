@@ -122,6 +122,24 @@ body {
   width: 100%;
 }
 
+.headerButton{
+  border: none;
+  background: none;
+  height: 100%;
+  
+  padding: 0;
+  
+  border: transparent 1px solid;
+  padding: 3px;
+  aspect-ratio: 1/1;
+  border-radius: 3px;
+  background-color: var(--bg-color-3);
+  
+  img{
+    height: 100%;
+  }
+}
+
 /*local rules*/
 
 #HOTBAR {
@@ -776,20 +794,138 @@ body {
       overflow: scroll;
       
       display: flex;
+      flex-direction: column;
       position: relative;
       
       background-color: var(--bg-color-3);
       
-      
-      ul{
-        list-style: none;
-        padding: 5px;
-        color: var(--text-color-light);
-        margin: 0;
-        width: min-content;
+      .fe-header{
+        min-height: 30px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 3px;
+        align-items: center;
+        position: relative;
+        z-index: 50;
+        
+        background-color: var(--bg-color-4);
+        
+        border-bottom: var(--bg-color-5) 3px solid;
+        
+        transition: border-color 0.5s ease-in-out;
+        
+        > *{
+          width: max-content;
+          height: 100%;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+        }
+        
+        
+        .fe-fileName{
+          font-size: 200%;
+          white-space: nowrap;
+          text-align: left;
+        }
+        .fe-fileExtension{
+          height: min-content;
+          margin-right: auto;
+          margin-top: 2px;
+          padding: 2px; 
+        }
+        .fe-fileExtension.yaml{
+          color: darkgoldenrod;
+        }
+        .fe-fileExtension.toml{
+          color: var(--acc-color-4);
+        }
+        
+        .fe-popup{
+          position: absolute;
+          right: 0px;
+          top: calc(100%);
+          border: var(--bg-color-5) 3px solid;
+          background: rgba(var(--bg-color-4-rgb),0.5);
+          
+          padding: 10px;
+          
+          min-width: 200px;
+          
+          width: fit-content;
+          height: fit-content;
+
+          transition: all 0.5s ease-in-out;
+
+          > *{
+            display: block;
+            width: 100%;
+          }
+
+        }
+        height: 37px;
+        padding: 3px;
       }
+      
+      .fe-header.ok{
+        border-bottom-color: var(--acc-color-2);
+        .fe-popup{
+          height: 0px;
+          overflow: hidden;
+          padding: 0px;
+          bottom: 0px;
+          opacity: 0;
+          border-color: var(--acc-color-2);
+          background-color: rgba(var(--acc-color-2-rgb),0.5);
+        }
+      }
+      .fe-header.warning{
+        border-bottom-color: rgb(228, 194, 44);
+        .fe-popup{
+          border-color: rgb(228, 194, 44);
+          background-color: rgba(228, 194, 44,0.5);
+        }
+      }
+      .fe-header.error{
+         border-bottom-color: rgb(173, 39, 15);
+        .fe-popup{
+          border-color: rgb(173, 39, 15);
+          background-color: rgba(173, 39, 15, 0.5);
+        }
+      }
+      
+      /*syntax highlight rules*/
       .CodeMirror * {
         font-family: "Fira Code", monospace;
+        .cm-atom{
+          color: var(--acc-color-4);
+        }
+        .cm-meta{
+          color: aliceblue
+        }
+        .cm-number{
+          color: yellow
+        }
+        .cm-string{
+          color: beige
+        }
+        .cm-s-default{
+          color: blueviolet;
+        }
+        .cm-comment{
+          color: gray;
+        }
+        .cm-variable-2{
+          color: darkgoldenrod;
+        }
+        .cm-keyword{
+          color: darkorange;
+        }
+        .cm-def{
+          color: orange;
+        }
       }
 
       .CodeMirror{
@@ -813,37 +949,7 @@ body {
           border-left: 1px solid #fff;
         }
       }
-      /*
-      textarea{
-        height: 100%;
-        width: 100%;
-        background: none;
-        border: none;
-        border-left:  var(--bg-color-4) 1px solid;
-        padding: 4px;
-        padding-left: 2; 
-        margin: 0;
-        
-        color: var(--text-color-light);
-      }*/
       
-      button{
-        position: absolute;
-        
-        right: 10px;
-        top: 10px;
-        
-        color: var(--text-color-light);
-        display: flex;
-        justify-content: center;
-        align-content: center;
-
-        span{
-          margin: auto auto auto 0;
-          white-space: nowrap;
-        }
-        width: 120px;
-      }
     }
     height: calc(100vh - 50px);
     overflow: hidden;

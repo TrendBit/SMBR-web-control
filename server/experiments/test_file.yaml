@@ -1,0 +1,91 @@
+# YAML soubor ukazující různé funkce a možnosti YAML
+
+# 1. Základní klíč-hodnota páry
+název: "Ukázkový YAML"
+verze: 1.0
+aktivní: true
+
+# 2. Seznamy (List)
+seznam_jmen:
+  - Alice
+  - Bob
+  - Carol
+
+# 3. Mapy (Mapping)
+osoby:
+  Alice:
+    věk: 30
+    město: "Praha"
+  Bob:
+    věk: 25
+    město: "Brno"
+  Carol:
+    věk: 27
+    město: "Ostrava"
+
+# 4. Vnořené struktury
+nastavení:
+  vzhled:
+    téma: "tmavé"
+    písmo:
+      rodina: "Arial"
+      velikost: 12
+  jazyk: "cs"
+
+# 5. Vícenásobné dokumenty (--- a ...)
+---
+# Toto je druhý dokument v jednom YAML souboru
+název: "Druhý dokument"
+data:
+  - název: "Položka 1"
+    hodnota: 100
+  - název: "Položka 2"
+    hodnota: 200
+...
+
+# 6. Víceřádkové řetězce (block scalars)
+popis: |
+  Toto je delší popis,
+  který může mít více řádků.
+  Přidáváme zde další řádky.
+zkrácený_popis: >
+  Toto je kratší popis,
+  který má všechny řádky spojené do jednoho.
+
+# 7. Kotvení a aliasy (&, *)
+výchozí_nastavení: &default_settings
+  jazyk: "cs"
+  region: "CZ"
+
+uživatel1:
+  <<: *default_settings
+  uživatelské_jméno: "uživatel1"
+  přístupová_úroveň: "admin"
+
+uživatel2:
+  <<: *default_settings
+  uživatelské_jméno: "uživatel2"
+  přístupová_úroveň: "uživatel"
+
+# 8. Typy dat (str, int, bool, float, null)
+typy_dat:
+  řetězec: "text"
+  celé_číslo: 42
+  desetinné_číslo: 3.14
+  boolean: true
+  neznámá_hodnota: null
+
+# 9. Seznam objektů (List of objects)
+produkty:
+  - název: "Produkt A"
+    cena: 100.0
+    skladem: true
+  - název: "Produkt B"
+    cena: 150.0
+    skladem: false
+
+# 10. Explicitní typy (tagy)
+explicitní_typy:
+  celé_číslo: !!int "123" # Zadejte explicitně, že je to celé číslo
+  plovoucí_čárka: !!float "3.14159" # Explicitně uvedeno jako float
+  boolean: !!bool "false" # Explicitně uvedeno jako boolean

@@ -1,0 +1,112 @@
+<div id="Temperature-Widget" class="widget ">
+    <h1>Temperature</h1>
+    <table class="table-widget-segment">
+        <thead>
+            <tr>
+                <th>color</th>
+                <th>name</th>
+                <th>current</th>
+                <th>target</th>
+            </tr>
+        </thead>
+        <tbody id="Temperature-Widget-Table">
+
+            <% Temperature_widget.rows.forEach(element => { %>
+                <tr class="table-master">
+                    <td class="table-color">
+                        <img src="<%= getIcon(element.icon) %>" alt="<%= element.icon %>">
+                    </td>
+
+                    <td class="table-name">
+                        <%= element.name %>
+                        <% if(element.sub_rows) { %> 
+                            <span class="collapse button1">v</span> 
+                        <% } %>
+                    </td>
+
+                    <td class="table-current api-fetcher"
+                        port="<% if(element.port){%><%=element.port%><%}else{%><%="8089"%><%} %>" 
+                        unit="<% if(element.unit){%><%=element.unit%><%}else{%><%="°C"%><%} %>" 
+                        resource="<%= element.resource %>" 
+                        component="<%= element.component %>"
+                        pull_period="<%= element.pull_period %>"
+                    >
+                    </td>
+                    
+                    <td class="table-target">
+                        <% if(element.input) {%> 
+                            <input type='number' class="button1" min="<%= element.input.min %>" max="<%= element.input.max %>" placeholder="nan"> 
+                            <input type="button" class="button1" value=">">
+                        <% } %>
+                    </td>
+                </tr>
+
+                <% if(element.sub_rows){numOfSubRows=element.sub_rows.length; for( let u = 0; u < numOfSubRows; u++ ) { let sub_element = element.sub_rows[u];%>
+                    <tr class="table-sub">
+                        <td class="table-color">
+                            <img src="<% if((u+1)<numOfSubRows){%><%=getIcon("subElement")%><%}else{%><%=getIcon("subElement-last")%><%} %>" alt="sub_element">
+                        </td>
+
+                        <td class="table-name">
+                            <%= sub_element.name %>
+                        </td>
+
+                        <td class="table-current api-fetcher"
+                            port="<% if(sub_element.port){%><%=sub_element.port%><%}else{%><%="8089"%><%} %>" 
+                            unit="<% if(sub_element.unit){%><%=sub_element.unit%><%}else{%><%="°C"%><%} %>" 
+                            resource="<%= sub_element.resource %>" 
+                            component="<%= sub_element.component %>"
+                            pull_period="<%= sub_element.pull_period %>"
+                        >
+                        </td>
+                        
+                        <td class="table-target">
+                            <% if(sub_element.input) {%> 
+                                <input type='number' class="button1" min="<%= sub_element.input.min %>" max="<%= sub_element.input.max %>"> 
+                                <input type="button" class="button1" value=">">
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }} %>
+
+            <% }); %>
+        </tbody>
+    </table>
+    <div class="apiChart">
+        <div style="display: none;">
+        </div>
+        <canvas id="Temperature-Widget-Chart"></canvas>
+    </div>
+     <!--
+    <script>
+        chartUpdaterArray.add(() =>{ //updater
+            
+        })  
+        const chart = document.getElementById("Temperature-Widget-Chart")
+        const possibleApiFetchers = document.getElementById("Temperature-Widget-Table").getElementsByClassName("api-fetcher");
+        const apiFetchers = [];
+        for(let i = 0; i< possibleApiFetchers.length; i++){
+            if(possibleApiFetchers[i].getAttribute("charted")){
+                apiFetchers.add(possibleApiFetchers[i]);
+            }
+        }
+        document.getElementById("Temperature-Widget-Table").getElementsByClassName("api-fetcher")
+        chartArray.add( new Chart(
+            chart,
+            {
+                type: 'line',
+                data: {
+                    labels: getCountdownArray(chart.getAttribute("history")),
+                    datasets: getEmptyDatasets(apiFetchers.length),
+                },
+                options: {
+                    responsive: true,
+                    animations: false,
+                    
+                }
+            }
+        ) )                   
+
+    </script>
+    -->
+</div>

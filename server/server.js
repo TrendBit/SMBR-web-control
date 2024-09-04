@@ -34,6 +34,50 @@ app.listen(PORT);
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
+app.locals.getIcon = function(name) {
+    switch(name){
+        case "activate":
+            return "./UI/icons/activate_icon.svg"
+        case "board":
+            return "./UI/icons/boards_icon.svg"
+        case "bottle":
+            return "./UI/icons/bottle_icon.svg"
+        case "config":
+            return "./UI/icons/config_icon.svg"
+        case "controls":
+            return "./UI/icons/controls_icon.svg"
+        case "dashboard":
+            return "./UI/icons/dashboard_icon.svg"
+        case "experiments":
+            return "./UI/icons/experiments_icon.svg"
+        case "leds":
+            return "./UI/icons/led_icon.svg"
+        case "lightbulb":
+            return "./UI/icons/lightbulb_icon.svg"
+        case "logo":
+            return "./UI/logo/logo_icon.svg"
+        case "mini_logo":
+            return "./UI/logo/PB_minilogo.svg"
+        case "menu":
+            return "./UI/icons/menu_icon.svg"
+        case "save":
+            return "./UI/icons/save_icon.svg"
+        case "search":
+            return "./UI/icons/search_icon.svg"
+        case "temperature_ambient":
+            return "./UI/icons/temperature_ambient_icon.svg"
+        case "temperature":
+            return "./UI/icons/temperature_icon.svg"
+        case "trashbin":
+            return "./UI/icons/trashbin_icon.svg"
+        case "subElement":
+            return "./UI/UI-elements/subElement.svg"
+        case "subElement-last":
+            return "./UI/UI-elements/subElement-last.svg"
+        default:
+            return "./UI/logo/LogoPlaceholder.svg"
+    }
+}
 
 //API endpoint for the index file
 app.get('/', (req, res) => {
@@ -42,7 +86,7 @@ app.get('/', (req, res) => {
 });
 
 console.log(validateFile(
-    parseFileToJson(path.join(configFilesPath,"experiments", "default.yaml")), 
+    parseFileToJson(path.join("configs", "default.yaml")), 
     parseFileToJson(path.join(configFilesPath, "schemas", "experiments_schema.yaml")))
 );
 
@@ -280,8 +324,9 @@ returns
 {result: 1} = file is valid
 */
 function validateFile(fileDataParsed, jsonSchemaDataParsed){
-    const ajv_worker = new ajv();
+    const ajv_worker = new ajv({allErrors: true});
     const validate = ajv_worker.compile(jsonSchemaDataParsed);
+    console.log(validate(fileDataParsed));
     if(validate(fileDataParsed)){
         return {result: 1};
     }
