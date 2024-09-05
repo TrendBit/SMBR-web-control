@@ -146,47 +146,48 @@ app.post('/send-file', (req, res) => {
     const textEncoder = new TextEncoder();
     if(textEncoder.encode(req.body).length > maxBodySize){
         res.status(413).send("body too large (max size: "+maxBodySize+" bytes)");
+        return
     }
     //console.log("send-file api activated\n----------------\nfileDir: "+fileDir+"\nfileName: "+fileName);
     if(fileName){
         if(allowedDirectories.includes(fileDir)){
             var fileData = "";
-            var validation = {result: 1};
-            try{
-                if(req.body != ""){
-                    fileData = req.body;
-                    validation = validateFile(
-                        yaml.load(fileData), 
-                        parseFileToJson(path.join(configFilesPath, "schemas", "experiments_schema.yaml"))
-                     )
-                }
-    
-                 
-                if(validation.result){
-                    fs.writeFileSync("./"+fileDir + "/" +fileName, fileData);
-                    res.status(200).send("file transfer successfull");
-                }else{
-                    res.status(400).send("invalid file, errors: \n" + JSON.stringify(validation.errors));
-                }
-            }
-            catch(err){
-                console.log("errerew: ",err);
+            if(req.body != undefined){
+                fileData = req.body;
             }
 
-            
-            //console.log("file data: =\n"+fileData+"\n=");
-            //console.log("request body: =\n"+req.body+"\n=");
-            
-            //console.log("successfull\n----------------");
+
+            var validation = {result: 1};
+            var inputParsed = "";
+            try{
+                inputParsed = yaml.load(fileData);
+            }
+            catch{
+                res.status(422).send("[{\"criticalError\": \"file is not parsable to yaml\"}]");
+                return
+            }
+
+            validation = validateFile(
+                inputParsed, 
+                parseFileToJson(path.join(configFilesPath, "schemas", "experiments_schema.yaml"))
+            )
+            if(validation.result){
+                fs.writeFileSync("./"+fileDir + "/" +fileName, fileData);
+                res.status(200).send("file transfer successfull");
+                return
+            }else{
+                res.status(422).send(JSON.stringify(validation.errors));
+                return
+            }            
         }
         else{
             res.status(403).send("you don't have permisions to write to this directory");
-            //console.log("unsuccessfull (403)\n----------------");
+            return
         }
     }
     else{
         res.status(400).send("missing headers");
-        //console.log("unsuccessfull (400)\n----------------");
+        return
     }
     
 })
@@ -318,6 +319,9 @@ function parseFileToJson(filePath){
     }
     return fileDataParsed;
 }
+
+
+
 /*
 returns
 {result: 0, errors: []} = file is invalid

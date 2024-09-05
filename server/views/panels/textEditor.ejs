@@ -35,14 +35,14 @@
     <div class="fe-header">
         <div class="fe-left-buttons">
             <% if(type=="experiments"){ %>
-                <button class="headerButton"><img src="<%= getIcon("trashbin") %>" alt="delete" title="delete"></button>
-                <button class="headerButton"><img src="<%= getIcon("rename") %>" alt="rename" title="rename"></button>
+                <button class="headerButton" onclick="deleteFileOnServer('<%= type %>')"><img src="<%= getIcon("trashbin") %>" alt="delete" title="delete"></button>
+                <button class="headerButton" onclick="renameFileOnServer('<%= type %>')"><img src="<%= getIcon("rename") %>" alt="rename" title="rename"></button>
             <% }%>
         </div>
         <h2 class="fe-fileName">Select file</h2>
         <h3 class="fe-fileExtension"></h3>
         <div class="fe-right-buttons">
-            <button class="headerButton"> <img src="<%= getIcon("upload") %>" alt="upload" title="upload"></button>
+            <button class="headerButton" onclick="saveFileOntoServer('<%= type %>')"> <img src="<%= getIcon("upload") %>" alt="upload" title="upload"></button>
         </div>
         <div class="fe-popup"></div>
     </div>  

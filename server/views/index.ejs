@@ -95,11 +95,25 @@ var currNumOfCharts = 0;
         var editors = [];
         editors["experiments"] = CodeMirror.fromTextArea(document.getElementById('experiments-codeditor'), {
                 lineNumbers: true,
-                mode: 'text/x-yaml'
+                mode: 'text/x-yaml',
+                indentUnit: 2,
+                extraKeys: {
+                    "Tab": function(cm) {
+                        var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+                        cm.replaceSelection(spaces);
+                    }
+                }
             });
         editors["configs"] = CodeMirror.fromTextArea(document.getElementById('configs-codeditor'), {
                 lineNumbers: true,
-                mode: 'text/x-yaml'
+                mode: 'text/x-yaml',
+                indentUnit: 2,
+                extraKeys: {
+                    "Tab": function(cm) {
+                        var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+                        cm.replaceSelection(spaces);
+                    }
+                }
             });
         editors.forEach(element => {
             element.refresh();
@@ -142,8 +156,12 @@ var currNumOfCharts = 0;
                     headers: {
                         'Content-Type': 'text/plain',
                         'target-directory': type
-                    }
+                    },
+                    signal: AbortSignal.timeout( 1000 )    
                 })
+                if(response.status!= 200){
+                    throw new Error("fetch error (response code): "+response.status);
+                }
                 list = JSON.parse(await response.text());
 
             } catch (error) {
@@ -158,80 +176,189 @@ var currNumOfCharts = 0;
             
         }
 
+        function getCurrentFile(type){
+            var rootPanelElement = document.getElementById(type+"-Panel");
+            const fileExtension = rootPanelElement.getElementsByClassName("fe-fileExtension")[0].innerHTML;
+            const fileName = rootPanelElement.getElementsByClassName("fe-fileName")[0].innerHTML;
+            const fileNameFull = (fileExtension)?(fileName + "." + fileExtension):(fileName);
+
+            return {
+                fileName: fileName,
+                fileExtension: fileExtension,
+                fileNameFull: fileNameFull,
+                directory: type,
+                data: editors[type].getValue()           
+            }
+        }
+
+        function clearEditor(type) {
+            var rootPanelElement = document.getElementById(type+"-Panel");
+            rootPanelElement.getElementsByClassName("fe-fileExtension")[0].innerHTML = "";
+            rootPanelElement.getElementsByClassName("fe-fileExtension")[0].classList = "fe-fileExtension "
+            rootPanelElement.getElementsByClassName("fe-fileName")[0].innerHTML = "";
+            reloadFileList();
+            editors[type].setValue("");
+        }
+
+        /*
+        element = the element in the list that called the function
+        */
         async function loadFileIntoEditor(element, fileName, type){
-            editors[type].setValue("error occured");
-            //document.getElementById(editorID).innerHTML = await fetchData(filePath);
+            var rootPanelElement = document.getElementById(type+"-Panel");
+
+            
+
+            //deselects every other file in fileList and enables the current one
             for (let i = 0; i < element.parentNode.children.length; i++) {
                 element.parentNode.children[i].classList.remove("active");
             }
             element.classList.add("active");
 
 
-            var rootPanelElement = document.getElementById(type+"-Panel");
-            var errorOccured = false;
+            var popupLevel = 0; 
+            var statusCache = 0;
 
-            fetchData(type + "/" + fileName)
+            //gets the selected file data
+            fetchData(type + "/" + fileName) 
             .then(response => {
-                //convert the response body to a simple string
-                if(response.status != 200) {
-                    errorOccured = true;
-                }
+                
+                statusCache = response.status;
+                //converts the response body to a simple string
                 return response.text();
                   
             })
             .then(data => {
                 // `data` is now a string containing the response body
-                if(errorOccured){
-                    setEditorHeaderPopup(type, "error", "<h2>an error occured while loading the file:<h2><p>"+data+"</p>");
+                if(statusCache!=200){
+                    switch(statusCache){
+                        case 404:
+                            throw new Error("the file does not exist anymore");
+                            break; 
+                        case 500:
+                            throw new Error("internal server error");
+                            break; 
+
+                        default:
+                            throw new Error("unknown error "+statusCache+"<br>"+ data);
+                            break; 
+                    }
+                    
                 }
                 else{
                     editors[type].setValue(data);
-                }
-                
+                }                
             })
             .catch(error => {
                 console.error('error while loading a file into editor:', error);
-                setEditorHeaderPopup(type, "error", "<h2>an error occured while loading the file:<h2><p>"+error+"</p>");
+                setEditorHeaderPopup(type, "error","error while loading the file:" +  error);
+                popupLevel=2;
+                editors[type].setValue("error occured"); 
             });
 
             //split the file name by point, than pop the last part as file extension and reasamble the rest into the file name
             const splitFileName = fileName.split(".");
-            if(splitFileName.length==1){
-                setEditorHeaderPopup(type, "warning", "<h2>warning, this file does not have a file extension<h2>");
-                console.log("ahoj");
-                errorOccured = true;
+            var fileExtension = "";
+            if(splitFileName.length==1 && popupLevel<2){
+                setEditorHeaderPopup(type, "warning", "warning, this file does not have a file extension");
+                popupLevel=1;
             }
-            const fileExtension = splitFileName.pop();      
-            fileName = splitFileName.join(".");                       
+            else{
+                fileExtension = splitFileName.pop(); 
+            }
+            fileName = splitFileName.join(".");     
+
+            //sets the name, file extension and file extension class
             rootPanelElement.getElementsByClassName("fe-fileExtension")[0].innerHTML = fileExtension;
             rootPanelElement.getElementsByClassName("fe-fileExtension")[0].classList = "fe-fileExtension " + fileExtension
             rootPanelElement.getElementsByClassName("fe-fileName")[0].innerHTML = fileName;
-            if(!errorOccured){
-                setEditorHeaderPopup(type, "ok", "");   
+            if(popupLevel<1){
+                setEditorHeaderPopup(type, "ok", "");     
             }
-            
+                   
         }
 
         async function deleteFileOnServer(type) {
-            var rootPanelElement = document.getElementById(type+"-Panel");
-            var fileName = rootPanelElement.getElementsByClassName("file-details-name")[0].innerHTML;
-            
-            try {
-                const response = await fetch("/delete-file", {
-                        method: 'DELETE',
+            const currFile = getCurrentFile(type);
+            var statusCache = 0;
+            fetch("/delete-file", {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'text/plain',
+                    'file-name': currFile.fileNameFull,
+                    'target-directory': type
+                },
+                signal: AbortSignal.timeout( 1000 )    
+            }).then( response => {
+                statusCache = response.status;
+                return response.text();
+            }).then(data => {
+                switch(statusCache){
+                    case 200:
+                        setEditorHeaderPopup(type, "info", "file deleted successfully"); 
+                        clearEditor(type);    
+                        reloadFileList(type);
+                        break;
+                    case 500:
+                        throw new Error("internal server error");
+                        break; 
+                    default:
+                        throw new Error("unknown error "+statusCache+"<br>"+ data);
+                        break; 
+                }
+            }).catch(error => {
+                console.error('error while deleting the file:', error);
+                setEditorHeaderPopup(type, "error", "error while deleting the file:<br>" + error);
+            })            
+        }
+
+        async function saveFileOntoServer(type) {
+            const currFile = getCurrentFile(type);
+            var statusCache = 0;
+
+            fetch("/send-file", {
+                        method: 'POST',
                         headers: {
                             'Content-Type': 'text/plain',
-                            'file-name': fileName,
+                            'file-name': currFile.fileNameFull,
                             'target-directory': type
+                        },
+                        body: currFile.data,
+                        signal: AbortSignal.timeout( 1000 )    
+            }).then( response => {
+                statusCache = response.status;
+                return response.text();
+            }).then(data => {
+                switch(statusCache){
+                    case 200:
+                        setEditorHeaderPopup(type, "info", "file saved successfully"); 
+                        break;
+                    case 422:
+                        var errorListObject = JSON.parse(data);
+                        console.log(errorListObject);
+                        if(errorListObject[0].criticalError){
+                            throw new Error(errorListObject[0].criticalError);
                         }
-                });
+                        var parsedResult = "<table class=\"errorTable\"><thead><tr><th>path</th><th>error</th><th>details</th></tr></thead><tbody>";
+                        errorListObject.forEach(element => {
+                            if(element.instancePath == ""){
+                                element.instancePath = "/";
+                            }
+                            parsedResult+="<tr><td><span class='comment'>"+element.instancePath+"</span></td><td>"+element.keyword+"</td><td>"+JSON.stringify(element.params)+"</td></tr>";
+                        })
+                        parsedResult+="</tbody></table>";
 
-                const result = await response.text();
-            } catch (error) {
-                console.error('Error while sending data:', error);
-            }
-            
-            reloadFileList(type);
+                        throw new Error("this file is not valid: <br>" + parsedResult);
+                    case 500:
+                        throw new Error("internal server error");
+                        break; 
+                    default:
+                        throw new Error("unknown error "+statusCache+"<br>"+ data);
+                        break; 
+                }
+            }).catch(error => {
+                console.error('error while saving the file:', error);
+                setEditorHeaderPopup(type, "error", "error while saving the file:<br>" + error);
+            })               
         }
 
         async function createNewFileOnServer(caller, type) {
@@ -249,7 +376,8 @@ var currNumOfCharts = 0;
                             'Content-Type': 'text/plain',
                             'file-name': fileName,
                             'target-directory': type
-                        }
+                        },
+                        signal: AbortSignal.timeout( 1000 )    
                 });
 
                 const result = await response.text();
@@ -260,27 +388,7 @@ var currNumOfCharts = 0;
             reloadFileList(type);
         }
 
-        async function saveFileOntoServer(type) {
-            var rootPanelElement = document.getElementById(type+"-Panel");
-            var fileName = rootPanelElement.getElementsByClassName("file-details-name")[0].innerHTML;
-            console.log("editor content: ",editors[type].getValue());
-            try {
-                const response = await fetch("/send-file", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'text/plain',
-                            'file-name': fileName,
-                            'target-directory': type
-                        },
-                        body: editors[type].getValue()
-                });
-
-                const result = await response.text();
-            } catch (error) {
-                console.error('Error while sending data:', error);
-            }
-            
-        }
+        
         
         //clock updater
         setInterval(() => {

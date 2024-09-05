@@ -11,6 +11,7 @@ experiment:
     - air
     - pump
     - wait
+ 
 
 stirrer:
   speed: 0.1
@@ -33,3 +34,4 @@ illumination:
   channel_1: 0.3
   channel_2: 0.0
   channel_3: 0.0
+  
