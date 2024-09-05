@@ -140,6 +140,11 @@ body {
   }
 }
 
+.headerButton:hover{
+  background-color: var(--bg-color-2);
+  cursor: pointer;
+}
+
 /*local rules*/
 
 #HOTBAR {

@@ -62,6 +62,8 @@ app.locals.getIcon = function(name) {
             return "./UI/icons/menu_icon.svg"
         case "save":
             return "./UI/icons/save_icon.svg"
+        case "upload":
+            return "./UI/icons/upload_icon.svg"
         case "search":
             return "./UI/icons/search_icon.svg"
         case "temperature_ambient":
@@ -85,10 +87,6 @@ app.get('/', (req, res) => {
     res.render('index', indexUtilities.parseConfig())
 });
 
-console.log(validateFile(
-    parseFileToJson(path.join("configs", "default.yaml")), 
-    parseFileToJson(path.join(configFilesPath, "schemas", "experiments_schema.yaml")))
-);
 
 const allowedDirectories = ["experiments","configs"];
 
@@ -330,12 +328,10 @@ returns
 function validateFile(fileDataParsed, jsonSchemaDataParsed){
     const ajv_worker = new ajv({allErrors: true});
     const validate = ajv_worker.compile(jsonSchemaDataParsed);
-    console.log(validate(fileDataParsed));
     if(validate(fileDataParsed)){
         return {result: 1};
     }
     else{
-        console.log("the config file is invalid: ",validate.errors);
         return {result: 0, errors: validate.errors};
     }
 }
