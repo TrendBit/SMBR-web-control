@@ -164,19 +164,61 @@ app.post('/send-file', (req, res) => {
                 res.status(422).send("[{\"criticalError\": \"file is not parsable to yaml\"}]");
                 return
             }
-
-            validation = validateFile(
-                inputParsed, 
-                parseFileToJson(path.join(configFilesPath, "schemas", "experiments_schema.yaml"))
-            )
-            if(validation.result){
+            var validationTarget = "";
+            if(fileDir == "experiments"){
+                validationTarget = "experiments_schema.yaml";
+            }
+            else{
+                const fileNameSplit= fileName.split(".");
+                const fileExtension =  fileNameSplit.pop();
+                validationTarget = fileNameSplit.join(".") + "_schema." + fileExtension; "test.yaml > test_schema.yaml";
+            }
+            
+            if(fs.existsSync(path.join(configFilesPath, "schemas", validationTarget))){
+                
+                validation = validateFile(
+                    inputParsed, 
+                    parseFileToJson(path.join(configFilesPath, "schemas", validationTarget))
+                )
+                if(validation.result){
+                    fs.writeFileSync("./"+fileDir + "/" +fileName, fileData);
+                    res.status(200).send("file transfer successfull");
+                    return
+                }else{
+                    res.status(422).send(JSON.stringify(validation.errors));
+                    return
+                }        
+            }
+            else{
+                console.log("no validation file for ", validationTarget);
                 fs.writeFileSync("./"+fileDir + "/" +fileName, fileData);
                 res.status(200).send("file transfer successfull");
                 return
-            }else{
-                res.status(422).send(JSON.stringify(validation.errors));
-                return
-            }            
+            }
+
+                
+        }
+        else{
+            res.status(403).send("you don't have permisions to write to this directory");
+            return
+        }
+    }
+    else{
+        res.status(400).send("missing headers");
+        return
+    }
+    
+})
+app.post('/create-file', (req, res) => {
+    const fileDir = req.headers['target-directory'];
+    const fileName = req.headers['file-name'];
+    const maxBodySize = 50000;
+
+    //console.log("send-file api activated\n----------------\nfileDir: "+fileDir+"\nfileName: "+fileName);
+    if(fileName){
+        if(allowedDirectories.includes(fileDir)){
+            fs.writeFileSync("./"+fileDir + "/" +fileName, "");
+            res.status(200).send("file transfer successfull");               
         }
         else{
             res.status(403).send("you don't have permisions to write to this directory");

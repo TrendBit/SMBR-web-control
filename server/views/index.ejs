@@ -343,7 +343,7 @@ var currNumOfCharts = 0;
                             if(element.instancePath == ""){
                                 element.instancePath = "/";
                             }
-                            parsedResult+="<tr><td><span class='comment'>"+element.instancePath+"</span></td><td>"+element.keyword+"</td><td>"+JSON.stringify(element.params)+"</td></tr>";
+                            parsedResult+="<tr><td><span class='comment'>"+element.instancePath+"</span></td><td>"+element.message+"</td><td>"+JSON.stringify(element.params)+"</td></tr>";
                         })
                         parsedResult+="</tbody></table>";
 
@@ -370,7 +370,7 @@ var currNumOfCharts = 0;
             rootPanelElement.getElementsByClassName("add-button")[0].children[0].classList.remove("activated");
 
             try {
-                const response = await fetch("/send-file", {
+                const response = await fetch("/create-file", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'text/plain',
