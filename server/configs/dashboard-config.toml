@@ -1,4 +1,4 @@
-#TEMPERATUREWIDGET
+#DashboardPanel.TemperatureWidget
 #rows[]
 #   name
 #   icon
@@ -24,7 +24,13 @@
 #graph
 #   
 
-[[Temperature_widget.rows]]
+
+[DashboardPanel.TemperatureWidget]
+name="nice"
+
+
+
+[[DashboardPanel.TemperatureWidget.rows]]
 name="TimeOut test"
 icon="fhahekfa"
 port=80
@@ -33,7 +39,7 @@ component="value"
 pull_period=5
 charted=true
 
-[[Temperature_widget.rows]]
+[[DashboardPanel.TemperatureWidget.rows]]
 name="Bottle"
 icon="bottle"
 port=80
@@ -42,11 +48,11 @@ component="value"
 pull_period=5
 charted=true
 
-    [Temperature_widget.rows.input]
+    [DashboardPanel.TemperatureWidget.rows.input]
     min=0
     max=15
 
-    [[Temperature_widget.rows.sub_rows]]
+    [[DashboardPanel.TemperatureWidget.rows.sub_rows]]
     name="Top"
     port=80
     resource="/test-get"
@@ -54,7 +60,7 @@ charted=true
     pull_period=5
     charted=true
 
-    [[Temperature_widget.rows.sub_rows]]
+    [[DashboardPanel.TemperatureWidget.rows.sub_rows]]
     name="Bottom"
     port=80
     resource="/test-get"
@@ -62,7 +68,7 @@ charted=true
     pull_period=5
     charted=true
 
-[[Temperature_widget.rows]]
+[[DashboardPanel.TemperatureWidget.rows]]
 name="LED array"
 icon="leds"
 port=80
@@ -71,13 +77,13 @@ component="value"
 pull_period=5
 charted=true
 
-[[Temperature_widget.rows]]
+[[DashboardPanel.TemperatureWidget.rows]]
 name="Boards"
 icon="board"
 component="value"
 pull_period=5
     
-    [[Temperature_widget.rows.sub_rows]]
+    [[DashboardPanel.TemperatureWidget.rows.sub_rows]]
     name="Raspberry - chip"
     port=8089
     resource="/temperature"
@@ -85,7 +91,7 @@ pull_period=5
     pull_period=5
     charted=true
 
-    [[Temperature_widget.rows.sub_rows]]
+    [[DashboardPanel.TemperatureWidget.rows.sub_rows]]
     name="Board2"
     port=80
     resource="/test-get"
@@ -93,21 +99,21 @@ pull_period=5
     pull_period=5
     charted=true
 
-    [[Temperature_widget.rows.sub_rows]]
+    [[DashboardPanel.TemperatureWidget.rows.sub_rows]]
     name="Board3"
     port=80
     resource="/test-get"
     component="value"
     pull_period=5
 
-    [[Temperature_widget.rows.sub_rows]]
+    [[DashboardPanel.TemperatureWidget.rows.sub_rows]]
     name="Board4"
     port=80
     resource="/test-get"
     component="value"
     pull_period=5
 
-[[Temperature_widget.rows]]
+[[DashboardPanel.TemperatureWidget.rows]]
 name="Ambient"
 icon="temperature_ambient"
 port=80

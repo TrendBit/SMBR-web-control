@@ -60,27 +60,41 @@ var currNumOfCharts = 0;
             <h2>Error</h2>
         </div>
         
-    </header    >
+    </header>
     <div class="container">
 
         <div id="SIDEBAR">
             <ul>
-                <li class="active" onclick="changeContext(0)"><img src="UI/icons/dashboard_icon.svg"><span>Dashboard</span></li>
-                <li onclick="changeContext(1)"><img src="UI/icons/experiments_icon.svg" ><span>Experiments</span></li>
-                <li onclick="changeContext(2)"><img src="UI/icons/config_icon.svg" ><span>Config</span></li>
+                <% contextCnt = 0; %>
+
+                <% if(locals.DashboardPanel){ %>
+                <li class="active" onclick="changeContext('<%= contextCnt++ %>')"><img src="<%= getIcon("dashboard") %>"><span>Dashboard</span></li>
+                <% } %>
+
+                <li onclick="changeContext('<%= contextCnt++ %>')"><img src="<%= getIcon("experiments") %>" ><span>Experiments</span></li>
+
+                <li onclick="changeContext('<%= contextCnt++ %>')"><img src="<%= getIcon("config") %>" ><span>Config</span></li>
+
+
             </ul>
         </div>
         <div id="CONTENT">
-            
-            <div id="DashBoard-Panel" class="content-panel container">
-                <%- include('panels/dashboard/TemperatureWidget.ejs') %>
-            </div>  
+
+            <% if(locals.DashboardPanel){ %>
+                <div id="DashBoard-Panel" class="content-panel container">
+                    <% if(DashboardPanel.TemperatureWidget){ %>
+                        <%- include('panels/dashboard/TemperatureWidget.ejs') %>
+                    <% } %>                
+                </div>  
+            <% } %>
+
             <div id="experiments-Panel" class="content-panel container hidden">
                 <%- include('panels/textEditor', {type: "experiments"}) %>
             </div>
             <div id="configs-Panel" class="content-panel container hidden">
                 <%- include('panels/textEditor', {type: "configs"})%>
             </div>
+
         </div>
 
     </div>

@@ -65,6 +65,7 @@ input::-webkit-inner-spin-button {
 }
 input[type=number] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 /*global class rules*/
@@ -143,6 +144,76 @@ body {
 .headerButton:hover{
   background-color: var(--bg-color-2);
   cursor: pointer;
+}
+
+
+
+
+.table-widget-segment{
+  border-spacing: 5px;
+  thead{
+    *{
+      font-size: smaller;
+      font-weight: normal;
+      border: var(--bg-color-3) 1px solid;
+      border-style: none solid none none;
+      padding-right: 5px; 
+    }
+    *:last-child{
+      padding: 0;
+      border: none;
+    }
+  }
+  tbody{
+    tr{
+      border-bottom: var(--bg-color-4) 1px solid;
+
+      img{
+        height: 1.5em;
+      }
+      input{
+        color: var(--text-color-light);
+      }
+      td>*{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      td.table-name{
+        width: 100%;
+      }
+      td.table-current{
+        min-width: 60px;
+      }
+      td.table-target{
+        min-width: 60px;
+        display: flex;
+
+        input[type="number"]{
+          width: 100%;
+          background: var(--bg-color-1);
+          border: var(--bg-color-4) 1px solid;
+          border-radius: 3px 0 0 3px;
+          color: var(--text-color-light);
+          border-right: none;
+          cursor: text;
+        }
+        input[type="button"]{
+          border-radius: 0 3px 3px 0;
+        }
+      }
+
+      span.collapse{
+        float: right;
+        cursor: pointer;
+
+        padding: 0 5px 0 5px;
+      }
+
+
+    }
+  }
+      
 }
 
 /*local rules*/
@@ -311,66 +382,6 @@ body {
     min-height: min-content;
     max-height: unset;
     #Temperature-Widget{
-
-      table{
-        thead{
-          *{
-            font-size: smaller;
-            font-weight: normal;
-            border: var(--bg-color-3) 1px solid;
-            border-style: dashed solid none;
-          }
-        }
-        tbody{
-          tr{
-            border-bottom: var(--bg-color-4) 1px solid;
-
-            img{
-              height: 1.5em;
-            }
-            input{
-              color: var(--text-color-light);
-            }
-            td>*{
-              display: flex;
-              justify-content: center;
-              align-items: center;
-            }
-            td.table-name{
-              width: 100%;
-            }
-            td.table-current{
-              min-width: 60px;
-            }
-            td.table-target{
-              min-width: 60px;
-              display: flex;
-
-              input[type="number"]{
-                width: 100%;
-                background: var(--bg-color-1);
-                border: var(--bg-color-4) 1px solid;
-                border-radius: 3px 0 0 3px;
-                color: var(--text-color-light);
-                border-right: none;
-                cursor: text;
-              }
-              input[type="button"]{
-                border-radius: 0 3px 3px 0;
-              }
-            }
-
-            span.collapse{
-              float: right;
-              cursor: pointer;
-
-              padding: 0 5px 0 5px;
-            }
-            
-            
-          }
-        }
-      }
       
     }
 
@@ -818,6 +829,9 @@ body {
         border-bottom: var(--bg-color-5) 3px solid;
         
         transition: border-color 0.5s ease-in-out;
+
+        height: 37px;
+        padding: 3px;
         
         > *{
           width: max-content;
@@ -885,8 +899,17 @@ body {
           }
 
         }
-        height: 37px;
-        padding: 3px;
+        
+      }
+
+      .fe-header{
+        .fe-popup:empty{
+          height: 0px;
+          overflow: hidden;
+          padding: 0px;
+          bottom: 0px;
+          opacity: 0;
+        }
       }
       
       .fe-header.ok{
@@ -901,6 +924,7 @@ body {
           background-color: rgba(var(--acc-color-2-rgb),0.5);
         }
       }
+
       .fe-header.warning{
         border-bottom-color: rgb(228, 194, 44);
         .fe-popup{
@@ -976,4 +1000,11 @@ body {
     overflow: hidden;
   }
   position: relative;
+}
+
+
+
+/*DEBUG*/
+[resource="/test-get"]{
+  color: darkorange;
 }

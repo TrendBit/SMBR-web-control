@@ -84,3 +84,47 @@ async function streamToString(stream) {
 
     return Buffer.concat(chunks).toString("utf-8");
 }
+
+
+async function fetchDataAsJson(url) {
+    const response = await fetch(url,
+                            {
+                                method: "GET",
+                                headers: {
+                                    'Content-Type': 'text/plain', //it has to be plain text else it will send a complex request with an additional OPTIONS request
+                                },
+                                signal: AbortSignal.timeout( 10000 )                           
+                            }
+                        );
+    //console.log(response);
+    return response.json()
+}
+async function fetchData(url) {
+    const response = await fetch(url,
+                            {
+                                method: "GET",
+                                headers: {
+                                    'Content-Type': 'text/plain', //it has to be plain text else it will send a complex request with an additional OPTIONS request
+                                }
+                            }
+                        );
+    //console.log(response);
+    return response
+}
+
+async function sendData(url, data) {
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain'
+            },
+            body: data
+        });
+        
+        const result = await response.json();
+        console.debug('Data sent: ', result.status());
+    } catch (error) {
+        console.error('Error while sending data:', error);
+    }
+}
