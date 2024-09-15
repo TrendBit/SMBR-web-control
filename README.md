@@ -1,7 +1,3 @@
-# now added
-
-extremely simple validation, when saving a file, the server tries to parse it to yaml, if it fails, it sends a err500. if it succeeds it tryes to validate it using the databse_exporter.yaml and sends a 400 if that fails.
-
 # about
 this repo is for the web control system.
 
