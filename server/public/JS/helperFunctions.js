@@ -99,6 +99,7 @@ async function fetchDataAsJson(url) {
     //console.log(response);
     return response.json()
 }
+
 async function fetchData(url) {
     const response = await fetch(url,
                             {

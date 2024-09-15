@@ -1,0 +1,105 @@
+DevicePanel:
+  modules:
+    - name: control
+      id: '0x00000000000000000'
+      instance: unidentified
+      data:
+        - unit: ms
+          resource: /control/ping
+          component: time_ms
+        - unit: °C
+          resource: /control/core_temp
+          component: temperature
+        - unit: °C
+          port: 80
+          resource: /test-get
+          component: value
+        - unit: '%'
+          port: 80
+          resource: /test-get
+          component: value
+    - name: unknown
+      id: '0x00000000000000000'
+      instance: unidentified
+      data:
+        - unit: ms
+          resource: /unknown/ping
+          component: time_ms
+        - unit: °C
+          resource: /unknown/core_temp
+          component: temperature
+        - unit: °C
+          port: 80
+          resource: /test-get
+          component: value
+        - unit: '%'
+          port: 80
+          resource: /test-get
+          component: value
+DashboardPanel:
+  TemperatureWidget:
+    rows:
+      - name: Bottle
+        icon: bottle
+        port: 80
+        resource: /test-get
+        component: value
+        pull_period: 5
+        charted: true
+        input:
+          min: 0
+          max: 15
+        sub_rows:
+          - name: Top
+            port: 80
+            resource: /test-get
+            component: value
+            pull_period: 5
+            charted: true
+          - name: Bottom
+            port: 80
+            resource: /test-get
+            component: value
+            pull_period: 5
+            charted: true
+      - name: LED array
+        icon: leds
+        port: 80
+        resource: /test-get
+        component: value
+        pull_period: 5
+        charted: true
+      - name: Boards
+        icon: board
+        component: value
+        pull_period: 5
+        sub_rows:
+          - name: Raspberry - chip
+            port: 8089
+            resource: /temperature
+            component: temperature
+            pull_period: 5
+            charted: true
+          - name: Board2
+            port: 80
+            resource: /test-get
+            component: value
+            pull_period: 5
+            charted: true
+          - name: Board3
+            port: 80
+            resource: /test-get
+            component: value
+            pull_period: 5
+          - name: Board4
+            port: 80
+            resource: /test-get
+            component: value
+            pull_period: 5
+      - name: Ambient
+        icon: temperature_ambient
+        port: 80
+        resource: /test-get
+        component: value
+        pull_period: 5
+        charted: true

@@ -1,3 +1,4 @@
+global.initialized = false;
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -8,11 +9,13 @@ const yaml = require('js-yaml');
 const ajv = require('ajv'); //another json validator
 const toml = require('toml');
 
+const webConfigAssembler = require('./webConfigAssembler.js');
 
 const PORT = 80;
 const indexUtilities = require('./indexUtilities.js');
 const { default: def } = require('ajv/dist/vocabularies/applicator/additionalItems.js');
 const configFilesPath = path.join("..","..","SMBR-config-files");
+
 
 //fixes the "TypeError: NetworkError when attempting to fetch resource" error by allowing anyone to use the api: 
 app.use(cors()); 
@@ -83,8 +86,16 @@ app.locals.getIcon = function(name) {
 
 //API endpoint for the index file
 app.get('/', (req, res) => {
-    //res.sendFile(path.join(__dirname, 'public', 'index.html'));  //version that uses standart .html
-    res.render('index', indexUtilities.parseConfig())
+    console.log(req.hostname + ": new connection active, rendering web");
+    if(global.initialized ){
+        res.render('index', webConfigAssembler.getConfig(req.hostname))
+    }else{
+        res.send("not initialized, try again later").status(109);
+    }
+    //res.render('index', indexUtilities.parseConfig())
+    
+
+    console.log(req.hostname + ": end of rendering web");
 });
 
 
@@ -98,6 +109,10 @@ app.get('/file-list', (req, res) => {
     else{
         res.status(403).send("you don't have permisions to view to this directory");
     }
+})
+
+app.get('/module-list', (req, res) => {
+    res.send(JSON.stringify(webConfigAssembler.getLoadedModules())).status(200);
 })
 
 app.delete('/delete-file', (req,res) => {
@@ -299,7 +314,6 @@ app.patch('/test-combined', (req, res) => {
 
 
 app.get('/timeout-test', (req, res) => {
-    console.log("recievew a timeout test request, the server will NOT send a response");
 })
 
 

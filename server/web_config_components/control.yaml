@@ -1,0 +1,96 @@
+#TEMPERATUREWIDGET
+#rows[]
+#   name
+#   icon
+#   *unit        (default °C)
+#   *port        (default 8089)
+#   resource     ("" for turning off api fetching)
+#   component
+#   *pull_period (default 5)
+#   *input{}     (default null)
+#       max
+#       min
+#   *sub_rows[]  (default null)
+#       name
+#       icon
+#       unit
+#       port
+#       resource
+#       component
+#       pull_period
+#       input{}
+#           max
+#           min
+#graph
+#   
+DashboardPanel:
+  TemperatureWidget:
+    rows:
+      - name: "Bottle"
+        icon: "bottle"
+        port: 80
+        resource: "/test-get"
+        component: "value"
+        pull_period: 5
+        charted: true
+        input:
+          min: 0
+          max: 15
+        sub_rows:
+          - name: "Top"
+            port: 80
+            resource: "/test-get"
+            component: "value"
+            pull_period: 5
+            charted: true
+          - name: "Bottom"
+            port: 80
+            resource: "/test-get"
+            component: "value"
+            pull_period: 5
+            charted: true
+      - name: "LED array"
+        icon: "leds"
+        port: 80
+        resource: "/test-get"
+        component: "value"
+        pull_period: 5
+        charted: true
+      - name: "Boards"
+        icon: "board"
+        component: "value"
+        pull_period: 5
+        sub_rows:
+          - name: "Raspberry - chip"
+            port: 8089
+            resource: "/temperature"
+            component: "temperature"
+            pull_period: 5
+            charted: true
+          - name: "Board2"
+            port: 80
+            resource: "/test-get"
+            component: "value"
+            pull_period: 5
+            charted: true
+          - name: "Board3"
+            port: 80
+            resource: "/test-get"
+            component: value
+            pull_period: 5
+          - name: "Board4"
+            port: 80
+            resource: "/test-get"
+            component: "value"
+            pull_period: 5
+      - name: "Ambient"
+        icon: "temperature_ambient"
+        port: 80
+        resource: "/test-get"
+        component: "value"
+        pull_period: 5
+        charted: true
+      
+
+
+      

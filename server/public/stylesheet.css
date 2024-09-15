@@ -218,6 +218,9 @@ body {
 
 /*local rules*/
 
+
+
+
 #HOTBAR {
   width: 100%;
   height: 50px;
@@ -252,8 +255,8 @@ body {
     }
     padding: 0 10px 0 10px;
   }
-  #Status-Indicator{
-    background-color: red;
+  #status-indicator{
+    background-color: green;
     border-radius: 0 0 0 15px;
     height: 100%;
     width: 80px;
@@ -331,10 +334,13 @@ body {
 }
 
 
-
 #CONTENT {
   width: 100%;
   height: 100%;
+  
+  position: relative;
+    
+  
   *.content-panel {
     transition: transform 0.5s ease-out, opacity 0.2s ease-in-out;
     position: absolute;
@@ -368,9 +374,25 @@ body {
       margin: 0;
       border-bottom: var(--acc-color-1) 2px solid;
       background-color: var(--bg-color-3);
+      p {
+        float: right;
+        margin: 0;
+        
+      }
             /*! color: var(--text-color-dark); */
     }
   }
+  
+  .widget.error{
+    h1 {
+      border-bottom: rgb(150, 25, 10) 2px solid;
+      p{
+        color: red;
+      }
+    }
+    
+  }
+  
   >* {
     box-sizing: border-box;
     padding: 10px;
@@ -999,9 +1021,82 @@ body {
     height: calc(100vh - 50px);
     overflow: hidden;
   }
-  position: relative;
+  
+  #device-Panel{
+    > *.widget{
+      max-width: max-content;
+      height: fit-content;
+      max-height: fit-content;
+      
+      td{
+        text-align: center;
+      }
+    }
+  }
 }
 
+
+
+#SIDEBAR,#CONTENT > *:not(#mainPopup){
+  transition: 0.5s filter cubic-bezier(0,.35,0,.84);
+}
+
+
+#MAIN.disabled{
+  #SIDEBAR, #CONTENT > *:not(#mainPopup){
+    transition: 10s filter cubic-bezier(0,.35,0,.84);
+    filter: brightness(0.6) grayscale(0.8);
+  }
+}
+
+
+#mainPopup{
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  z-index: 10;
+  max-width: 30%;
+  min-width: 250px;
+  width: fit-content;
+  
+  display: none;
+
+  background: var(--bg-color-1);
+  border: var(--bg-color-5) 2px solid;
+  *{
+    font-weight: 1000;
+    font-size: 15px;
+
+    padding: 0px;
+    margin: 0px;
+  }
+
+
+  padding: 15px;
+
+  border-radius: 0 0 0 20px; 
+}
+
+#mainPopup:hover{
+  border-width: 3px;
+  padding: 13px;
+  filter:brightness(1.1);
+  cursor: pointer;
+}
+
+#mainPopup.warning{
+  border-color: rgb(228, 194, 44);
+  background-color: rgb(228, 194, 44);
+  color: var(--text-color-light);
+  display: block;
+}
+
+#mainPopup.error{
+  border-color: rgb(200, 50, 30);
+  background-color: rgba(150, 25, 10, 1);
+  color: var(--text-color-light);
+  display: block;
+}
 
 
 /*DEBUG*/

@@ -56,13 +56,15 @@ var currNumOfCharts = 0;
             <p id="hotbar-clock">16:22</p>
             <p id="hotbar-date">11.07.2024</p>
         </div>
-        <div id="Status-Indicator" onclick="changeStatus(this)">
-            <h2>Error</h2>
+        <div id="status-indicator" onclick="changeStatus(this)">
+            <h2>Standby</h2>
         </div>
         
     </header>
-    <div class="container">
 
+    
+
+    <div id="MAIN" class="container">
         <div id="SIDEBAR">
             <ul>
                 <% contextCnt = 0; %>
@@ -75,11 +77,13 @@ var currNumOfCharts = 0;
 
                 <li onclick="changeContext('<%= contextCnt++ %>')"><img src="<%= getIcon("config") %>" ><span>Config</span></li>
 
-
+                <% if(locals.DevicePanel){ %>
+                    <li onclick="changeContext('<%= contextCnt++ %>')"><img src="<%= getIcon("device") %>"><span>Device</span></li>
+                <% } %>
             </ul>
         </div>
         <div id="CONTENT">
-
+            
             <% if(locals.DashboardPanel){ %>
                 <div id="DashBoard-Panel" class="content-panel container">
                     <% if(DashboardPanel.TemperatureWidget){ %>
@@ -89,12 +93,18 @@ var currNumOfCharts = 0;
             <% } %>
 
             <div id="experiments-Panel" class="content-panel container hidden">
-                <%- include('panels/textEditor', {type: "experiments"}) %>
+                <%- include('panels/TextEditor', {type: "experiments"}) %>
             </div>
             <div id="configs-Panel" class="content-panel container hidden">
-                <%- include('panels/textEditor', {type: "configs"})%>
+                <%- include('panels/TextEditor', {type: "configs"})%>
             </div>
 
+            <% if(locals.DevicePanel){ %>
+                <div id="Device-Panel" class="content-panel container hidden">
+                    <%- include('panels/DevicePanel.ejs') %>            
+                </div>  
+            <% } %>
+            <div id="mainPopup" onclick="resetMainPopup()"></div>
         </div>
 
     </div>
@@ -452,6 +462,27 @@ var currNumOfCharts = 0;
             }
         }
 
+        function setStatus(type){
+            const element = document.getElementById("status-indicator");
+            switch (type){
+                case "standby": {
+                    element.children[0].innerHTML = "Standby";
+                    element.style.backgroundColor = "green";
+                    break;
+                }
+                case "running": {
+                    element.children[0].innerHTML = "Running";
+                    element.style.backgroundColor = "orange";
+                    break;
+                }
+                case "error": {
+                    element.children[0].innerHTML = "Error";
+                    element.style.backgroundColor = "red";
+                    break;  
+                }
+            }
+        }
+
         /*
         sets the targeted editors popup to a type and sets the body of the message, overwrites last value
         */
@@ -463,8 +494,31 @@ var currNumOfCharts = 0;
             header.classList = "fe-header " + messageType;
             popup.innerHTML = message;
         }
+
+        function setMainPopup(messageType, message){
+            const popup = document.getElementById("mainPopup")
+
+            
+
+            if(popup.innerHTML != ("<p> "+message+" </p>")){
+                if(message!=""){
+                    document.getElementById("MAIN").classList.add("disabled");
+                }
+                popup.innerHTML = "<p> "+message+" </p>";
+                popup.classList = messageType;
+            }
+        }
+
+        function resetMainPopup(){
+            const popup = document.getElementById("mainPopup")
+
+            document.getElementById("MAIN").classList.remove("disabled");
+
+            popup.classList = "";
+        }
         
     </script>
     <script src="JS/apiUpdateWorker.js"></script>
+    <script src="JS/moduleApiUpdateWorker.js"></script>
 </body>
 </html>

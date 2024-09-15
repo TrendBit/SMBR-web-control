@@ -1,0 +1,110 @@
+<div class="widget" id="module-list">
+    <h1 class="name">Module list <p></p></h1>
+    <table class="table-widget-segment">
+        <thead>
+            <tr>
+                <th>module name</th>
+                <th>id</th>
+                <th>instance</th>
+                <th>ping</th>
+                <th>core temperature</th>
+                <th>module temperature</th>
+                <th>CPU load</th>
+            </tr>
+        </thead>
+        <tbody id="moduleList">
+            <% if(DevicePanel.modules){DevicePanel.modules.forEach(element => { %>
+                <tr class="table-master">
+                    <td><%= element.name     %></td> 
+                    <td><%= element.id       %></td> 
+                    <td><%= element.instance %></td>
+    
+                    <%element.data.forEach(dataField => { %>
+                        <td class="module-api-fetcher"
+                            unit="<% if(dataField.unit){%><%=dataField.unit%><%}else{%><%="°C"%><%} %>" 
+                            resource="<%= dataField.resource %>" 
+                            component="<%= dataField.component %>"
+                            port="<% if(dataField.port){%><%=dataField.port%><%}else{%><%="8089"%><%} %>"
+                        >
+                        </td>
+                    <%});%>
+                    
+                </tr>
+            <% });} %>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    /*
+
+
+    var loadedModules = [];
+    var firstLoad = true;
+
+    function addModule(name, moduleID, instance){
+        console.log("adding new module: ", name, moduleID, instance);
+        loadedModules.push(moduleID);
+        const params = [
+            {
+                resource: "/"+name+"/ping",
+                component: "time_ms",
+                unit: "ms"
+            },
+            {
+                resource: "/"+name+"/core_temp",
+                component: "temperature",
+                unit: "°C"
+            },
+            {
+                resource: "/test-get", // "/"+name+"/module_temp",
+                component: "value",
+                unit: "°C"
+            },
+            {
+                resource: "/test-get", // "/"+name+"/cpu_load",
+                component: "value",
+                unit: "%"
+            }
+        ]
+            
+       
+        var result =  "<tr> <td>"+name+"</td> <td>"+moduleID+"</td> <td>"+instance+"</td>"
+        params.forEach(element => {
+            if(element.resource=="/test-get"){
+                element.resource = "/test-get\"port=\"80" //wokraround that adds the port indetifier when using test resource
+            }
+            result+="<td class=\"module-api-fetcher\" unit=\""+element.unit+"\" resource=\""+element.resource+"\"component=\""+element.component+"\"></td>"
+        });
+        result+="</tr>";
+
+        document.getElementById("moduleList").innerHTML +=  result;
+    }
+
+    async function refreshModules(){
+        const url = "http://" + window.location.hostname + ":8089";
+        console.log("refreshing modules "+loadedModules.length+" already loaded: ",loadedModules);
+        var response = [];
+        try {
+            response = await fetchDataAsJson(url + "/system/modules");
+        } catch (error) {
+            console.error(error);
+            response = [];
+        }
+        
+        response.forEach(element =>{
+            if(loadedModules.includes(element.uid)){
+                console.log("module " + element.module_type + " (" + element.uid + ") already loaded");
+            }
+            else{
+                addModule(element.module_type, element.uid, "undefined");
+                if(!firstLoad){
+                    document.getElementById("reload page, modules added");
+                }
+            }
+        });        
+
+        firstLoad = false;
+    }
+    */
+</script>
