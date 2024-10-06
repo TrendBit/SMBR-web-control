@@ -146,9 +146,6 @@ body {
   cursor: pointer;
 }
 
-
-
-
 .table-widget-segment{
   border-spacing: 5px;
   thead{
@@ -182,8 +179,8 @@ body {
       td.table-name{
         width: 100%;
       }
-      td.table-current{
-        min-width: 60px;
+      td.table-dataField{
+        min-width: max-content;
       }
       td.table-target{
         min-width: 60px;
@@ -216,6 +213,23 @@ body {
       
 }
 
+.api-fetcher.error, .module-api-fetcher.error{
+  color: red;
+  font-weight: bold;
+  transition: color 0.5s ease-in-out, font-weight 0.5s ease-in-out;
+}
+
+*:has(div.colorFilter){
+  position: relative;
+}
+.colorFilter{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  mix-blend-mode: darken;
+}
 /*local rules*/
 
 
@@ -404,7 +418,7 @@ body {
     min-height: min-content;
     max-height: unset;
     #Temperature-Widget{
-      
+      grid-row: 1/span 2;
     }
 
     #SimpleSensors-Widget {

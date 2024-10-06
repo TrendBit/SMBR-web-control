@@ -2,20 +2,19 @@
 var currNumOfCharts = 0;
 %>
 <script>
-    var chartUpdaterArray = [];
     var chartArray = [];
 
     function getCountdownArray(length){
-        result = [];
+        var result = [];
         for (let i = 0; i < length; i++) {
-            result.add(i);
+            result.push(i);
         }
         return result;
     }
     function getEmptyDatasets(qantity){
-        reuslt = [];
+        var result = [];
         for (let i = 0; i < qantity; i++) {
-            result.add({
+            result.push({
                 data: [],
                 cubicInterpolationMode: 'monotone',
                 tension: 0.4
@@ -49,6 +48,7 @@ var currNumOfCharts = 0;
     
 </head>
 <body onload="executeOnloadQueue()">
+    
     <header id="HOTBAR">
         <button onclick="toggleClass_ByID('SIDEBAR', 'collapsed')"><img src="<%= getIcon("mini_logo") %>"></button>
         <h1>PhenoBottle</h1>
@@ -86,9 +86,12 @@ var currNumOfCharts = 0;
             
             <% if(locals.DashboardPanel){ %>
                 <div id="DashBoard-Panel" class="content-panel container">
-                    <% if(DashboardPanel.TemperatureWidget){ %>
-                        <%- include('panels/dashboard/TemperatureWidget.ejs') %>
-                    <% } %>                
+                    <% if(DashboardPanel.TemperatureWidget){  %>
+                        <%- include('panels/dashboard/TemperatureWidget.ejs', {currNumOfCharts: currNumOfCharts++}) %>
+                    <% } %>      
+                    <% if(DashboardPanel.LedArrayWidget){ %>
+                        <%- include('panels/dashboard/LedArrayWidget.ejs', {currNumOfCharts: currNumOfCharts++}) %>
+                    <% } %>           
                 </div>  
             <% } %>
 
@@ -109,6 +112,8 @@ var currNumOfCharts = 0;
 
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js" integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css"></link>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js" integrity="sha512-8RnEqURPUc5aqFEN04aQEiPlSAdE0jlFS/9iGgUyNtwFnSKCXhmB6ZTNl7LnDtDWKabJIASzXrzD0K+LYexU9g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -145,9 +150,18 @@ var currNumOfCharts = 0;
     </script>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js" integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
+       <script>
+
+        onloadQueue.push(() =>  {//REFRESH ALL COLORFILTERS
+            console.log("REFERSHING COLORFILTERS");
+            const colorFilters = document.getElementsByClassName("colorFilter");
+            for (let i = 0; i < colorFilters.length; i++) {
+                const element = colorFilters[i];
+                element.style.backgroundColor = element.getAttribute("colorFilter");
+            }
+        })
+
+
         let currContext = 0;
         function changeContext(whereTo){
             if(currContext!=whereTo){

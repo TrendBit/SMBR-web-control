@@ -10,14 +10,17 @@ async function updateSite(){
     if(currContext == 0){
         for (let i = 0; i < apiFetchers.length; i++) {
             const element = apiFetchers[i];
-            //console.log(element);
+            
             if (element.getAttribute("resource")!="") {
                 fetchDataAsJson(url+":"+element.getAttribute("port")+element.getAttribute("resource"))
                 .then(response => {
                     element.innerHTML = Math.round(response[element.getAttribute("component")]) + " " + element.getAttribute("unit")
+                    element.classList.remove("error");
                 })
                 .catch(err => {
-                        console.error(err);
+                    element.innerHTML = "Null"
+                    element.classList.add("error");
+                    console.error(err);
                 })
 
 

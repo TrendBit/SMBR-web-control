@@ -1,3 +1,118 @@
+DashboardPanel:
+  TemperatureWidget:
+    rows:
+      - name: Bottle
+        icon: bottle
+        port: 80
+        resource: /test-get
+        component: value
+        charted: true
+        input:
+          min: 0
+          max: 15
+        sub_rows:
+          - name: Top
+            port: 80
+            resource: /test-get
+            component: value
+            charted: true
+          - name: Bottom
+            port: 80
+            resource: /test-get
+            component: value
+            charted: true
+      - name: LED array
+        icon: leds
+        port: 80
+        resource: /test-get
+        component: value
+        charted: true
+      - name: Boards
+        icon: board
+        component: value
+        sub_rows:
+          - name: Raspberry - chip
+            port: 8089
+            resource: /temperature
+            component: temperature
+            charted: true
+          - name: Board2
+            port: 80
+            resource: /test-get
+            component: value
+            charted: true
+          - name: Board3
+            port: 80
+            resource: /test-get
+            component: value
+          - name: Board4
+            port: 80
+            resource: /test-get
+            component: value
+      - name: Ambient
+        icon: temperature_ambient
+        port: 80
+        resource: /test-get
+        component: value
+        charted: true
+    chart:
+      history: 15
+  LedArrayWidget:
+    rows:
+      - name: Red
+        borderColor: '#ad270f'
+        backgroundColor: '#632013'
+        absolute:
+          port: 80
+          resource: /test-get
+          component: value
+          charted: true
+        relative:
+          port: 80
+          resource: /test-get
+          component: value
+          charted: true
+      - name: Green
+        borderColor: '#547c04'
+        backgroundColor: '#2c4404'
+        absolute:
+          port: 80
+          resource: /test-get
+          component: value
+          charted: true
+        relative:
+          port: 80
+          resource: /test-get
+          component: value
+          charted: true
+      - name: Blue
+        borderColor: '#1d9ef5'
+        backgroundColor: '#0f5a8c'
+        absolute:
+          port: 80
+          resource: /test-get
+          component: value
+          charted: true
+        relative:
+          port: 80
+          resource: /test-get
+          component: value
+          charted: true
+      - name: White
+        borderColor: '#c0c1c1'
+        backgroundColor: '#7b7c7e'
+        absolute:
+          port: 80
+          resource: /test-get
+          component: value
+          charted: true
+        relative:
+          port: 80
+          resource: /test-get
+          component: value
+          charted: true
+    chart:
+      history: 15
 DevicePanel:
   modules:
     - name: control
@@ -9,6 +124,24 @@ DevicePanel:
           component: time_ms
         - unit: °C
           resource: /control/core_temp
+          component: temperature
+        - unit: °C
+          port: 80
+          resource: /test-get
+          component: value
+        - unit: '%'
+          port: 80
+          resource: /test-get
+          component: value
+    - name: loljuhi
+      id: '0x00000000004500000'
+      instance: unidentified
+      data:
+        - unit: ms
+          resource: /loljuhi/ping
+          component: time_ms
+        - unit: °C
+          resource: /loljuhi/core_temp
           component: temperature
         - unit: °C
           port: 80
@@ -36,70 +169,3 @@ DevicePanel:
           port: 80
           resource: /test-get
           component: value
-DashboardPanel:
-  TemperatureWidget:
-    rows:
-      - name: Bottle
-        icon: bottle
-        port: 80
-        resource: /test-get
-        component: value
-        pull_period: 5
-        charted: true
-        input:
-          min: 0
-          max: 15
-        sub_rows:
-          - name: Top
-            port: 80
-            resource: /test-get
-            component: value
-            pull_period: 5
-            charted: true
-          - name: Bottom
-            port: 80
-            resource: /test-get
-            component: value
-            pull_period: 5
-            charted: true
-      - name: LED array
-        icon: leds
-        port: 80
-        resource: /test-get
-        component: value
-        pull_period: 5
-        charted: true
-      - name: Boards
-        icon: board
-        component: value
-        pull_period: 5
-        sub_rows:
-          - name: Raspberry - chip
-            port: 8089
-            resource: /temperature
-            component: temperature
-            pull_period: 5
-            charted: true
-          - name: Board2
-            port: 80
-            resource: /test-get
-            component: value
-            pull_period: 5
-            charted: true
-          - name: Board3
-            port: 80
-            resource: /test-get
-            component: value
-            pull_period: 5
-          - name: Board4
-            port: 80
-            resource: /test-get
-            component: value
-            pull_period: 5
-      - name: Ambient
-        icon: temperature_ambient
-        port: 80
-        resource: /test-get
-        component: value
-        pull_period: 5
-        charted: true

@@ -6,7 +6,7 @@
 #   *port        (default 8089)
 #   resource     ("" for turning off api fetching)
 #   component
-#   *pull_period (default 5)
+#   * (default 5)
 #   *input{}     (default null)
 #       max
 #       min
@@ -17,7 +17,7 @@
 #       port
 #       resource
 #       component
-#       pull_period
+#       
 #       input{}
 #           max
 #           min
@@ -31,7 +31,6 @@ DashboardPanel:
         port: 80
         resource: "/test-get"
         component: "value"
-        pull_period: 5
         charted: true
         input:
           min: 0
@@ -41,56 +40,102 @@ DashboardPanel:
             port: 80
             resource: "/test-get"
             component: "value"
-            pull_period: 5
             charted: true
           - name: "Bottom"
             port: 80
             resource: "/test-get"
             component: "value"
-            pull_period: 5
             charted: true
       - name: "LED array"
         icon: "leds"
         port: 80
         resource: "/test-get"
         component: "value"
-        pull_period: 5
         charted: true
       - name: "Boards"
         icon: "board"
         component: "value"
-        pull_period: 5
         sub_rows:
           - name: "Raspberry - chip"
             port: 8089
             resource: "/temperature"
             component: "temperature"
-            pull_period: 5
             charted: true
           - name: "Board2"
             port: 80
             resource: "/test-get"
             component: "value"
-            pull_period: 5
             charted: true
           - name: "Board3"
             port: 80
             resource: "/test-get"
             component: value
-            pull_period: 5
           - name: "Board4"
             port: 80
             resource: "/test-get"
             component: "value"
-            pull_period: 5
       - name: "Ambient"
         icon: "temperature_ambient"
         port: 80
         resource: "/test-get"
         component: "value"
-        pull_period: 5
         charted: true
-      
-
-
+    chart:
+      history: 15
+  LedArrayWidget:
+    rows:
+      - name: "Red"
+        borderColor: '#ad270f'
+        backgroundColor: '#632013'
+        absolute:
+          port: 80
+          resource: "/test-get"
+          component: "value"
+          charted: true
+        relative:
+          port: 80
+          resource: "/test-get"
+          component: "value"
+          charted: true
+      - name: "Green"
+        borderColor: '#547c04'
+        backgroundColor: '#2c4404'
+        absolute:
+          port: 80
+          resource: "/test-get"
+          component: "value"
+          charted: true
+        relative:
+          port: 80
+          resource: "/test-get"
+          component: "value"
+          charted: true
+      - name: "Blue"
+        borderColor: '#1d9ef5'
+        backgroundColor: '#0f5a8c'
+        absolute:
+          port: 80
+          resource: "/test-get"
+          component: "value"
+          charted: true
+        relative:
+          port: 80
+          resource: "/test-get"
+          component: "value"
+          charted: true
+      - name: "White"
+        borderColor: '#c0c1c1'
+        backgroundColor: '#7b7c7e'
+        absolute:
+          port: 80
+          resource: "/test-get"
+          component: "value"
+          charted: true
+        relative:
+          port: 80
+          resource: "/test-get"
+          component: "value"
+          charted: true
+    chart:
+      history: 15 
       

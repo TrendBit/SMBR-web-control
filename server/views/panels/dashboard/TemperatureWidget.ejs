@@ -10,11 +10,12 @@
             </tr>
         </thead>
         <tbody id="Temperature-Widget-Table">
-
+            <% var i=-1; %>
             <% DashboardPanel.TemperatureWidget.rows.forEach(element => { %>
                 <tr class="table-master">
                     <td class="table-color">
                         <img src="<%= getIcon(element.icon) %>" alt="<%= element.icon %>">
+                        <div class="colorFilter" colorFilter="<%= getColor(++i) %>"></div>
                     </td>
 
                     <td class="table-name">
@@ -24,12 +25,12 @@
                         <% } %>
                     </td>
 
-                    <td class="table-current api-fetcher"
+                    <td class="table-dataField api-fetcher"
                         port="<% if(element.port){%><%=element.port%><%}else{%><%="8089"%><%} %>" 
                         unit="<% if(element.unit){%><%=element.unit%><%}else{%><%="°C"%><%} %>" 
                         resource="<%= element.resource %>" 
                         component="<%= element.component %>"
-                        pull_period="<%= element.pull_period %>"
+                        charted="<% if(element.charted){%><%=element.charted%><%}else{%><%="false"%><%} %>" 
                     >
                     </td>
                     
@@ -45,6 +46,7 @@
                     <tr class="table-sub">
                         <td class="table-color">
                             <img src="<% if((u+1)<numOfSubRows){%><%=getIcon("subElement")%><%}else{%><%=getIcon("subElement-last")%><%} %>" alt="sub_element">
+                            <div class="colorFilter" colorFilter="<%= getSubColor(i,u+1) %>"></div>
                         </td>
 
                         <td class="table-name">
@@ -56,7 +58,7 @@
                             unit="<% if(sub_element.unit){%><%=sub_element.unit%><%}else{%><%="°C"%><%} %>" 
                             resource="<%= sub_element.resource %>" 
                             component="<%= sub_element.component %>"
-                            pull_period="<%= sub_element.pull_period %>"
+                            charted="<% if(element.charted){%><%=element.charted%><%}else{%><%="false"%><%} %>" 
                         >
                         </td>
                         
@@ -75,38 +77,135 @@
     <div class="apiChart">
         <div style="display: none;">
         </div>
-        <canvas id="Temperature-Widget-Chart"></canvas>
+        <canvas id="Temperature-Widget-Chart" chartIndex="<%= currNumOfCharts++ %>" history="<%= DashboardPanel.TemperatureWidget.chart.history %>"></canvas>
     </div>
-     <!--
+    
     <script>
-        chartUpdaterArray.add(() =>{ //updater
+        setInterval(() => { //updater
+            const chart = document.getElementById("Temperature-Widget-Chart");
+            const chartIndex = chart.getAttribute("chartIndex");
+            const url = "http://" + window.location.hostname;
+            var i = 0;
             
-        })  
-        const chart = document.getElementById("Temperature-Widget-Chart")
-        const possibleApiFetchers = document.getElementById("Temperature-Widget-Table").getElementsByClassName("api-fetcher");
-        const apiFetchers = [];
-        for(let i = 0; i< possibleApiFetchers.length; i++){
-            if(possibleApiFetchers[i].getAttribute("charted")){
-                apiFetchers.add(possibleApiFetchers[i]);
+            if(chartArray[chartIndex].count <= chart.getAttribute("history")){
+                chartArray[chartIndex].count++;
             }
-        }
-        document.getElementById("Temperature-Widget-Table").getElementsByClassName("api-fetcher")
-        chartArray.add( new Chart(
-            chart,
-            {
-                type: 'line',
-                data: {
-                    labels: getCountdownArray(chart.getAttribute("history")),
-                    datasets: getEmptyDatasets(apiFetchers.length),
-                },
-                options: {
-                    responsive: true,
-                    animations: false,
+            
+            for (let i = 0; i  < chartArray[chartIndex].apiFetchers.length; i++) {
+                const element = chartArray[chartIndex].apiFetchers[i];
+        
+                fetchDataAsJson(url+":"+element.getAttribute("port")+element.getAttribute("resource"))
+                .then(response => {
+                    response = response[element.getAttribute("component")];
+                    const dataSet = chartArray[chartIndex].data.datasets[i++];
+
+                    if(chartArray[chartIndex].count > chart.getAttribute("history")){
+                        dataSet.data.shift();
+                    }
+
+                    dataSet.data.push(response);
                     
+                    
+                    chartArray[chartIndex].update();
+
+                    element.classList.remove("error");
+                })
+                .catch(err => {
+                    element.innerHTML = "Null"
+                    element.classList.add("error");
+                    console.error(err);
+                })
+                
+            }
+            
+
+        },5000);
+        onloadQueue.push(() => {
+            const chart = document.getElementById("Temperature-Widget-Chart")
+            const chartIndex = chart.getAttribute("chartIndex");
+            const possibleApiFetchers = document.getElementById("Temperature-Widget-Table").getElementsByClassName("api-fetcher");
+            var colorFilters = [];
+            var apiFetchers = [];
+            for(let i = 0; i< possibleApiFetchers.length; i++){
+                if(possibleApiFetchers[i].getAttribute("charted")){
+                    apiFetchers.push(possibleApiFetchers[i]);
+                    colorFilters.push(possibleApiFetchers[i].parentElement.getElementsByClassName("colorFilter")[0]);
                 }
             }
-        ) )                   
+
+            console.log("Iitializing a new chart\nindex: ",chartIndex,"\nhistory:",chart.getAttribute("history"),"\napiFetchers:",apiFetchers, "\ncolorFilters:",colorFilters);
+            chartArray[chartIndex] = ( new Chart(
+                chart,
+                {
+                    type: 'line',
+                    data: {
+                        labels: getCountdownArray(chart.getAttribute("history")),
+                        datasets: getEmptyDatasets(apiFetchers.length),
+                    },
+                    options: {
+                        responsive: true,
+                        animations: false,
+                        plugins:{
+                            legend:{
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                display: true,
+                                ticks: {
+                                    display: false
+                                },
+                                grid:{
+                                    color: "rgb(50,50,50)"
+                                }
+                            },
+                            y: {
+                                display: true,
+                                grid:{
+                                    color: "rgb(50,50,50)"
+                                }
+                            }
+                        },
+                        grid: {
+                            color: "red"
+                        }
+                    }
+                }
+            ) );
+            chartArray[chartIndex].apiFetchers= apiFetchers;    
+            chartArray[chartIndex].count = 0; 
+
+            
+
+            var i = 0;
+            chartArray[chartIndex].apiFetchers.forEach(element => {
+                const targetColorFilter = colorFilters[i];
+                
+                const dataSet = chartArray[chartIndex].data.datasets[i++];
+                const targetColor = targetColorFilter.getAttribute("colorFilter");
+
+                dataSet.borderColor     = targetColor;
+                dataSet.backgroundColor = darkenHexColor(targetColor,30);
+                
+                const label = element.parentElement.getElementsByClassName("table-name")[0].innerHTML.trim();
+                const splitLabel = label.split(' ');
+                dataSet.label = "";
+                for (let i = 0; i < splitLabel.length; i++) {
+                    const element = splitLabel[i];
+                    if(element[0] == '<'){
+                        break;
+                    }
+                    dataSet.label += element;
+                }     
+                dataSet.label = dataSet.label.trim();         
+                
+                console.log("new dataset borderColor:",dataSet.borderColor,
+                            ", backgroundColor:",dataSet.backgroundColor,
+                            ", label:",dataSet.label);
+            });    
+        });
+             
 
     </script>
-    -->
 </div>

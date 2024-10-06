@@ -64,8 +64,11 @@ async function updateSite(skipConextCheck){
                 fetchDataAsJson(url+":"+port+element.getAttribute("resource"))
                 .then(response => {
                     element.innerHTML = Math.round(response[element.getAttribute("component")]) + " " + element.getAttribute("unit")
+                    element.classList.remove("error");
                 })
                 .catch(err => {
+                    element.innerHTML = "Null";
+                    element.classList.add("error");
                     console.error(element, err);
                 })
                 

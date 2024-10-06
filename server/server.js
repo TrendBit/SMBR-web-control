@@ -69,6 +69,8 @@ app.locals.getIcon = function(name) {
             return "./UI/icons/upload_icon.svg"
         case "search":
             return "./UI/icons/search_icon.svg"
+        case "dot":
+            return "./UI/icons/dot_icon.svg"
         case "temperature_ambient":
             return "./UI/icons/temperature_ambient_icon.svg"
         case "temperature":
@@ -83,6 +85,49 @@ app.locals.getIcon = function(name) {
             return "./UI/logo/LogoPlaceholder.svg"
     }
 }
+
+app.locals.getColor = function(index) {
+    colorArray=[
+        "#9adb00",
+        "#ffff00",
+        "#ffa500",
+        "#1d9ef5",
+        "#ad270f",
+        "#c0c1c1",
+        "#642470"
+    ]
+    return colorArray[index%colorArray.length];
+}
+
+app.locals.getSubColor = function(index, degree) {
+    return darkenHexColor(app.locals.getColor(index),degree*10);
+}
+
+function hexToRgb(hex) {
+    hex = hex.replace(/^#/, ''); // Removes symbol # if it exists
+    let bigint = parseInt(hex, 16);
+    let r = (bigint >> 16) & 255;
+    let g = (bigint >> 8) & 255;
+    let b = bigint & 255;
+
+    return { r, g, b };
+}
+
+function darkenHexColor(hex, percent) {
+    let { r, g, b } = hexToRgb(hex);
+
+    r = Math.max(0, Math.min(255, r * (1 - percent / 100)));
+    g = Math.max(0, Math.min(255, g * (1 - percent / 100)));
+    b = Math.max(0, Math.min(255, b * (1 - percent / 100)));
+
+    return rgbToHex(Math.round(r), Math.round(g), Math.round(b));
+}
+
+
+function rgbToHex(r, g, b) {
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+}
+
 
 //API endpoint for the index file
 app.get('/', (req, res) => {

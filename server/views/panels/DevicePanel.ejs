@@ -15,12 +15,12 @@
         <tbody id="moduleList">
             <% if(DevicePanel.modules){DevicePanel.modules.forEach(element => { %>
                 <tr class="table-master">
-                    <td><%= element.name     %></td> 
-                    <td><%= element.id       %></td> 
-                    <td><%= element.instance %></td>
+                    <td class="table-dataField"><%= element.name     %></td> 
+                    <td class="table-dataField"><%= element.id       %></td> 
+                    <td class="table-dataField"><%= element.instance %></td>
     
                     <%element.data.forEach(dataField => { %>
-                        <td class="module-api-fetcher"
+                        <td class="module-api-fetcher table-dataField"
                             unit="<% if(dataField.unit){%><%=dataField.unit%><%}else{%><%="°C"%><%} %>" 
                             resource="<%= dataField.resource %>" 
                             component="<%= dataField.component %>"

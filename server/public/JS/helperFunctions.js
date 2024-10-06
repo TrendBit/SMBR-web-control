@@ -129,3 +129,46 @@ async function sendData(url, data) {
         console.error('Error while sending data:', error);
     }
 }
+
+function censor(censor) { //stolen from https://stackoverflow.com/questions/4816099/chrome-sendrequest-error-typeerror-converting-circular-structure-to-json/9653082#9653082
+    var i = 0;
+    
+    return function(key, value) {
+      if(i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value) 
+        return '[Circular]'; 
+      
+      if(i >= 29)
+        return '[Unknown]';
+    
+      ++i;
+
+      return value;  
+    }
+  }
+
+
+  
+function hexToRgb(hex) {
+    hex = hex.replace(/^#/, ''); // Removes symbol # if it exists
+    let bigint = parseInt(hex, 16);
+    let r = (bigint >> 16) & 255;
+    let g = (bigint >> 8) & 255;
+    let b = bigint & 255;
+
+    return { r, g, b };
+}
+
+function darkenHexColor(hex, percent) {
+    let { r, g, b } = hexToRgb(hex);
+
+    r = Math.max(0, Math.min(255, r * (1 - percent / 100)));
+    g = Math.max(0, Math.min(255, g * (1 - percent / 100)));
+    b = Math.max(0, Math.min(255, b * (1 - percent / 100)));
+
+    return rgbToHex(Math.round(r), Math.round(g), Math.round(b));
+}
+
+
+function rgbToHex(r, g, b) {
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+}

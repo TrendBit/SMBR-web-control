@@ -9,11 +9,15 @@ var loadedModules = [
         uid: "0x00000000000000000"
     },
     {
+        module_type: "loljuhi",
+        uid: "0x00000000004500000"
+    },
+    {
         module_type: "unknown",
         uid: "0x00000000000000000"
     }
 ];
-var assembledConfig = "";
+var assembledConfig = {};
 
 var localIP = "";
 
@@ -128,27 +132,29 @@ async function reloadModules(){
 
 
 
-
-function deepMerge(target, source) {
-
-    for (const key in source) {
-        if (Array.isArray(source[key])) {
-            if (Array.isArray(target[key])) {
-                let mergedArray = [...target[key]];
-                Object.assign(mergedArray, source[key]);
-                target[key] = [...new Set(mergedArray.concat(source[key]))];
-            } else {
+/*
+    merges source into target rewriting existing entries in target
+*/
+function deepMerge(source, target){
+    for (const [key, value] of Object.entries(source)){
+        if(Array.isArray(value)){
+            if(Array.isArray(target[key])){
+                target[key] = target[key].concat(value);
+            }else{
+                target[key] = value;
+            }
+        }else if(value instanceof Object){
+            if(target[key]){
+                deepMerge(source[key], target[key]);
+            }
+            else{
                 target[key] = source[key];
             }
-        } else if (source[key] instanceof Object && !Array.isArray(source[key])) {
-            target[key] = target[key] || {};
-            deepMerge(target[key], source[key]);
-        } else {
-            target[key] = source[key];
+        }else{
+            target[key] = value;
         }
     }
-    return target;
-}
+  }
 
 
 
@@ -167,6 +173,8 @@ function buildWebConfig(){
             ]
         }
     };
+
+    assembledConfig = {};
 
     loadedModules.forEach(element => {
         moduleConfig.DevicePanel.modules.push({
@@ -202,7 +210,7 @@ function buildWebConfig(){
         });
 
 
-
+        
         switch (element.module_type) {
             //prepared for future modules with different prerequisites
             case "control":
@@ -221,17 +229,38 @@ function buildWebConfig(){
                     assembledConfig.Errors.push({
                         description:"unable to load \"web_config_components/control.yaml\""
                     });
+                    
+                    console.error("unable load \"web_config_components/",element.module_type,".yaml\"")
                 }
-                assembledConfig = deepMerge(configComponent, assembledConfig);
+
+                deepMerge(configComponent, assembledConfig);
+                
                     
                 break;
             
             default:
+                console.error("unable load \"web_config_components/",element.module_type,".yaml\"")
                 break;
         }
     });
 
-    assembledConfig = deepMerge(moduleConfig, assembledConfig);
+    deepMerge(moduleConfig, assembledConfig);
 
     fs.writeFileSync("webConfig.yaml",yaml.dump(assembledConfig));
 }
+
+function censor(censor) { //stolen from https://stackoverflow.com/questions/4816099/chrome-sendrequest-error-typeerror-converting-circular-structure-to-json/9653082#9653082
+    var i = 0;
+    
+    return function(key, value) {
+      if(i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value) 
+        return '[Circular]'; 
+      
+      if(i >= 29)
+        return '[Unknown]';
+    
+      ++i;
+
+      return value;  
+    }
+  }
