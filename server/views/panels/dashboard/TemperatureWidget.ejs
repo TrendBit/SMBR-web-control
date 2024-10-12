@@ -30,7 +30,7 @@
                         unit="<% if(element.unit){%><%=element.unit%><%}else{%><%="°C"%><%} %>" 
                         resource="<%= element.resource %>" 
                         component="<%= element.component %>"
-                        charted="<% if(element.charted){%><%=element.charted%><%}else{%><%="false"%><%} %>" 
+                        charted="<%= element.charted %>" 
                     >
                     </td>
                     
@@ -90,36 +90,28 @@
             if(chartArray[chartIndex].count <= chart.getAttribute("history")){
                 chartArray[chartIndex].count++;
             }
-            
             for (let i = 0; i  < chartArray[chartIndex].apiFetchers.length; i++) {
                 const element = chartArray[chartIndex].apiFetchers[i];
-        
-                fetchDataAsJson(url+":"+element.getAttribute("port")+element.getAttribute("resource"))
-                .then(response => {
-                    response = response[element.getAttribute("component")];
-                    const dataSet = chartArray[chartIndex].data.datasets[i++];
 
-                    if(chartArray[chartIndex].count > chart.getAttribute("history")){
-                        dataSet.data.shift();
-                    }
+                const dataSet = element.dataSet;
+                if(chartArray[chartIndex].count > chart.getAttribute("history")){
+                    dataSet.data.shift();
+                }
 
-                    dataSet.data.push(response);
-                    
-                    
-                    chartArray[chartIndex].update();
+                dataSet.data.push(element.innerHTML.split(" ")[0]);
+                
+                
+                
 
-                    element.classList.remove("error");
-                })
-                .catch(err => {
-                    element.innerHTML = "Null"
-                    element.classList.add("error");
-                    console.error(err);
-                })
+                element.classList.remove("error");
+                
                 
             }
+            chartArray[chartIndex].update();
+            
             
 
-        },5000);
+        },2500);
         onloadQueue.push(() => {
             const chart = document.getElementById("Temperature-Widget-Chart")
             const chartIndex = chart.getAttribute("chartIndex");
@@ -127,7 +119,7 @@
             var colorFilters = [];
             var apiFetchers = [];
             for(let i = 0; i< possibleApiFetchers.length; i++){
-                if(possibleApiFetchers[i].getAttribute("charted")){
+                if(possibleApiFetchers[i].getAttribute("charted") == "true"){
                     apiFetchers.push(possibleApiFetchers[i]);
                     colorFilters.push(possibleApiFetchers[i].parentElement.getElementsByClassName("colorFilter")[0]);
                 }
@@ -145,6 +137,15 @@
                     options: {
                         responsive: true,
                         animations: false,
+                        elements: {
+                            point:{
+                                radius: 1
+                            }
+                        },
+                        interactions:{
+                            mode: "nearest",
+                            intersect: false
+                        },
                         plugins:{
                             legend:{
                                 display: false
@@ -184,6 +185,9 @@
                 
                 const dataSet = chartArray[chartIndex].data.datasets[i++];
                 const targetColor = targetColorFilter.getAttribute("colorFilter");
+
+                element.dataSet = dataSet;
+                element.chart = chart;
 
                 dataSet.borderColor     = targetColor;
                 dataSet.backgroundColor = darkenHexColor(targetColor,30);

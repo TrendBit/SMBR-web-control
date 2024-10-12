@@ -1,7 +1,7 @@
 (function() {
 setInterval(updateSite, 5000);
 
-updateSite();
+onloadQueue.push( () => updateSite());
 
 async function updateSite(){
     const apiFetchers = document.getElementsByClassName('api-fetcher');
@@ -20,7 +20,7 @@ async function updateSite(){
                 .catch(err => {
                     element.innerHTML = "Null"
                     element.classList.add("error");
-                    console.error(err);
+                    console.error(element,err);
                 })
 
 

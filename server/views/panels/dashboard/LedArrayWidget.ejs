@@ -10,11 +10,12 @@
             </tr>
         </thead>
         <tbody id="LedArray-Widget-Table">
-
-            <% DashboardPanel.LedArrayWidget.rows.forEach(element => { %>
+            <% var i = 0;%>
+            <% DashboardPanel.LedArrayWidget.table.rows.forEach(element => { %>
                 <tr class="table-master">
-                    <td class="table-color" style="color: <%if(element.borderColor){%><%=element.borderColor%><%}else{%><%="white"%><%} %>;">
-                        ⬤
+                    <td class="table-color">
+                        <img src="<%= getIcon("dot") %>" alt="dot">
+                        <div class="colorFilter" colorFilter="<%= getColor(i++) %>"></div>
                     </td>
 
                     <td class="table-name">
@@ -28,8 +29,6 @@
                         component="<%= element.absolute.component %>"
                         pull_period="<%= element.absolute.pull_period %>"
                         charted="<% if(element.relative.charted){%><%=element.relative.charted%><%}else{%><%="false"%><%} %>" 
-                        borderColor="<% if(element.borderColor){%><%=element.borderColor%><%}else{%><%=""%><%} %>"
-                        backgroundColor="<% if(element.backgroundColor){%><%=element.backgroundColor%><%}else{%><%=""%><%} %>"
                         label="absolute"
                     >
                     </td>
@@ -41,8 +40,6 @@
                         component="<%= element.relative.component %>"
                         pull_period="<%= element.relative.pull_period %>"
                         charted="<% if(element.relative.charted){%><%=element.relative.charted%><%}else{%><%="false"%><%} %>" 
-                        borderColor="<% if(element.borderColor){%><%=element.borderColor%><%}else{%><%=""%><%} %>"
-                        backgroundColor="<% if(element.backgroundColor){%><%=element.backgroundColor%><%}else{%><%=""%><%} %>"
                         label="relative"
                     >
                     </td>
@@ -50,116 +47,39 @@
             <% }); %>
         </tbody>
     </table>
-    <div class="apiChart" >
-        <canvas id="LedArray-Widget-Chart" chartIndex="<%= currNumOfCharts++ %>" history="<%= DashboardPanel.LedArrayWidget.chart.history %>"></canvas>
-    </div>
-    <script>
-        setInterval(() => { //updater
-            const chart = document.getElementById("LedArray-Widget-Chart");
-            const chartIndex = chart.getAttribute("chartIndex");
-            const url = "http://" + window.location.hostname;
-            var i = 0;
-            
-            if(chartArray[chartIndex].count <= chart.getAttribute("history")){
-                chartArray[chartIndex].count++;
-            }
-            
-            chartArray[chartIndex].apiFetchers.forEach(element => {
-                fetchDataAsJson(url+":"+element.getAttribute("port")+element.getAttribute("resource"))
-                .then(response => {
-                    response = response[element.getAttribute("component")];
-                    const dataSet = chartArray[chartIndex].data.datasets[i++];
 
-                    if(chartArray[chartIndex].count > chart.getAttribute("history")){
-                        dataSet.data.shift();
-                    }
-                    
-
-                    dataSet.data.push(response);
-                    
-                    
-                    chartArray[chartIndex].update();
-
-                    element.classList.remove("error");
-                })
-                .catch(err => {
-                    element.innerHTML = "Null"
-                    element.classList.add("error");
-                    console.error(err);
-                })
+    <div class="control-panel" id="LedArray-Widget-control-panel">
+        <%i = 0; DashboardPanel.LedArrayWidget.control.sliders.forEach(element => { %>
+            <div class="slider1 widget">
+                <div class="slider-labels">
+                    <h3 class="slider-name"><%= element.name %></h3>
+                    <p class="slider-value" id="LedArray-Widget-slider-value-<%= i  %>">err</p>
+                </div>
                 
-            });
-            
-
-        },5000);
-        onloadQueue.push(() => {
-            const chart = document.getElementById("LedArray-Widget-Chart");
-            const chartIndex = chart.getAttribute("chartIndex");
-            const possibleApiFetchers = document.getElementById("LedArray-Widget-Table").getElementsByClassName("api-fetcher");
-            const apiFetchers = [];
-            for(let i = 0; i< possibleApiFetchers.length; i++){
-                if(possibleApiFetchers[i].getAttribute("charted")){
-                    apiFetchers.push(possibleApiFetchers[i]);
-                }
-            }
-            console.log("Iitializing a new chart \nindex:",chartIndex,"\nhistory:",chart.getAttribute("history"),"\napiFetchers:",apiFetchers);
-            chartArray[chartIndex] =( new Chart(
-                chart,
-                {
-                    type: 'line',
-                    data: {
-                        labels: getCountdownArray(chart.getAttribute("history")),
-                        datasets: getEmptyDatasets(apiFetchers.length),
-                    },
-                    options: {
-                        responsive: true,
-                        animations: false,
-                        plugins:{
-                            legend:{
-                                display: false
-                            }
-                        },
-                        scales: {
-                            x: {
-                                display: true,
-                                ticks: {
-                                    display: false
-                                },
-                                grid:{
-                                    color: "rgb(50,50,50)"
-                                }
-                            },
-                            y: {
-                                display: true,
-                                grid:{
-                                    color: "rgb(50,50,50)"
-                                }
-                            }
-                        },
-                        grid: {
-                            color: "red"
-                        }
-                    },
-                }
-            ) );
-            chartArray[chartIndex].apiFetchers= apiFetchers;    
-            chartArray[chartIndex].count = 0;  
-
-            var i = 0;
-            chartArray[chartIndex].apiFetchers.forEach(element => {
-                const dataSet = chartArray[chartIndex].data.datasets[i++];
-                if( element.getAttribute("label") == "absolute"){
-                    if(element.getAttribute("borderColor"))     dataSet.borderColor=element.getAttribute("borderColor");
-                    if(element.getAttribute("backgroundColor")) dataSet.backgroundColor=element.getAttribute("backgroundColor");
-                }else{
-                    if(element.getAttribute("borderColor"))     dataSet.borderColor=element.getAttribute("backgroundColor");
-                    if(element.getAttribute("backgroundColor")) dataSet.backgroundColor=element.getAttribute("borderColor");
-                }
+                <div>
+                    <input  class="slider vertical" 
+                        type="range" 
+                        min="<%= element.min %>" 
+                        max="<%= element.max %>" 
+                        step="<% if(element.step){%><%=element.step%><%}else{%><%="1"%><%} %>"
+                        value="err" 
+                        valueLable="LedArray-Widget-slider-value-<%= i++  %>"
+                    >
+                </div>
                 
-                dataSet.label = element.parentElement.getElementsByClassName("table-name")[0].innerHTML.trim() + " " + element.getAttribute("label");                  
-            });
-        });
-             
-
-    </script>
+                
+            </div>
+           
+        <% }); %> 
+        <script>
+            const controlPanel = document.getElementById("LedArray-Widget-control-panel");
+            const sliders = controlPanel.getElementsByClassName("slider");
+            for (let i = 0; i < sliders.length; i++) {
+                const element = sliders[i];
+                element.oninput = function() {
+                document.getElementById(element.getAttribute("valueLable")).innerHTML = element.value + "%";
+                };
+            }
+        </script>
+    </div>    
 </div>
