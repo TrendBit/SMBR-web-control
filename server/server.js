@@ -24,6 +24,11 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use("/experiments" ,express.static(path.join(__dirname, 'experiments')));
 app.use("/configs" ,express.static(path.join(__dirname, 'configs')));
+app.use("/node_modules/chart.js",express.static(path.join(__dirname,'node_modules','chart.js')))
+app.use("/node_modules/codemirror",express.static(path.join(__dirname,'node_modules','codemirror')))
+app.use("/node_modules/@codemirror",express.static(path.join(__dirname,'node_modules','@codemirror')))
+
+
 
 //sets the favicon resource
 app.use(favicon(path.join(__dirname, 'public','UI','logo','favicon.png')));
