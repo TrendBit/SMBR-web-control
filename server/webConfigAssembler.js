@@ -59,6 +59,7 @@ async function initialize() {
         buildWebConfig();
     }
     else{
+        loadedModules = [];
         reloadModules();
     }
 
