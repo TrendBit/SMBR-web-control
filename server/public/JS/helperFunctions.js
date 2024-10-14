@@ -114,20 +114,15 @@ async function fetchData(url) {
 }
 
 async function sendData(url, data) {
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'text/plain'
-            },
-            body: data
-        });
-        
-        const result = await response.json();
-        console.debug('Data sent: ', result.status());
-    } catch (error) {
-        console.error('Error while sending data:', error);
-    }
+    const response = await fetch(url, {
+        method: 'POST',
+        referrerPolicy: "unsafe-url",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: data
+    });
+    return await response;
 }
 
 function censor(censor) { //stolen from https://stackoverflow.com/questions/4816099/chrome-sendrequest-error-typeerror-converting-circular-structure-to-json/9653082#9653082
