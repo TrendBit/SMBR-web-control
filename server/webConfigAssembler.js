@@ -28,30 +28,13 @@ async function initialize() {
     const nets = networkInterfaces();
     const results = [];
     console.log("looking for apiServer");
-    for (const name of Object.keys(nets)) {
-        for (const net of nets[name]) {
-            // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
-            // 'IPv4' is in Node <= 17, from 18 it's a number 4 or 6
-            const familyV4Value = typeof net.family === 'string' ? 'IPv4' : 4
-            if (net.family === familyV4Value) {
-                if (!results[name]) {
-                    results[name] = [];
-                }
-                results[name].push(net.address);
-            }
-        }
-    }
-
-    for (const name of Object.keys(results)) {
-        const element = results[name];
-        try {
-            console.log("  trying ","http://"+element[0]+":8089/system/modules")
-            const response = await axios.get("http://"+element[0]+":8089/system/modules", {});
-            console.log("  ",element, " API DETECTED");  
-            localIP = element[0];
-        } catch (error) {
-            console.log("  ",element, " no api");  
-        }
+    try {
+        console.log("  trying ","http://"+"127.0.0.1"+":8089/system/modules")
+        const response = await axios.get("http://"+"127.0.0.1"+":8089/system/modules", {});
+        console.log("    API DETECTED");  
+        localIP = "127.0.0.1";
+    } catch (error) {
+        console.log("    no api");  
     }
 
     if(!localIP){
@@ -98,8 +81,16 @@ module.exports = {
 
 
 
-
+var unsuccessfullReloads = 0;
 async function reloadModules(){
+    if(!localIP){
+        if(unsuccessfullReloads++ >= 20){
+            initialize();
+        }else{
+            console.warn("unsuccessfullReloads: ",unsuccessfullReloads,"/20");
+        }
+        return 
+    }
     try {
         const response = await axios.get('http://'+localIP+':8089/system/modules', {});
         if(response.status == 200){
