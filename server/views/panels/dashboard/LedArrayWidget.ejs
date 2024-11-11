@@ -1,97 +1,57 @@
 <div id="LedArray-Widget" class="widget">
-    <h1>Spektral</h1>
-    <table class="table-widget-segment">
-        <thead>
-            <tr>
-                <th>color</th>
-                <th>name</th>
-                <th>absolute</th>
-                <th>relative</th>
-            </tr>
-        </thead>
-        <tbody id="LedArray-Widget-Table">
-            <% var i = 0;%>
-            <% DashboardPanel.LedArrayWidget.table.rows.forEach(element => { %>
-                <tr class="table-master">
-                    <td class="table-color">
-                        <img src="<%= getIcon("dot") %>" alt="dot">
-                        <div class="colorFilter" colorFilter="<%= getColor(i++) %>"></div>
-                    </td>
-
-                    <td class="table-name">
-                        <%= element.name %>
-                    </td>
-
-                    <td class="table-dataField api-fetcher"
-                        port="<% if(element.absolute.port){%><%=element.absolute.port%><%}else{%><%="8089"%><%} %>" 
-                        unit="<% if(element.absolute.unit){%><%=element.absolute.unit%><%}else{%><%="lm"%><%} %>" 
-                        resource="<%= element.absolute.resource %>" 
-                        component="<%= element.absolute.component %>"
-                        pull_period="<%= element.absolute.pull_period %>"
-                        charted="<% if(element.relative.charted){%><%=element.relative.charted%><%}else{%><%="false"%><%} %>" 
-                        label="absolute"
-                    >
-                    </td>
-                    
-                    <td class="table-dataField api-fetcher"
-                        port="<% if(element.relative.port){%><%=element.relative.port%><%}else{%><%="8089"%><%} %>" 
-                        unit="<% if(element.relative.unit){%><%=element.relative.unit%><%}else{%><%="%"%><%} %>" 
-                        resource="<%= element.relative.resource %>" 
-                        component="<%= element.relative.component %>"
-                        pull_period="<%= element.relative.pull_period %>"
-                        charted="<% if(element.relative.charted){%><%=element.relative.charted%><%}else{%><%="false"%><%} %>" 
-                        label="relative"
-                    >
-                    </td>
-                </tr>
-            <% }); %>
-        </tbody>
-    </table>
-
+    <h1>LedArray</h1>
     <div class="control-panel" id="LedArray-Widget-control-panel">
-        <%i = 0; DashboardPanel.LedArrayWidget.control.sliders.forEach(element => { %>
+        <%i = 0; DashboardPanel.LedArrayWidget.sliders.forEach(element => { %>
             <div class="slider1 widget">
                 <div class="slider-labels">
                     <h3 class="slider-name"><%= element.name %></h3>
                     <p class="slider-value" id="LedArray-Widget-slider-value-<%= i  %>">unknown</p>
                 </div>
-                
-                <div>
+                <div class="slider-slider">
                     <input  class="slider vertical" 
                         type="range" 
                         min="<%= element.min %>" 
                         max="<%= element.max %>" 
+                        unit="<% if(element.unit){%><%=element.unit%><%}else{%><%="%"%><%} %>"
                         step="<% if(element.step){%><%=element.step%><%}else{%><%="1"%><%} %>"
                         valueLabel="LedArray-Widget-slider-value-<%= i++  %>"
                         lastUpdate="0"
+                        channel="<%= element.channel %>"
                     >
                 </div>
-                
-                
             </div>
            
         <% }); %> 
         <script>
-            const controlPanel = document.getElementById("LedArray-Widget-control-panel");
-            const sliders = controlPanel.getElementsByClassName("slider");
-            for (let i = 0; i < sliders.length; i++) {
-                const element = sliders[i];
-                element.oninput = function() {
-                    document.getElementById(element.getAttribute("valueLabel")).innerHTML = element.value + "%";
-                    if((Date.now() - startMilis) - element.getAttribute("lastUpdate") > 100 || element.value == element.getAttribute("max") || element.value == element.getAttribute("min")){
+            (function() {
+                const controlPanel = document.getElementById("LedArray-Widget-control-panel");
+                const sliders = controlPanel.getElementsByClassName("slider");
+                for (let i = 0; i < sliders.length; i++) {
+                    const element = sliders[i];
+                    element.oninput = function() {
+                        document.getElementById(element.getAttribute("valueLabel")).innerHTML = (element.value) + element.getAttribute("unit");
+                        if((Date.now() - startMilis) - element.getAttribute("lastUpdate") > 100 || element.value == element.getAttribute("max") || element.value == element.getAttribute("min")){
+                            element.setAttribute("lastUpdate",Date.now()-startMilis);
+                            const url = "http://" + window.location.hostname;
+                            const data = {
+                                intensity: Math.round(element.value)/100,
+                                channel: Math.round(element.getAttribute("channel"))
+                            }
+                            sendData(url+":8089/control/set-led-intensity",JSON.stringify(data));
+                        }
+                    };
+                    element.onchange = function() {
+                        document.getElementById(element.getAttribute("valueLabel")).innerHTML = (element.value) + element.getAttribute("unit");
                         element.setAttribute("lastUpdate",Date.now()-startMilis);
                         const url = "http://" + window.location.hostname;
-                        const data = {intensity: Math.round(element.value)}
+                        const data = {
+                            intensity: Math.round(element.value)/100,
+                            channel: Math.round(element.getAttribute("channel"))
+                        }
                         sendData(url+":8089/control/set-led-intensity",JSON.stringify(data));
                     }
-                };
-                element.onchange = function() {
-                    element.setAttribute("lastUpdate",Date.now()-startMilis);
-                    const url = "http://" + window.location.hostname;
-                    const data = {intensity: Math.round(element.value)}
-                    sendData(url+":8089/control/set-led-intensity",JSON.stringify(data));
                 }
-            }
+            })();
         </script>
     </div>    
 </div>

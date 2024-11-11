@@ -61,70 +61,99 @@ DashboardPanel:
     chart:
       history: 30
   LedArrayWidget:
-    control:
-      sliders:
-        - name: Channel 1
-          min: 0
-          max: 100
-          step: 0.1
-        - name: Channel 2
-          min: 0
-          max: 20
-          step: 5
-        - name: Channel 3
-          min: 0
-          max: 100
-          step: 0.1
-        - name: Channel 4
-          min: 0
-          max: 100
-          step: 0.1
-    table:
-      rows:
-        - name: Channel 1
-          absolute:
-            port: 80
-            resource: /test-get
-            component: value
-            charted: true
-          relative:
-            port: 80
-            resource: /test-get
-            component: value
-            charted: true
-        - name: Channel 2
-          absolute:
-            port: 80
-            resource: /test-get
-            component: value
-            charted: true
-          relative:
-            port: 80
-            resource: /test-get
-            component: value
-            charted: true
-        - name: Channel 3
-          absolute:
-            port: 80
-            resource: /test-get
-            component: value
-            charted: true
-          relative:
-            port: 80
-            resource: /test-get
-            component: value
-            charted: true
-        - name: Channel 4
-          absolute:
-            port: 80
-            resource: /test-get
-            component: value
-            charted: true
-          relative:
-            port: 80
-            resource: /test-get
-            component: value
-            charted: true
+    sliders:
+      - name: Channel 1
+        min: 0
+        max: 100
+        step: 1
+        channel: 0
+      - name: Channel 2
+        min: 0
+        max: 100
+        step: 1
+        channel: 1
+      - name: Channel 3
+        min: 0
+        max: 100
+        step: 1
+        channel: 2
+      - name: Channel 4
+        min: 0
+        max: 100
+        step: 1
+        channel: 3
+  CoolSpektrometerWidget:
+    rows:
+      - name: Channel 1
+        absolute:
+          port: 80
+          resource: /test-get
+          component: value
+          charted: true
+        relative:
+          port: 80
+          resource: /test-get
+          component: value
+          charted: true
+      - name: Channel 2
+        absolute:
+          port: 80
+          resource: /test-get
+          component: value
+          charted: true
+        relative:
+          port: 80
+          resource: /test-get
+          component: value
+          charted: true
+      - name: Channel 3
+        absolute:
+          port: 80
+          resource: /test-get
+          component: value
+          charted: true
+        relative:
+          port: 80
+          resource: /test-get
+          component: value
+          charted: true
+      - name: Channel 4
+        absolute:
+          port: 80
+          resource: /test-get
+          component: value
+          charted: true
+        relative:
+          port: 80
+          resource: /test-get
+          component: value
+          charted: true
+  ControlWidget:
+    sliders:
+      - name: Air
+        min: 0
+        max: 1
+        step: 0.1
+        unit: ' '
+        defaultValue: 0
+      - name: Mix
+        min: 0
+        max: 1
+        step: 0.1
+        unit: ' '
+        defaultValue: 0
+      - name: Pump
+        min: -1
+        max: 1
+        step: 0.1
+        unit: ' '
+        defaultValue: 0
+      - name: Heater
+        min: -1
+        max: 1
+        step: 0.1
+        unit: ' '
+        defaultValue: 0
 DevicePanel:
   modules:
     - name: control

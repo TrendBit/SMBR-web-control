@@ -86,8 +86,14 @@ var currNumOfCharts = 0;
                     <% if(DashboardPanel.TemperatureWidget){  %>
                         <%- include('panels/dashboard/TemperatureWidget.ejs', {currNumOfCharts: currNumOfCharts++}) %>
                     <% } %>      
+                    <% if(DashboardPanel.CoolSpektrometerWidget){  %>
+                        <%- include('panels/dashboard/CoolSpektrometerWidget.ejs') %>
+                    <% } %>    
+                    <% if(DashboardPanel.ControlWidget){  %>
+                        <%- include('panels/dashboard/ControlWidget.ejs') %>
+                    <% } %>    
                     <% if(DashboardPanel.LedArrayWidget){ %>
-                        <%- include('panels/dashboard/LedArrayWidget.ejs', {currNumOfCharts: currNumOfCharts++}) %>
+                        <%- include('panels/dashboard/LedArrayWidget.ejs') %>
                     <% } %>           
                 </div>  
             <% } %>

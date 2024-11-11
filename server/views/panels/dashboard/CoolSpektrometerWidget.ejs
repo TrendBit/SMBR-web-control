@@ -1,0 +1,50 @@
+<div id="CoolSpektrometer-Widget" class="widget">
+    <h1>Spektral</h1>
+    <table class="table-widget-segment">
+        <thead>
+            <tr>
+                <th>color</th>
+                <th>name</th>
+                <th>absolute</th>
+                <th>relative</th>
+            </tr>
+        </thead>
+        <tbody id="CoolSpektrometer-Widget-Table">
+            <% var i = 0;%>
+            <% DashboardPanel.CoolSpektrometerWidget.rows.forEach(element => { %>
+                <tr class="table-master">
+                    <td class="table-color">
+                        <img src="<%= getIcon("dot") %>" alt="dot">
+                        <div class="colorFilter" colorFilter="<%= getColor(i++) %>"></div>
+                    </td>
+
+                    <td class="table-name">
+                        <%= element.name %>
+                    </td>
+
+                    <td class="table-dataField api-fetcher"
+                        port="<% if(element.absolute.port){%><%=element.absolute.port%><%}else{%><%="8089"%><%} %>" 
+                        unit="<% if(element.absolute.unit){%><%=element.absolute.unit%><%}else{%><%="lm"%><%} %>" 
+                        resource="<%= element.absolute.resource %>" 
+                        component="<%= element.absolute.component %>"
+                        pull_period="<%= element.absolute.pull_period %>"
+                        charted="<% if(element.relative.charted){%><%=element.relative.charted%><%}else{%><%="false"%><%} %>" 
+                        label="absolute"
+                    >
+                    </td>
+                    
+                    <td class="table-dataField api-fetcher"
+                        port="<% if(element.relative.port){%><%=element.relative.port%><%}else{%><%="8089"%><%} %>" 
+                        unit="<% if(element.relative.unit){%><%=element.relative.unit%><%}else{%><%="%"%><%} %>" 
+                        resource="<%= element.relative.resource %>" 
+                        component="<%= element.relative.component %>"
+                        pull_period="<%= element.relative.pull_period %>"
+                        charted="<% if(element.relative.charted){%><%=element.relative.charted%><%}else{%><%="false"%><%} %>" 
+                        label="relative"
+                    >
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
