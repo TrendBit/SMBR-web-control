@@ -167,3 +167,7 @@ function darkenHexColor(hex, percent) {
 function rgbToHex(r, g, b) {
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
 }
+
+function mapRangeToRange(number, inMin,inMax, outMin,outMax){
+    return ((number - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+}

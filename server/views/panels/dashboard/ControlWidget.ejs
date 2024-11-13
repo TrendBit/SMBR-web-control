@@ -31,6 +31,15 @@
             for (let i = 0; i < sliders.length; i++) {
                 const element = sliders[i];
                 element.oninput = function() {
+                    if((window.webkitURL != null)){//chrome slider fix
+                        const progress = mapRangeToRange(element.value,Number(element.getAttribute("max")),Number(element.getAttribute("min")),100,0) 
+                        if(element.classList.contains("vertical")){
+                            element.style.background = "linear-gradient(0deg, var(--acc-color-2) "+progress+"%, var(--bg-color-3) "+progress+"%)";
+                        }else{
+                            element.style.background = "linear-gradient(90deg, var(--acc-color-2) "+progress+"%, var(--bg-color-3) "+progress+"%)";
+                        }
+                    }
+
                     document.getElementById(element.getAttribute("valueLabel")).innerHTML = (element.value) + element.getAttribute("unit");
                     if((Date.now() - startMilis) - element.getAttribute("lastUpdate") > 100 || element.value == element.getAttribute("max") || element.value == element.getAttribute("min")){
                         element.setAttribute("lastUpdate",Date.now()-startMilis);
