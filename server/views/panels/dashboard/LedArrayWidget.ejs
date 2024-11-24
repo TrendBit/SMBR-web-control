@@ -1,5 +1,23 @@
 <div id="LedArray-Widget" class="widget">
-    <h1>LedArray</h1>
+    <div class="header">
+        <h1>Led array</h1>
+        <div class="right">
+            <% if(DashboardPanel.LedArrayWidget.header) DashboardPanel.LedArrayWidget.header.rows.forEach(element => { %>
+                <div>
+                    <p><%= element.name %></p>
+                    <p class="table-dataField api-fetcher"
+                        port="<% if(element.port){%><%=element.port%><%}else{%><%="8089"%><%} %>" 
+                        unit="<% if(element.unit){%><%=element.unit%><%}else{%><%="°C"%><%} %>" 
+                        resource="<%= element.resource %>" 
+                        component="<%= element.component %>"
+                    ></p>
+                </div>
+            <% }); %>
+        </div>
+        <div class="top">
+            <p>ERROR</p>
+        </div>
+    </div>
     <div class="control-panel" id="LedArray-Widget-control-panel">
         <%i = 0; DashboardPanel.LedArrayWidget.sliders.forEach(element => { %>
             <div class="slider1 widget">

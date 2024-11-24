@@ -25,6 +25,7 @@
 #   
 DashboardPanel:
   TemperatureWidget:
+    header: 
     rows:
       - name: "Bottle"
         icon: "bottle"
@@ -96,9 +97,19 @@ DashboardPanel:
 
     chart:
       history: 30
-
-  
   LedArrayWidget:
+    header: 
+        rows:
+          - name: "TEST"
+            type: "dataField"
+            port: 80
+            resource: "/test-get"
+            component: "value"
+          - name: "TEST2"
+            type: "dataField"
+            port: 80
+            resource: "/test-get"
+            component: "value"
     sliders:
       - name: "Channel 1"
         min: 0
@@ -121,6 +132,13 @@ DashboardPanel:
         step: 1
         channel: 3
   CoolSpektrometerWidget:
+    header: 
+      rows:
+        - name: "TEST"
+          port: 80
+          type: "dataField"
+          resource: "/test-get"
+          component: "value"
     rows:
       - name: "Channel 1"
         absolute:
@@ -167,6 +185,7 @@ DashboardPanel:
           component: "value"
           charted: true
   ControlWidget:
+    header: 
     sliders:
       - name: "Air"
         min: 0

@@ -1,5 +1,25 @@
 <div id="Temperature-Widget" class="widget ">
-    <h1>Temperature</h1>
+    <div class="header">
+        <h1>Temperature</h1>
+        <div class="right">
+            <% if(DashboardPanel.TemperatureWidget.header) DashboardPanel.TemperatureWidget.header.rows.forEach(element => { %>
+                <div>
+                    <p><%= element.name %></p>
+                    <p class="table-dataField api-fetcher"
+                        port="<% if(element.port){%><%=element.port%><%}else{%><%="8089"%><%} %>" 
+                        unit="<% if(element.unit){%><%=element.unit%><%}else{%><%="°C"%><%} %>" 
+                        resource="<%= element.resource %>" 
+                        component="<%= element.component %>"
+                    ></p>
+                </div>
+            <% }); %>
+        </div>
+        <div class="top">
+            <p>ERROR</p>
+        </div>
+    </div>
+
+
     <table class="table-widget-segment">
         <thead>
             <tr>

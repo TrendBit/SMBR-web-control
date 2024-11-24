@@ -1,5 +1,23 @@
 <div id="Control-Widget" class="widget">
-    <h1>Control</h1>
+    <div class="header">
+        <h1>Control</h1>
+        <div class="right">
+            <% if(DashboardPanel.ControlWidget.header) DashboardPanel.ControlWidget.header.rows.forEach(element => { %>
+                <div>
+                    <p><%= element.name %></p>
+                    <p class="table-dataField api-fetcher"
+                        port="<% if(element.port){%><%=element.port%><%}else{%><%="8089"%><%} %>" 
+                        unit="<% if(element.unit){%><%=element.unit%><%}else{%><%="°C"%><%} %>" 
+                        resource="<%= element.resource %>" 
+                        component="<%= element.component %>"
+                    ></p>
+                </div>
+            <% }); %>
+        </div>
+        <div class="top">
+            <p>ERROR</p>
+        </div>
+    </div>
     <div id="Control-Widget-sliders">
     <%i = 0; DashboardPanel.ControlWidget.sliders.forEach(element => { %>
         <div class="slider1 widget">
