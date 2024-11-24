@@ -164,6 +164,10 @@ app.get('/file-list', (req, res) => {
 app.get('/module-list', (req, res) => {
     res.send(JSON.stringify(webConfigAssembler.getLoadedModules())).status(200);
 })
+app.get('/module-list-refresh',  async (req, res) => {
+    
+    res.send(JSON.stringify(await webConfigAssembler.getLoadedModulesRefresh())).status(200);
+})
 
 app.delete('/delete-file', (req,res) => {
     const fileDir = req.headers['target-directory'];

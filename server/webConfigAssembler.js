@@ -73,6 +73,11 @@ module.exports = {
     },
     getLoadedModules: function() {
         return loadedModules;
+    },
+    getLoadedModulesRefresh: async function() {
+        unsuccessfullReloads = 500000;
+        await reloadModules();
+        return loadedModules;
     }
 }
 
@@ -85,6 +90,7 @@ var unsuccessfullReloads = 0;
 async function reloadModules(){
     if(!localIP){
         if(unsuccessfullReloads++ >= 20){
+            unsuccessfullReloads = 0;
             initialize();
         }else{
             console.warn("unsuccessfullReloads: ",unsuccessfullReloads,"/20");
@@ -109,8 +115,10 @@ async function reloadModules(){
                 console.warn("changes in configuration detected");
                 buildWebConfig();
             }
-            }
-            else{
+        }
+        else{
+            console.log("dwadwajk");
+            localIP = "";
             throw new Error({code:response.status});
         }
     } catch (error) {
