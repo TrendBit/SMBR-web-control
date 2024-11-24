@@ -38,6 +38,10 @@ a simple test for different way to interact with the APIs
 **ejs** for creating dynamic sites
 **toml** for converting toml to json
 **serve-favicon** for serving the favicon icon
+**ajv** for validating using json-schema
+**js-yaml** for parsing yaml
+**axios** for a simpler way to send api requests
+**chart.js** for offline integration of chart.js
 
 ___
 # API

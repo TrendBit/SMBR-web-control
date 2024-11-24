@@ -1,0 +1,216 @@
+<div id="Temperature-Widget" class="widget ">
+    <h1>Temperature</h1>
+    <table class="table-widget-segment">
+        <thead>
+            <tr>
+                <th>color</th>
+                <th>name</th>
+                <th>current</th>
+                <th>target</th>
+            </tr>
+        </thead>
+        <tbody id="Temperature-Widget-Table">
+            <% var i=-1; %>
+            <% DashboardPanel.TemperatureWidget.rows.forEach(element => { %>
+                <tr class="table-master">
+                    <td class="table-color">
+                        <img src="<%= getIcon(element.icon) %>" alt="<%= element.icon %>">
+                        <div class="colorFilter" colorFilter="<%= getColor(++i) %>"></div>
+                    </td>
+
+                    <td class="table-name">
+                        <%= element.name %>
+                        <% if(element.sub_rows) { %> 
+                            <span class="collapse button1">v</span> 
+                        <% } %>
+                    </td>
+
+                    <td class="table-dataField api-fetcher"
+                        port="<% if(element.port){%><%=element.port%><%}else{%><%="8089"%><%} %>" 
+                        unit="<% if(element.unit){%><%=element.unit%><%}else{%><%="°C"%><%} %>" 
+                        resource="<%= element.resource %>" 
+                        component="<%= element.component %>"
+                        charted="<%= element.charted %>" 
+                    >
+                    </td>
+                    
+                    <td class="table-target">
+                        <% if(element.input) {%> 
+                            <input type='number' class="button1" min="<%= element.input.min %>" max="<%= element.input.max %>" placeholder="nan"> 
+                            <input type="button" class="button1" value=">">
+                        <% } %>
+                    </td>
+                </tr>
+
+                <% if(element.sub_rows){numOfSubRows=element.sub_rows.length; for( let u = 0; u < numOfSubRows; u++ ) { let sub_element = element.sub_rows[u];%>
+                    <tr class="table-sub">
+                        <td class="table-color">
+                            <img src="<% if((u+1)<numOfSubRows){%><%=getIcon("subElement")%><%}else{%><%=getIcon("subElement-last")%><%} %>" alt="sub_element">
+                            <div class="colorFilter" colorFilter="<%= getSubColor(i,u+1) %>"></div>
+                        </td>
+
+                        <td class="table-name">
+                            <%= sub_element.name %>
+                        </td>
+
+                        <td class="table-current api-fetcher"
+                            port="<% if(sub_element.port){%><%=sub_element.port%><%}else{%><%="8089"%><%} %>" 
+                            unit="<% if(sub_element.unit){%><%=sub_element.unit%><%}else{%><%="°C"%><%} %>" 
+                            resource="<%= sub_element.resource %>" 
+                            component="<%= sub_element.component %>"
+                            charted="<% if(element.charted){%><%=element.charted%><%}else{%><%="false"%><%} %>" 
+                        >
+                        </td>
+                        
+                        <td class="table-target">
+                            <% if(sub_element.input) {%> 
+                                <input type='number' class="button1" min="<%= sub_element.input.min %>" max="<%= sub_element.input.max %>"> 
+                                <input type="button" class="button1" value=">">
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }} %>
+
+            <% }); %>
+        </tbody>
+    </table>
+    <div class="apiChart">
+        <div style="display: none;">
+        </div>
+        <canvas id="Temperature-Widget-Chart" chartIndex="<%= currNumOfCharts++ %>" history="<%= DashboardPanel.TemperatureWidget.chart.history %>"></canvas>
+    </div>
+    
+    <script>
+        setInterval(() => { //updater
+            const chart = document.getElementById("Temperature-Widget-Chart");
+            const chartIndex = chart.getAttribute("chartIndex");
+            const url = "http://" + window.location.hostname;
+            var i = 0;
+            
+            if(chartArray[chartIndex].count <= chart.getAttribute("history")){
+                chartArray[chartIndex].count++;
+            }
+            for (let i = 0; i  < chartArray[chartIndex].apiFetchers.length; i++) {
+                const element = chartArray[chartIndex].apiFetchers[i];
+
+                const dataSet = element.dataSet;
+                if(chartArray[chartIndex].count > chart.getAttribute("history")){
+                    dataSet.data.shift();
+                }
+
+                dataSet.data.push(element.innerHTML.split(" ")[0]);
+                
+                
+                
+
+                element.classList.remove("error");
+                
+                
+            }
+            chartArray[chartIndex].update();
+            
+            
+
+        },2500);
+        onloadQueue.push(() => {
+            const chart = document.getElementById("Temperature-Widget-Chart")
+            const chartIndex = chart.getAttribute("chartIndex");
+            const possibleApiFetchers = document.getElementById("Temperature-Widget-Table").getElementsByClassName("api-fetcher");
+            var colorFilters = [];
+            var apiFetchers = [];
+            for(let i = 0; i< possibleApiFetchers.length; i++){
+                if(possibleApiFetchers[i].getAttribute("charted") == "true"){
+                    apiFetchers.push(possibleApiFetchers[i]);
+                    colorFilters.push(possibleApiFetchers[i].parentElement.getElementsByClassName("colorFilter")[0]);
+                }
+            }
+
+            console.log("Iitializing a new chart\nindex: ",chartIndex,"\nhistory:",chart.getAttribute("history"),"\napiFetchers:",apiFetchers, "\ncolorFilters:",colorFilters);
+            chartArray[chartIndex] = ( new Chart(
+                chart,
+                {
+                    type: 'line',
+                    data: {
+                        labels: getCountdownArray(chart.getAttribute("history")),
+                        datasets: getEmptyDatasets(apiFetchers.length),
+                    },
+                    options: {
+                        responsive: true,
+                        animations: false,
+                        elements: {
+                            point:{
+                                radius: 1
+                            }
+                        },
+                        interaction:{
+                            mode: "nearest",
+                            axis: "xy",
+                            intersect: false
+                        },
+                        plugins:{
+                            legend:{
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                display: true,
+                                ticks: {
+                                    display: false
+                                },
+                                grid:{
+                                    color: "rgb(50,50,50)"
+                                }
+                            },
+                            y: {
+                                display: true,
+                                grid:{
+                                    color: "rgb(50,50,50)"
+                                }
+                            }
+                        },
+                        grid: {
+                            color: "red"
+                        }
+                    }
+                }
+            ) );
+            chartArray[chartIndex].apiFetchers= apiFetchers;    
+            chartArray[chartIndex].count = 0; 
+
+            
+
+            var i = 0;
+            chartArray[chartIndex].apiFetchers.forEach(element => {
+                const targetColorFilter = colorFilters[i];
+                
+                const dataSet = chartArray[chartIndex].data.datasets[i++];
+                const targetColor = targetColorFilter.getAttribute("colorFilter");
+
+                element.dataSet = dataSet;
+                element.chart = chart;
+
+                dataSet.borderColor     = targetColor;
+                dataSet.backgroundColor = darkenHexColor(targetColor,30);
+                
+                const label = element.parentElement.getElementsByClassName("table-name")[0].innerHTML.trim();
+                const splitLabel = label.split(' ');
+                dataSet.label = "";
+                for (let i = 0; i < splitLabel.length; i++) {
+                    const element = splitLabel[i];
+                    if(element[0] == '<'){
+                        break;
+                    }
+                    dataSet.label += element;
+                }     
+                dataSet.label = dataSet.label.trim();         
+                
+                console.log("new dataset borderColor:",dataSet.borderColor,
+                            ", backgroundColor:",dataSet.backgroundColor,
+                            ", label:",dataSet.label);
+            });    
+        });
+             
+
+    </script>
+</div>

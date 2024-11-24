@@ -1,4 +1,3 @@
-
 const fs = require('node:fs');
 const toml = require('toml');
 module.exports = {

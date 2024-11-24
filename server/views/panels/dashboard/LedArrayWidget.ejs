@@ -1,0 +1,65 @@
+<div id="LedArray-Widget" class="widget">
+    <h1>LedArray</h1>
+    <div class="control-panel" id="LedArray-Widget-control-panel">
+        <%i = 0; DashboardPanel.LedArrayWidget.sliders.forEach(element => { %>
+            <div class="slider1 widget">
+                <div class="slider-labels">
+                    <h3 class="slider-name"><%= element.name %></h3>
+                    <p class="slider-value" id="LedArray-Widget-slider-value-<%= i  %>">unknown</p>
+                </div>
+                <div class="slider-slider">
+                    <input  class="slider vertical" 
+                        type="range" 
+                        min="<%= element.min %>" 
+                        max="<%= element.max %>" 
+                        unit="<% if(element.unit){%><%=element.unit%><%}else{%><%="%"%><%} %>"
+                        step="<% if(element.step){%><%=element.step%><%}else{%><%="1"%><%} %>"
+                        valueLabel="LedArray-Widget-slider-value-<%= i++  %>"
+                        lastUpdate="0"
+                        channel="<%= element.channel %>"
+                    >
+                </div>
+            </div>
+           
+        <% }); %> 
+        <script>
+            (function() {
+                const controlPanel = document.getElementById("LedArray-Widget-control-panel");
+                const sliders = controlPanel.getElementsByClassName("slider");
+                for (let i = 0; i < sliders.length; i++) {
+                    const element = sliders[i];
+                    element.oninput = function() {
+                        document.getElementById(element.getAttribute("valueLabel")).innerHTML = (element.value) + element.getAttribute("unit");
+                        if((window.webkitURL != null)){//chrome slider fix
+                            const progress = mapRangeToRange(element.value,Number(element.getAttribute("max")),Number(element.getAttribute("min")),100,0) 
+                            if(element.classList.contains("vertical")){
+                                element.style.background = "linear-gradient(0deg, var(--acc-color-2) "+0+"%, var(--bg-color-3) "+progress+"%)";
+                            }else{
+                                element.style.background = "linear-gradient(90deg, var(--acc-color-2) "+0+"%, var(--bg-color-3) "+progress+"%)";
+                            }
+                        }
+                        if((Date.now() - startMilis) - element.getAttribute("lastUpdate") > 100 || element.value == element.getAttribute("max") || element.value == element.getAttribute("min")){
+                            element.setAttribute("lastUpdate",Date.now()-startMilis);
+                            const url = "http://" + window.location.hostname;
+                            const data = {
+                                intensity: Math.round(element.value)/100,
+                                channel: Math.round(element.getAttribute("channel"))
+                            }
+                            sendData(url+":8089/control/set-led-intensity",JSON.stringify(data));
+                        }
+                    };
+                    element.onchange = function() {
+                        document.getElementById(element.getAttribute("valueLabel")).innerHTML = (element.value) + element.getAttribute("unit");
+                        element.setAttribute("lastUpdate",Date.now()-startMilis);
+                        const url = "http://" + window.location.hostname;
+                        const data = {
+                            intensity: Math.round(element.value)/100,
+                            channel: Math.round(element.getAttribute("channel"))
+                        }
+                        sendData(url+":8089/control/set-led-intensity",JSON.stringify(data));
+                    }
+                }
+            })();
+        </script>
+    </div>    
+</div>

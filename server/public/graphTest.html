@@ -37,7 +37,7 @@ It also gives a way to toggle the onboard LED
             if(myChart.data.datasets[0].data.length > 10){
                 myChart.data.datasets[0].data.shift();
             }else{
-                myChart.data.labels.push(count++);
+                //myChart.data.labels.push(count++);
             }
             myChart.data.datasets[0].data.push(response);
             myChart.update();
@@ -45,11 +45,11 @@ It also gives a way to toggle the onboard LED
         }
 
         function fetchData() {
-            fetch('http://localhost:8080/test-get')
+            fetch('http://localhost:80/test-get')
                 .then(response => response.json())
                 .then(response => {
                     console.log(response);
-                    updateSite(response.test);
+                    updateSite(response.value);
                 })
                 .catch(error => console.error('Error fetching data:', error));            
         }

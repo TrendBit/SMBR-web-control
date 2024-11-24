@@ -1,74 +1,35 @@
 <% 
-
-function getIcon(name){
-    switch(name){
-        case "activate":
-            return "./UI/icons/activate_icon.svg"
-        case "board":
-            return "./UI/icons/boards_icon.svg"
-        case "bottle":
-            return "./UI/icons/bottle_icon.svg"
-        case "config":
-            return "./UI/icons/config_icon.svg"
-        case "controls":
-            return "./UI/icons/controls_icon.svg"
-        case "dashboard":
-            return "./UI/icons/dashboard_icon.svg"
-        case "experiments":
-            return "./UI/icons/experiments_icon.svg"
-        case "leds":
-            return "./UI/icons/led_icon.svg"
-        case "lightbulb":
-            return "./UI/icons/lightbulb_icon.svg"
-        case "logo":
-            return "./UI/logo/logo_icon.svg"
-        case "mini_logo":
-            return "./UI/logo/PB_minilogo.svg"
-        case "menu":
-            return "./UI/icons/menu_icon.svg"
-        case "save":
-            return "./UI/icons/save_icon.svg"
-        case "search":
-            return "./UI/icons/search_icon.svg"
-        case "temperature_ambient":
-            return "./UI/icons/temperature_ambient_icon.svg"
-        case "temperature":
-            return "./UI/icons/temperature_icon.svg"
-        case "trashbin":
-            return "./UI/icons/trashbin_icon.svg"
-        case "subElement":
-            return "./UI/UI-elements/subElement.svg"
-        case "subElement-last":
-            return "./UI/UI-elements/subElement-last.svg"
-        default:
-            return "./UI/logo/LogoPlaceholder.svg"
-    }
-}
-
 var currNumOfCharts = 0;
 %>
 <script>
-    var chartUpdaterArray = [];
+    const startMilis = Date.now();
     var chartArray = [];
 
     function getCountdownArray(length){
-        result = [];
+        var result = [];
         for (let i = 0; i < length; i++) {
-            result.add(i);
+            result.push(i);
         }
         return result;
     }
     function getEmptyDatasets(qantity){
-        reuslt = [];
+        var result = [];
         for (let i = 0; i < qantity; i++) {
-            result.add({
+            result.push({
                 data: [],
                 cubicInterpolationMode: 'monotone',
-                tension: 0.4
             })
         }
         return result;
     }
+
+    const onloadQueue = [];
+    function executeOnloadQueue(){
+        onloadQueue.forEach(element => {
+            element();
+        })
+    }
+
 </script>
 <script src="JS/helperFunctions.js"></script>
 
@@ -78,15 +39,13 @@ var currNumOfCharts = 0;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PhenoBottle</title>
-    <link rel="stylesheet" href="stylesheet.css">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-
+    
+    <link rel="stylesheet" href="CSS/fonts/Fira_Code.css">
+    <link rel="stylesheet" href="CSS/fonts/Roboto.css">
+    <link rel="stylesheet" href="CSS/stylesheet.css">
 </head>
-<body>
+<body onload="executeOnloadQueue()">
+    
     <header id="HOTBAR">
         <button onclick="toggleClass_ByID('SIDEBAR', 'collapsed')"><img src="<%= getIcon("mini_logo") %>"></button>
         <h1>PhenoBottle</h1>
@@ -94,251 +53,124 @@ var currNumOfCharts = 0;
             <p id="hotbar-clock">16:22</p>
             <p id="hotbar-date">11.07.2024</p>
         </div>
-        <div id="Status-Indicator" onclick="changeStatus(this)">
-            <h2>Error</h2>
+        <div id="status-indicator" onclick="changeStatus(this)">
+            <h2>Standby</h2>
         </div>
         
-    </header    >
-    <div class="container">
+    </header>
 
+    
+
+    <div id="MAIN" class="container">
         <div id="SIDEBAR">
             <ul>
-                <li class="active" onclick="changeContext(0)"><img src="UI/icons/dashboard_icon.svg"><span>Dashboard</span></li>
-                <li onclick="changeContext(1)"><img src="UI/icons/experiments_icon.svg" ><span>Experiments</span></li>
-                <li onclick="changeContext(2)"><img src="UI/icons/config_icon.svg" ><span>Config</span></li>
+                <% contextCnt = 0; %>
+
+                <% if(locals.DashboardPanel){ %>
+                <li class="active" onclick="changeContext('<%= contextCnt++ %>')"><img src="<%= getIcon("dashboard") %>"><span>Dashboard</span></li>
+                <% } %>
+
+                <li onclick="changeContext('<%= contextCnt++ %>')"><img src="<%= getIcon("experiments") %>" ><span>Experiments</span></li>
+
+                <li onclick="changeContext('<%= contextCnt++ %>')"><img src="<%= getIcon("config") %>" ><span>Config</span></li>
+
+                <% if(locals.DevicePanel){ %>
+                    <li onclick="changeContext('<%= contextCnt++ %>')"><img src="<%= getIcon("device") %>"><span>Device</span></li>
+                <% } %>
             </ul>
         </div>
         <div id="CONTENT">
             
-            <div id="DashBoard-Panel" class="content-panel container">
-
-                <div id="Temperature-Widget" class="widget ">
-                    <h1>Temperature</h1>
-                    <table class="table-widget-segment">
-                        <thead>
-                            <tr>
-                                <th>color</th>
-                                <th>name</th>
-                                <th>current</th>
-                                <th>target</th>
-                            </tr>
-                        </thead>
-                        <tbody id="Temperature-Widget-Table">
-
-                            <% Temperature_widget.rows.forEach(element => { %>
-                                <tr class="table-master">
-                                    <td class="table-color">
-                                        <img src="<%= getIcon(element.icon) %>" alt="<%= element.icon %>">
-                                    </td>
-
-                                    <td class="table-name">
-                                        <%= element.name %>
-                                        <% if(element.sub_rows) { %> 
-                                            <span class="collapse button1">v</span> 
-                                        <% } %>
-                                    </td>
-
-                                    <td class="table-current api-fetcher"
-                                        port="<% if(element.port){%><%=element.port%><%}else{%><%="8089"%><%} %>" 
-                                        unit="<% if(element.unit){%><%=element.unit%><%}else{%><%="°C"%><%} %>" 
-                                        resource="<%= element.resource %>" 
-                                        component="<%= element.component %>"
-                                        pull_period="<%= element.pull_period %>"
-                                    >
-                                    </td>
-                                    
-                                    <td class="table-target">
-                                        <% if(element.input) {%> 
-                                            <input type='number' class="button1" min="<%= element.input.min %>" max="<%= element.input.max %>" placeholder="nan"> 
-                                            <input type="button" class="button1" value=">">
-                                        <% } %>
-                                    </td>
-                                </tr>
-
-                                <% if(element.sub_rows){numOfSubRows=element.sub_rows.length; for( let u = 0; u < numOfSubRows; u++ ) { let sub_element = element.sub_rows[u];%>
-                                    <tr class="table-sub">
-                                        <td class="table-color">
-                                            <img src="<% if((u+1)<numOfSubRows){%><%=getIcon("subElement")%><%}else{%><%=getIcon("subElement-last")%><%} %>" alt="sub_element">
-                                        </td>
-    
-                                        <td class="table-name">
-                                            <%= sub_element.name %>
-                                        </td>
-    
-                                        <td class="table-current api-fetcher"
-                                            port="<% if(sub_element.port){%><%=sub_element.port%><%}else{%><%="8089"%><%} %>" 
-                                            unit="<% if(sub_element.unit){%><%=sub_element.unit%><%}else{%><%="°C"%><%} %>" 
-                                            resource="<%= sub_element.resource %>" 
-                                            component="<%= sub_element.component %>"
-                                            pull_period="<%= sub_element.pull_period %>"
-                                        >
-                                        </td>
-                                        
-                                        <td class="table-target">
-                                            <% if(sub_element.input) {%> 
-                                                <input type='number' class="button1" min="<%= sub_element.input.min %>" max="<%= sub_element.input.max %>"> 
-                                                <input type="button" class="button1" value=">">
-                                            <% } %>
-                                        </td>
-                                    </tr>
-                                <% }} %>
-
-                            <% }); %>
-                        </tbody>
-                    </table>
-                    <div class="apiChart">
-                        <div style="display: none;">
-                        </div>
-                        <canvas id="Temperature-Widget-Chart"></canvas>
-                    </div>
-                    <script>
-                        chartUpdaterArray.add(() =>{ //updater
-                            
-                        })  
-                        const chart = document.getElementById("Temperature-Widget-Chart")
-                        const possibleApiFetchers = document.getElementById("Temperature-Widget-Table").getElementsByClassName("api-fetcher");
-                        const apiFetchers = [];
-                        for(let i = 0; i< possibleApiFetchers.length; i++){
-                            if(possibleApiFetchers[i].getAttribute("charted")){
-                                apiFetchers.add(possibleApiFetchers[i]);
-                            }
-                        }
-                        document.getElementById("Temperature-Widget-Table").getElementsByClassName("api-fetcher")
-                        chartArray.add( new Chart(
-                            chart,
-                            {
-                                type: 'line',
-                                data: {
-                                    labels: getCountdownArray(chart.getAttribute("history")),
-                                    datasets: getEmptyDatasets(apiFetchers.length),
-                                },
-                                options: {
-                                    responsive: true,
-                                    animations: false,
-                                    
-                                }
-                            }
-                        ) )                   
-
-                    </script>
-                </div>
-            </div>  
-
+            <% if(locals.DashboardPanel){ %>
+                <div id="DashBoard-Panel" class="content-panel container">
+                    <% if(DashboardPanel.TemperatureWidget){  %>
+                        <%- include('panels/dashboard/TemperatureWidget.ejs', {currNumOfCharts: currNumOfCharts++}) %>
+                    <% } %>      
+                    <% if(DashboardPanel.CoolSpektrometerWidget){  %>
+                        <%- include('panels/dashboard/CoolSpektrometerWidget.ejs') %>
+                    <% } %>    
+                    <% if(DashboardPanel.ControlWidget){  %>
+                        <%- include('panels/dashboard/ControlWidget.ejs') %>
+                    <% } %>    
+                    <% if(DashboardPanel.LedArrayWidget){ %>
+                        <%- include('panels/dashboard/LedArrayWidget.ejs') %>
+                    <% } %>           
+                </div>  
+            <% } %>
 
             <div id="experiments-Panel" class="content-panel container hidden">
-                <div class="file-browser">
-                    <div class="search-bar">
-                        <input type="text">
-                        <img src="UI/icons/search_icon.svg" alt="searchIcon" class="icon">
-                    </div>
-                    <div class="add-button ">
-                        <div class="button1">
-                            <div class="button2container">
-                                <input type="text" class="button2 left add-button-fileName" placeholder="file name">
-                                <button class="button2 right" onclick="createNewFileOnServer(this, 'experiments')">create</button>
-                            </div>
-                            <img src="UI/icons/add_icon.svg" alt="addIcon" onclick="toggleClass_Parent(this, 'activated')">
-                            
-                            
-                        </div>
-                    </div>
-                    <ul class="file-list">
-                        <% Editor.experiments.forEach(element => { %>
-                            <li onclick="loadFileIntoEditor(this,'<%= element %>', 'experiments')"><%= element %></li>
-                        <% }); %>
-                    </ul>
-                    <div class="file-details">
-                        <h2 class="file-details-name"></h2>
-                        <ul class="file-details-stats">
-                        </ul>
-                        <div class="file-details-buttons">
-                            <a id="activate-button"  class="button1"><span>Activate</span><img src="UI/icons/activate_icon.svg" alt="activateIcon" class="icon"></a>
-                            <a id="remove-button"    class="button1" onclick="activateClass(this, 'activated')">
-                                    <span  >Remove</span>  <img src="UI/icons/trashbin_icon.svg" alt="removeIcon" class="icon"> 
-                                    <div><p>are you sure?</p><button onclick="deleteFileOnServer('experiments'); deactivateClass_nthParent(event, this, 'activated',2)">yes</button><button onclick="deactivateClass_nthParent(event, this, 'activated',2)">no</button></div>
-                            </a>
-                        </div>
-                        
-                    </div>
-                </div>
-                <div class="file-editor">
-                    
-                    <textarea id="experiments-codeditor" name="experiments-codeditor"></textarea>
-                    <button class="button1" onclick="saveFileOntoServer('experiments')"><span>Save changes</span> <img src="UI/icons/save_icon.svg" alt="saveChangesIcon" class="icon"></button>
-                </div>
+                <%- include('panels/TextEditor', {type: "experiments"}) %>
             </div>
             <div id="configs-Panel" class="content-panel container hidden">
-                <div class="file-browser">
-                    <div class="search-bar">
-                        <input type="text">
-                        <img src="UI/icons/search_icon.svg" alt="searchIcon" class="icon">
-                    </div>
-                    <div class="add-button ">
-                        <div class="button1" >
-                            <div class="button2container">
-                                <input type="text" class="button2 left add-button-fileName" placeholder="file name">
-                                <button class="button2 right" onclick="createNewFileOnServer(this, 'configs')">create</button>
-                            </div>
-                            <img src="UI/icons/add_icon.svg" alt="addIcon" onclick="toggleClass_Parent(this, 'activated')">
-                            
-                            
-                        </div>
-                    </div>
-                    <ul class="file-list">
-                        <% Editor.configs.forEach(element => { %>
-                            <li onclick="loadFileIntoEditor(this,'<%= element %>', 'configs')"><%= element %></li>
-                        <% }); %>
-                    </ul>
-                    <div class="file-details">
-                        <h2 class="file-details-name" ></h2>
-                        <ul class="file-details-stats">
-                        </ul>
-                        <div class="file-details-buttons">
-                            <a id="activate-button"  class="button1"><span>Activate</span><img src="UI/icons/activate_icon.svg" alt="activateIcon" class="icon"></a>
-                            <a id="remove-button"    class="button1" onclick="activateClass(this, 'activated')">
-                                    <span  >Remove</span>  <img src="UI/icons/trashbin_icon.svg" alt="removeIcon" class="icon"> 
-                                    <div><p>are you sure?</p><button onclick="deleteFileOnServer('configs'); deactivateClass_nthParent(event, this, 'activated',2)">yes</button><button onclick="deactivateClass_nthParent(event, this, 'activated',2)">no</button></div>
-                            </a>
-                        </div>
-                        
-                    </div>
-                </div>
-                <div class="file-editor">
-                    
-                    <textarea id="configs-codeditor" name="configs-codeditor">
-                    </textarea>
-                    <button class="button1" onclick="saveFileOntoServer('configs')"><span>Save changes</span> <img src="UI/icons/save_icon.svg" alt="saveChangesIcon" class="icon"></button>
-                </div>
+                <%- include('panels/TextEditor', {type: "configs"})%>
             </div>
+
+            <% if(locals.DevicePanel){ %>
+                <div id="Device-Panel" class="content-panel container hidden">
+                    <%- include('panels/DevicePanel.ejs') %>            
+                </div>  
+            <% } %>
+            <div id="mainPopup" onclick="resetMainPopup()"></div>
         </div>
 
     </div>
-    <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
-    <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/perl/perl.min.js"></script>
-    
+
+    <script src="/node_modules/chart.js/dist/chart.umd.js"></script>
+    <script type="module" src="/JS/CodeMirror.js"></script>
+    <!--
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css"></link>
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/abbott.min.css"></link>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js" integrity="sha512-8RnEqURPUc5aqFEN04aQEiPlSAdE0jlFS/9iGgUyNtwFnSKCXhmB6ZTNl7LnDtDWKabJIASzXrzD0K+LYexU9g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/yaml/yaml.min.js" integrity="sha512-+aXDZ93WyextRiAZpsRuJyiAZ38ztttUyO/H3FZx4gOAOv4/k9C6Um1CvHVtaowHZ2h7kH0d+orWvdBLPVwb4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    -->
+
+    <link rel="stylesheet" type="text/css" href="/CDN/codemirror/6.65.7/codemirror.min.css"></link>
+    <script src="/CDN/codemirror/6.65.7/codemirror.min.js"></script>
+    <script src="/CDN/codemirror/6.65.7/mode/yaml/yaml.min.js"></script>
     
+
     <script>
         var editors = [];
         editors["experiments"] = CodeMirror.fromTextArea(document.getElementById('experiments-codeditor'), {
                 lineNumbers: true,
-                mode: 'text/x-toml',
-                theme: 'neat'
+                mode: 'text/x-yaml',
+                indentUnit: 2,
+                extraKeys: {
+                    "Tab": function(cm) {
+                        var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+                        cm.replaceSelection(spaces);
+                    }
+                }
             });
         editors["configs"] = CodeMirror.fromTextArea(document.getElementById('configs-codeditor'), {
                 lineNumbers: true,
-                mode: 'text/x-toml'
+                mode: 'text/x-yaml',
+                indentUnit: 2,
+                extraKeys: {
+                    "Tab": function(cm) {
+                        var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+                        cm.replaceSelection(spaces);
+                    }
+                }
             });
+
         editors.forEach(element => {
             element.refresh();
         });
     </script>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js" integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
+
+        onloadQueue.push(() =>  {//REFRESH ALL COLORFILTERS
+            console.log("REFERSHING COLORFILTERS");
+            const colorFilters = document.getElementsByClassName("colorFilter");
+            for (let i = 0; i < colorFilters.length; i++) {
+                const element = colorFilters[i];
+                element.style.backgroundColor = element.getAttribute("colorFilter");
+            }
+        })
+
+
         let currContext = 0;
         function changeContext(whereTo){
             if(currContext!=whereTo){
@@ -346,7 +178,6 @@ var currNumOfCharts = 0;
                 const contentPanels = document.getElementById("CONTENT").children;
                 for(let i=0; i<contentPanels.length; i++){
                     contentPanels[i].classList.add("hidden");
-                    
                 }
 
                 const contentPanelsList = document.getElementById("SIDEBAR").children[0].children;
@@ -362,44 +193,8 @@ var currNumOfCharts = 0;
         }
 
 
-        async function loadFileIntoEditor(element, filePath, type){
-            //document.getElementById(editorID).innerHTML = await fetchData(filePath);
-            for (let i = 0; i < element.parentNode.children.length; i++) {
-                element.parentNode.children[i].classList.remove("active");
-            }
-            element.classList.add("active");
-
-
-            var rootPanelElement = document.getElementById(type+"-Panel");
-           
-            //console.log("root panel element: ",rootPanelElement);
-
-            fetchData(type + "/" + filePath)
-            .then(response => {
-                // Convert the response body to a string
-                const headersToFetch = ["Last-Modified", "Content-Length"];
-
-                var newDetails = "";
-                newDetails+="<li>" + "Last modified" + ": <span>" + (new Date(response.headers.get("Last-Modified"))).toISOString().replace('T',' ').split(".")[0] + "</span></li>";
-                newDetails+="<li>" + "size" + ": <span>" + response.headers.get("Content-Length") + " B </span></li>";
-                
-                //console.log("file details element: ",rootPanelElement.getElementsByClassName("file-details-stats"));
-                rootPanelElement.getElementsByClassName("file-details-stats")[0].innerHTML = newDetails;
-                return response.text();
-                
-            })
-            .then(data => {
-                // `data` is now a string containing the response body
-                editors[type].setValue(data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-            //console.log("file name element: ",rootPanelElement.getElementsByClassName("file-details-name"));
-            rootPanelElement.getElementsByClassName("file-details-name")[0].innerHTML = filePath;
-        }
-
         async function reloadFileList(type) {
+            console.log("reloading files for "+type);
             const fileList = document.getElementById(type+"-Panel").getElementsByClassName("file-list")[0];
             var list = [];
             try {
@@ -408,8 +203,12 @@ var currNumOfCharts = 0;
                     headers: {
                         'Content-Type': 'text/plain',
                         'target-directory': type
-                    }
+                    },
+                    signal: AbortSignal.timeout( 1000 )    
                 })
+                if(response.status!= 200){
+                    throw new Error("fetch error (response code): "+response.status);
+                }
                 list = JSON.parse(await response.text());
 
             } catch (error) {
@@ -424,26 +223,189 @@ var currNumOfCharts = 0;
             
         }
 
-        async function deleteFileOnServer(type) {
+        function getCurrentFile(type){
             var rootPanelElement = document.getElementById(type+"-Panel");
-            var fileName = rootPanelElement.getElementsByClassName("file-details-name")[0].innerHTML;
+            const fileExtension = rootPanelElement.getElementsByClassName("fe-fileExtension")[0].innerHTML;
+            const fileName = rootPanelElement.getElementsByClassName("fe-fileName")[0].innerHTML;
+            const fileNameFull = (fileExtension)?(fileName + "." + fileExtension):(fileName);
+
+            return {
+                fileName: fileName,
+                fileExtension: fileExtension,
+                fileNameFull: fileNameFull,
+                directory: type,
+                data: editors[type].getValue()           
+            }
+        }
+
+        function clearEditor(type) {
+            var rootPanelElement = document.getElementById(type+"-Panel");
+            rootPanelElement.getElementsByClassName("fe-fileExtension")[0].innerHTML = "";
+            rootPanelElement.getElementsByClassName("fe-fileExtension")[0].classList = "fe-fileExtension "
+            rootPanelElement.getElementsByClassName("fe-fileName")[0].innerHTML = "";
+            reloadFileList();
+            editors[type].setValue("");
+        }
+
+        /*
+        element = the element in the list that called the function
+        */
+        async function loadFileIntoEditor(element, fileName, type){
+            var rootPanelElement = document.getElementById(type+"-Panel");
+
             
-            try {
-                const response = await fetch("/delete-file", {
-                        method: 'DELETE',
+
+            //deselects every other file in fileList and enables the current one
+            for (let i = 0; i < element.parentNode.children.length; i++) {
+                element.parentNode.children[i].classList.remove("active");
+            }
+            element.classList.add("active");
+
+
+            var popupLevel = 0; 
+            var statusCache = 0;
+
+            //gets the selected file data
+            fetchData(type + "/" + fileName) 
+            .then(response => {
+                
+                statusCache = response.status;
+                //converts the response body to a simple string
+                return response.text();
+                  
+            })
+            .then(data => {
+                // `data` is now a string containing the response body
+                if(statusCache!=200){
+                    switch(statusCache){
+                        case 404:
+                            throw new Error("the file does not exist anymore");
+                            break; 
+                        case 500:
+                            throw new Error("internal server error");
+                            break; 
+
+                        default:
+                            throw new Error("unknown error "+statusCache+"<br>"+ data);
+                            break; 
+                    }
+                    
+                }
+                else{
+                    editors[type].setValue(data);
+                }                
+            })
+            .catch(error => {
+                console.error('error while loading a file into editor:', error);
+                setEditorHeaderPopup(type, "error","error while loading the file:" +  error);
+                popupLevel=2;
+                editors[type].setValue("error occured"); 
+            });
+
+            //split the file name by point, than pop the last part as file extension and reasamble the rest into the file name
+            const splitFileName = fileName.split(".");
+            var fileExtension = "";
+            if(splitFileName.length==1 && popupLevel<2){
+                setEditorHeaderPopup(type, "warning", "warning, this file does not have a file extension");
+                popupLevel=1;
+            }
+            else{
+                fileExtension = splitFileName.pop(); 
+            }
+            fileName = splitFileName.join(".");     
+
+            //sets the name, file extension and file extension class
+            rootPanelElement.getElementsByClassName("fe-fileExtension")[0].innerHTML = fileExtension;
+            rootPanelElement.getElementsByClassName("fe-fileExtension")[0].classList = "fe-fileExtension " + fileExtension
+            rootPanelElement.getElementsByClassName("fe-fileName")[0].innerHTML = fileName;
+            if(popupLevel<1){
+                setEditorHeaderPopup(type, "ok", "");     
+            }
+                   
+        }
+
+        async function deleteFileOnServer(type) {
+            const currFile = getCurrentFile(type);
+            var statusCache = 0;
+            fetch("/delete-file", {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'text/plain',
+                    'file-name': currFile.fileNameFull,
+                    'target-directory': type
+                },
+                signal: AbortSignal.timeout( 1000 )    
+            }).then( response => {
+                statusCache = response.status;
+                return response.text();
+            }).then(data => {
+                switch(statusCache){
+                    case 200:
+                        setEditorHeaderPopup(type, "info", "file deleted successfully"); 
+                        clearEditor(type);    
+                        reloadFileList(type);
+                        break;
+                    case 500:
+                        throw new Error("internal server error");
+                        break; 
+                    default:
+                        throw new Error("unknown error "+statusCache+"<br>"+ data);
+                        break; 
+                }
+            }).catch(error => {
+                console.error('error while deleting the file:', error);
+                setEditorHeaderPopup(type, "error", "error while deleting the file:<br>" + error);
+            })            
+        }
+
+        async function saveFileOntoServer(type) {
+            const currFile = getCurrentFile(type);
+            var statusCache = 0;
+
+            fetch("/send-file", {
+                        method: 'POST',
                         headers: {
                             'Content-Type': 'text/plain',
-                            'file-name': fileName,
+                            'file-name': currFile.fileNameFull,
                             'target-directory': type
+                        },
+                        body: currFile.data,
+                        signal: AbortSignal.timeout( 1000 )    
+            }).then( response => {
+                statusCache = response.status;
+                return response.text();
+            }).then(data => {
+                switch(statusCache){
+                    case 200:
+                        setEditorHeaderPopup(type, "info", "file saved successfully"); 
+                        break;
+                    case 422:
+                        var errorListObject = JSON.parse(data);
+                        console.log(errorListObject);
+                        if(errorListObject[0].criticalError){
+                            throw new Error(errorListObject[0].criticalError);
                         }
-                });
+                        var parsedResult = "<table class=\"errorTable\"><thead><tr><th>path</th><th>error</th><th>details</th></tr></thead><tbody>";
+                        errorListObject.forEach(element => {
+                            if(element.instancePath == ""){
+                                element.instancePath = "/";
+                            }
+                            parsedResult+="<tr><td><span class='comment'>"+element.instancePath+"</span></td><td>"+element.message+"</td><td>"+JSON.stringify(element.params)+"</td></tr>";
+                        })
+                        parsedResult+="</tbody></table>";
 
-                const result = await response.text();
-            } catch (error) {
-                console.error('Error while sending data:', error);
-            }
-            
-            reloadFileList(type);
+                        throw new Error("this file is not valid: <br>" + parsedResult);
+                    case 500:
+                        throw new Error("internal server error");
+                        break; 
+                    default:
+                        throw new Error("unknown error "+statusCache+"<br>"+ data);
+                        break; 
+                }
+            }).catch(error => {
+                console.error('error while saving the file:', error);
+                setEditorHeaderPopup(type, "error", "error while saving the file:<br>" + error);
+            })               
         }
 
         async function createNewFileOnServer(caller, type) {
@@ -455,13 +417,14 @@ var currNumOfCharts = 0;
             rootPanelElement.getElementsByClassName("add-button")[0].children[0].classList.remove("activated");
 
             try {
-                const response = await fetch("/send-file", {
+                const response = await fetch("/create-file", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'text/plain',
                             'file-name': fileName,
                             'target-directory': type
-                        }
+                        },
+                        signal: AbortSignal.timeout( 1000 )    
                 });
 
                 const result = await response.text();
@@ -472,36 +435,24 @@ var currNumOfCharts = 0;
             reloadFileList(type);
         }
 
-        async function saveFileOntoServer(type) {
-            var rootPanelElement = document.getElementById(type+"-Panel");
-            var fileName = rootPanelElement.getElementsByClassName("file-details-name")[0].innerHTML;
-            console.log("editor content: ",editors[type].getValue());
-            try {
-                const response = await fetch("/send-file", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'text/plain',
-                            'file-name': fileName,
-                            'target-directory': type
-                        },
-                        body: editors[type].getValue()
-                });
-
-                const result = await response.text();
-            } catch (error) {
-                console.error('Error while sending data:', error);
-            }
-            
-        }
         
-        const currentDateTime = new Date();
+        
+        //clock updater
         setInterval(() => {
-            const newTime = currentDateTime.getDate() + "." + (currentDateTime.getMonth()+1) + " " + currentDateTime.getFullYear();
-            if(newTime != document.getElementById("hotbar-date").innerHTML){
-                document.getElementById("hotbar-date").innerHTML = newTime;
+            const currentDateTime = new Date();
+            const newDate = currentDateTime.getDate() + "." + (currentDateTime.getMonth()+1) + " " + currentDateTime.getFullYear();
+            const newTime = addZeroIfNeeded(currentDateTime.getHours()) + ":" + addZeroIfNeeded(currentDateTime.getMinutes());
+            document.getElementById("hotbar-date").innerHTML = newDate;
+            document.getElementById("hotbar-clock").innerHTML = newTime;
+
+            function addZeroIfNeeded(time){
+                if(time < 10){
+                    return "0" + time;
+                }
+                return time;
             }
-            
         }, 1000);
+        
         function changeStatus(element){
             console.log(element.children[0].innerHTML);
             switch (element.children[0].innerHTML){
@@ -533,8 +484,64 @@ var currNumOfCharts = 0;
                 }
             }
         }
-        document.getElementById("hotbar-clock").innerHTML = currentDateTime.getHours() + ":" + currentDateTime.getMinutes(); 
+
+        function setStatus(type){
+            const element = document.getElementById("status-indicator");
+            switch (type){
+                case "standby": {
+                    element.children[0].innerHTML = "Standby";
+                    element.style.backgroundColor = "green";
+                    break;
+                }
+                case "running": {
+                    element.children[0].innerHTML = "Running";
+                    element.style.backgroundColor = "orange";
+                    break;
+                }
+                case "error": {
+                    element.children[0].innerHTML = "Error";
+                    element.style.backgroundColor = "red";
+                    break;  
+                }
+            }
+        }
+
+        /*
+        sets the targeted editors popup to a type and sets the body of the message, overwrites last value
+        */
+        function setEditorHeaderPopup(type, messageType, message){
+            const rootPanelElement = document.getElementById(type+"-Panel");
+            const header = rootPanelElement.getElementsByClassName("fe-header")[0];
+            const popup = rootPanelElement.getElementsByClassName("fe-popup")[0];
+
+            header.classList = "fe-header " + messageType;
+            popup.innerHTML = message;
+        }
+
+        function setMainPopup(messageType, message){
+            const popup = document.getElementById("mainPopup")
+
+            
+
+            if(popup.innerHTML != ("<p> "+message+" </p>")){
+                if(message!=""){
+                    document.getElementById("MAIN").classList.add("disabled");
+                }
+                popup.innerHTML = "<p> "+message+" </p>";
+                popup.classList = messageType;
+            }
+        }
+
+        function resetMainPopup(){
+            const popup = document.getElementById("mainPopup")
+
+            document.getElementById("MAIN").classList.remove("disabled");
+
+            popup.classList = "";
+        }
+        
     </script>
     <script src="JS/apiUpdateWorker.js"></script>
+    <script src="JS/moduleApiUpdateWorker.js"></script>
 </body>
 </html>

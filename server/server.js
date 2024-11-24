@@ -1,12 +1,21 @@
+global.initialized = false;
 const express = require('express');
 const app = express();
 const path = require('path');
 const cors = require('cors');
 const fs = require('node:fs');
 const favicon = require('serve-favicon');
+const yaml = require('js-yaml');
+const ajv = require('ajv'); //another json validator
+const toml = require('toml');
+
+const webConfigAssembler = require('./webConfigAssembler.js');
 
 const PORT = 80;
 const indexUtilities = require('./indexUtilities.js');
+const { default: def } = require('ajv/dist/vocabularies/applicator/additionalItems.js');
+const configFilesPath = path.join("..","..","SMBR-config-files");
+
 
 //fixes the "TypeError: NetworkError when attempting to fetch resource" error by allowing anyone to use the api: 
 app.use(cors()); 
@@ -15,6 +24,11 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use("/experiments" ,express.static(path.join(__dirname, 'experiments')));
 app.use("/configs" ,express.static(path.join(__dirname, 'configs')));
+app.use("/node_modules/chart.js",express.static(path.join(__dirname,'node_modules','chart.js')))
+app.use("/node_modules/codemirror",express.static(path.join(__dirname,'node_modules','codemirror')))
+app.use("/node_modules/@codemirror",express.static(path.join(__dirname,'node_modules','@codemirror')))
+
+
 
 //sets the favicon resource
 app.use(favicon(path.join(__dirname, 'public','UI','logo','favicon.png')));
@@ -28,13 +42,111 @@ app.listen(PORT);
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
+app.locals.getIcon = function(name) {
+    switch(name){
+        case "activate":
+            return "./UI/icons/activate_icon.svg"
+        case "board":
+            return "./UI/icons/boards_icon.svg"
+        case "bottle":
+            return "./UI/icons/bottle_icon.svg"
+        case "config":
+            return "./UI/icons/config_icon.svg"
+        case "controls":
+            return "./UI/icons/controls_icon.svg"
+        case "dashboard":
+            return "./UI/icons/dashboard_icon.svg"
+        case "experiments":
+            return "./UI/icons/experiments_icon.svg"
+        case "leds":
+            return "./UI/icons/led_icon.svg"
+        case "lightbulb":
+            return "./UI/icons/lightbulb_icon.svg"
+        case "logo":
+            return "./UI/logo/logo_icon.svg"
+        case "mini_logo":
+            return "./UI/logo/PB_minilogo.svg"
+        case "menu":
+            return "./UI/icons/menu_icon.svg"
+        case "save":
+            return "./UI/icons/save_icon.svg"
+        case "upload":
+            return "./UI/icons/upload_icon.svg"
+        case "search":
+            return "./UI/icons/search_icon.svg"
+        case "dot":
+            return "./UI/icons/dot_icon.svg"
+        case "temperature_ambient":
+            return "./UI/icons/temperature_ambient_icon.svg"
+        case "temperature":
+            return "./UI/icons/temperature_icon.svg"
+        case "trashbin":
+            return "./UI/icons/trashbin_icon.svg"
+        case "subElement":
+            return "./UI/UI-elements/subElement.svg"
+        case "subElement-last":
+            return "./UI/UI-elements/subElement-last.svg"
+        default:
+            return "./UI/logo/LogoPlaceholder.svg"
+    }
+}
+
+app.locals.getColor = function(index) {
+    colorArray=[
+        "#9adb00",
+        "#ffff00",
+        "#ffa500",
+        "#1d9ef5",
+        "#ad270f",
+        "#c0c1c1",
+        "#642470"
+    ]
+    return colorArray[index%colorArray.length];
+}
+
+app.locals.getSubColor = function(index, degree) {
+    return darkenHexColor(app.locals.getColor(index),degree*20);
+}
+
+function hexToRgb(hex) {
+    hex = hex.replace(/^#/, ''); // Removes symbol # if it exists
+    let bigint = parseInt(hex, 16);
+    let r = (bigint >> 16) & 255;
+    let g = (bigint >> 8) & 255;
+    let b = bigint & 255;
+
+    return { r, g, b };
+}
+
+function darkenHexColor(hex, percent) {
+    let { r, g, b } = hexToRgb(hex);
+
+    r = Math.max(0, Math.min(255, r * (1 - percent / 100)));
+    g = Math.max(0, Math.min(255, g * (1 - percent / 100)));
+    b = Math.max(0, Math.min(255, b * (1 - percent / 100)));
+
+    return rgbToHex(Math.round(r), Math.round(g), Math.round(b));
+}
+
+
+function rgbToHex(r, g, b) {
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+}
+
 
 //API endpoint for the index file
 app.get('/', (req, res) => {
-    //res.sendFile(path.join(__dirname, 'public', 'index.html'));  //version that uses standart .html
-    res.render('index', indexUtilities.parseConfig())
-});
+    console.log(req.hostname + ": new connection active, rendering web");
+    if(global.initialized ){
+        res.render('index', webConfigAssembler.getConfig(req.hostname))
+    }else{
+        res.send("not initialized, try again later").status(109);
+    }
+    //res.render('index', indexUtilities.parseConfig())
+    
 
+    console.log(req.hostname + ": end of rendering web");
+});
 
 
 const allowedDirectories = ["experiments","configs"];
@@ -47,6 +159,10 @@ app.get('/file-list', (req, res) => {
     else{
         res.status(403).send("you don't have permisions to view to this directory");
     }
+})
+
+app.get('/module-list', (req, res) => {
+    res.send(JSON.stringify(webConfigAssembler.getLoadedModules())).status(200);
 })
 
 app.delete('/delete-file', (req,res) => {
@@ -93,35 +209,93 @@ app.post('/send-file', (req, res) => {
     const textEncoder = new TextEncoder();
     if(textEncoder.encode(req.body).length > maxBodySize){
         res.status(413).send("body too large (max size: "+maxBodySize+" bytes)");
+        return
     }
     //console.log("send-file api activated\n----------------\nfileDir: "+fileDir+"\nfileName: "+fileName);
     if(fileName){
         if(allowedDirectories.includes(fileDir)){
             var fileData = "";
-        
             if(req.body != undefined){
                 fileData = req.body;
             }
 
+
+            var validation = {result: 1};
+            var inputParsed = "";
+            try{
+                inputParsed = yaml.load(fileData);
+            }
+            catch{
+                res.status(422).send("[{\"criticalError\": \"file is not parsable to yaml\"}]");
+                return
+            }
+            var validationTarget = "";
+            if(fileDir == "experiments"){
+                validationTarget = "experiments_schema.yaml";
+            }
+            else{
+                const fileNameSplit= fileName.split(".");
+                const fileExtension =  fileNameSplit.pop();
+                validationTarget = fileNameSplit.join(".") + "_schema." + fileExtension; "test.yaml > test_schema.yaml";
+            }
             
-            //console.log("file data: =\n"+fileData+"\n=");
-            //console.log("request body: =\n"+req.body+"\n=");
-            fs.writeFileSync("./"+fileDir + "/" +fileName, fileData);
-            res.status(200).send("file transfer successfull");
-            //console.log("successfull\n----------------");
+            if(fs.existsSync(path.join(configFilesPath, "schemas", validationTarget))){
+                
+                validation = validateFile(
+                    inputParsed, 
+                    parseFileToJson(path.join(configFilesPath, "schemas", validationTarget))
+                )
+                if(validation.result){
+                    fs.writeFileSync("./"+fileDir + "/" +fileName, fileData);
+                    res.status(200).send("file transfer successfull");
+                    return
+                }else{
+                    res.status(422).send(JSON.stringify(validation.errors));
+                    return
+                }        
+            }
+            else{
+                console.log("no validation file for ", validationTarget);
+                fs.writeFileSync("./"+fileDir + "/" +fileName, fileData);
+                res.status(200).send("file transfer successfull");
+                return
+            }
+
+                
         }
         else{
             res.status(403).send("you don't have permisions to write to this directory");
-            //console.log("unsuccessfull (403)\n----------------");
+            return
         }
     }
     else{
         res.status(400).send("missing headers");
-        //console.log("unsuccessfull (400)\n----------------");
+        return
     }
     
 })
+app.post('/create-file', (req, res) => {
+    const fileDir = req.headers['target-directory'];
+    const fileName = req.headers['file-name'];
+    const maxBodySize = 50000;
 
+    //console.log("send-file api activated\n----------------\nfileDir: "+fileDir+"\nfileName: "+fileName);
+    if(fileName){
+        if(allowedDirectories.includes(fileDir)){
+            fs.writeFileSync("./"+fileDir + "/" +fileName, "");
+            res.status(200).send("file transfer successfull");               
+        }
+        else{
+            res.status(403).send("you don't have permisions to write to this directory");
+            return
+        }
+    }
+    else{
+        res.status(400).send("missing headers");
+        return
+    }
+    
+})
 
 
 /*
@@ -190,7 +364,6 @@ app.patch('/test-combined', (req, res) => {
 
 
 app.get('/timeout-test', (req, res) => {
-    console.log("recievew a timeout test request, the server will NOT send a response");
 })
 
 
@@ -216,3 +389,55 @@ function censor(censor) { //stolen from https://stackoverflow.com/questions/4816
       return value;  
     }
   }
+
+
+function parseFileToJson(filePath){
+    var fileData = "";
+    try {fileData = fs.readFileSync(filePath);} catch (error) {
+        console.error("error while trying to read the config file","("+filePath+")",error);
+        return {};
+    }
+    const fileType = filePath.split(".").pop();
+
+    var fileDataParsed = {};
+    switch(fileType){
+        case "yaml":
+            try {
+                fileDataParsed = yaml.load(fileData);
+            } catch (error) {
+                console.error("error while trying to parse a TOML config file","("+filePath+")",error);
+                return {};
+            }
+            break;
+        case "toml":
+            try {
+                fileDataParsed = toml.parse(fileData);
+            } catch (error) {
+                console.error("error while trying to parse a TOML config file","("+filePath+")",error);
+                return {};
+            }
+            break;
+        default:
+            console.error("invalid fileType in configs: ",fileType,"("+filePath+")");
+            return {};
+    }
+    return fileDataParsed;
+}
+
+
+
+/*
+returns
+{result: 0, errors: []} = file is invalid
+{result: 1} = file is valid
+*/
+function validateFile(fileDataParsed, jsonSchemaDataParsed){
+    const ajv_worker = new ajv({allErrors: true});
+    const validate = ajv_worker.compile(jsonSchemaDataParsed);
+    if(validate(fileDataParsed)){
+        return {result: 1};
+    }
+    else{
+        return {result: 0, errors: validate.errors};
+    }
+}
