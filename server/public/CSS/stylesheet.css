@@ -70,6 +70,10 @@ input[type=number] {
 
 /*global class rules*/
 
+p{
+  margin: 0;
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -101,10 +105,27 @@ body {
   color: var(--text-color-light);
 }
 
-.button1:hover, .button2:hover{
+
+
+.button1:hover:enabled, .button2:hover:enabled{
   background-color: var(--bg-color-3);
   border-color: var(--acc-color-3); 
 }
+
+.button1.hoverSpin, .button2.hoverSpin{
+  >*{
+    
+    transform: rotate(0deg);
+  }
+  
+}
+.button1.hoverSpin:hover:enabled, .button2.hoverSpin:hover:enabled{
+  >*{
+    transition: transform 0.6s cubic-bezier(.79,.14,.15,.86);
+    transform: rotate(360deg);
+  }
+}
+
 
 .button2container{
   width: min-content;
@@ -122,6 +143,16 @@ body {
   border-right: none;
   width: 100%;
 }
+
+.button1:disabled, .button2:disabled{
+  background-color: var(--bg-color-1);
+  border-color: var(--bg-color-3);
+  >*{
+    opacity: 0.3;
+    filter: grayscale(0.8);
+  }
+}
+
 
 .headerButton{
   border: none;
@@ -1126,6 +1157,9 @@ body {
       
       td{
         text-align: center;
+        img{
+          height: 1.2em;
+        }
       }
     }
   }

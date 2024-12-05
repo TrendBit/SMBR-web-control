@@ -18,13 +18,36 @@
                 <th>core temperature</th>
                 <th>module temperature</th>
                 <th>CPU load</th>
+                <th>control</th>
             </tr>
         </thead>
         <tbody id="moduleList">
+            <script>
+                table = document.getElementsByClassName(moduleList-refreshButton);
+                async function restartModule(element){
+                    parentElement = element.parentNode.parentNode;
+                    
+                    const targetModuleID = parentElement.getElementsByClassName("moduleList-element-id")[0].innerHTML;
+                    const targetModuleNAME = parentElement.getElementsByClassName("moduleList-element-name")[0].innerHTML;
+                    const confirmationPayload = {
+                        "uid" : "" + targetModuleID
+                    }
+                    const url = "http://" + window.location.hostname;
+                    response = await sendData(url+":8089/"+targetModuleNAME+"/restart","{\n  \"uid\": \""+targetModuleID+"\"\n}");
+                    if(response.status != 200){
+                        setMainPopup("error","couldn't restart module "+targetModuleNAME+" ["+targetModuleID+"] got error code: "+response.status);
+                    }
+                    element.disabled = true;
+                    setTimeout(() => { 
+                        element.disabled = false;
+                    }, 2000);
+                    
+                }
+            </script>
             <% if(DevicePanel.modules){DevicePanel.modules.forEach(element => { %>
                 <tr class="table-master">
-                    <td class="table-dataField"><%= element.name     %></td> 
-                    <td class="table-dataField"><%= element.id       %></td> 
+                    <td class="table-dataField moduleList-element-name"><%= element.name     %></td> 
+                    <td class="table-dataField moduleList-element-id"><%= element.id       %></td> 
                     <td class="table-dataField"><%= element.instance %></td>
     
                     <%element.data.forEach(dataField => { %>
@@ -37,82 +60,14 @@
                         </td>
                     <%});%>
                     
+                    <td class="table-dataField">
+                        <button onclick="restartModule(this)" class="button1 hoverSpin moduleList-refreshButton">
+                            <img src="<%= getIcon("refresh") %>"title="restart module">
+                        </button>
+                    </td>
                 </tr>
             <% });} %>
+            
         </tbody>
     </table>
 </div>
-
-<script>
-    /*
-
-
-    var loadedModules = [];
-    var firstLoad = true;
-
-    function addModule(name, moduleID, instance){
-        console.log("adding new module: ", name, moduleID, instance);
-        loadedModules.push(moduleID);
-        const params = [
-            {
-                resource: "/"+name+"/ping",
-                component: "time_ms",
-                unit: "ms"
-            },
-            {
-                resource: "/"+name+"/core_temp",
-                component: "temperature",
-                unit: "°C"
-            },
-            {
-                resource: "/test-get", // "/"+name+"/module_temp",
-                component: "value",
-                unit: "°C"
-            },
-            {
-                resource: "/test-get", // "/"+name+"/cpu_load",
-                component: "value",
-                unit: "%"
-            }
-        ]
-            
-       
-        var result =  "<tr> <td>"+name+"</td> <td>"+moduleID+"</td> <td>"+instance+"</td>"
-        params.forEach(element => {
-            if(element.resource=="/test-get"){
-                element.resource = "/test-get\"port=\"80" //wokraround that adds the port indetifier when using test resource
-            }
-            result+="<td class=\"module-api-fetcher\" unit=\""+element.unit+"\" resource=\""+element.resource+"\"component=\""+element.component+"\"></td>"
-        });
-        result+="</tr>";
-
-        document.getElementById("moduleList").innerHTML +=  result;
-    }
-
-    async function refreshModules(){
-        const url = "http://" + window.location.hostname + ":8089";
-        console.log("refreshing modules "+loadedModules.length+" already loaded: ",loadedModules);
-        var response = [];
-        try {
-            response = await fetchDataAsJson(url + "/system/modules");
-        } catch (error) {
-            console.error(error);
-            response = [];
-        }
-        
-        response.forEach(element =>{
-            if(loadedModules.includes(element.uid)){
-                console.log("module " + element.module_type + " (" + element.uid + ") already loaded");
-            }
-            else{
-                addModule(element.module_type, element.uid, "undefined");
-                if(!firstLoad){
-                    document.getElementById("reload page, modules added");
-                }
-            }
-        });        
-
-        firstLoad = false;
-    }
-    */
-</script>

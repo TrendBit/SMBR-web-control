@@ -86,6 +86,8 @@ app.locals.getIcon = function(name) {
             return "./UI/UI-elements/subElement.svg"
         case "subElement-last":
             return "./UI/UI-elements/subElement-last.svg"
+        case "refresh":
+            return "./UI/icons/refresh_icon.svg"
         default:
             return "./UI/logo/LogoPlaceholder.svg"
     }
