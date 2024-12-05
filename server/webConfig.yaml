@@ -34,9 +34,9 @@ DashboardPanel:
         charted: false
         sub_rows:
           - name: Raspberry - chip
-            port: 8089
-            resource: /temperature
-            component: temperature
+            port: 80
+            resource: /test-get
+            component: value
             charted: true
           - name: Board2
             port: 80
@@ -64,15 +64,11 @@ DashboardPanel:
   LedArrayWidget:
     header:
       rows:
-        - name: TEST
+        - name: temperature
           type: dataField
           port: 80
           resource: /test-get
-          component: value
-        - name: TEST2
-          type: dataField
-          port: 80
-          resource: /test-get
+          unit: °C
           component: value
     sliders:
       - name: Channel 1

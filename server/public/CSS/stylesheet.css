@@ -108,8 +108,8 @@ body {
 
 
 .button1:hover:enabled, .button2:hover:enabled{
-  background-color: var(--bg-color-3);
-  border-color: var(--acc-color-3); 
+  background-color: var(--bg-color-3) !important;
+  border-color: var(--acc-color-3)!important;
 }
 
 .button1.hoverSpin, .button2.hoverSpin{
@@ -145,11 +145,11 @@ body {
 }
 
 .button1:disabled, .button2:disabled{
-  background-color: var(--bg-color-1);
-  border-color: var(--bg-color-3);
+  background-color: var(--bg-color-1) !important;
+  border-color: var(--bg-color-3)!important;
   >*{
-    opacity: 0.3;
-    filter: grayscale(0.8);
+    opacity: 0.3!important;
+    filter: grayscale(0.8)!important;
   }
 }
 
@@ -392,23 +392,55 @@ body {
     }
     
     >div.right{
-      background-color: var(--bg-color-2);
-      border: var(--bg-color-4) 1px solid;
-      padding: 2px;
-      border-radius: 4px;
-      width: min-content;
-      height: min-content;
-      >div{
+      display: flex;
+      flex-direction: column;
+      width: fit-content;
+      min-height: 86%;
+
+
+      
+      >*{
+        background-color: var(--bg-color-2);
+        border: var(--bg-color-4) 1px solid;
+        padding: 2px;
+        border-radius: 4px;
+        
         width: 100%;
+        padding-top: 1px;
+        padding-bottom: 1px;
+      }
+      >*:first-child:not(:last-child){
+        padding-top: 2px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0; 
+        border-bottom: none;
+      }
+      >:last-child:not(:first-child){
+        border-top-left-radius: 0;
+        border-top-right-radius: 0; 
+        padding-bottom: 2px;
+      }
+      >:not(:last-child):not(:first-child){
+        border-bottom: none;
+        border-radius: 0;
+      }
+      
+      >div{
         display: flex;
         justify-content:space-between;
         flex-direction: row;
         gap: 7px;
-        
+        max-width: 100%;
+        box-sizing: border-box;
       }
       *{
         white-space:nowrap;
       }
+      button{
+          height: 100%;
+          
+      }
+      
       
     }
     >div.right:not(:has(*)){
@@ -1154,11 +1186,19 @@ body {
       max-width: max-content;
       height: fit-content;
       max-height: fit-content;
+      .header{
+        button{
+          padding: 5px;
+        }
+      }
       
       td{
         text-align: center;
-        img{
-          height: 1.2em;
+        button{
+          padding: 2px;
+          img{
+            height: 1.2em;
+          }
         }
       }
     }
