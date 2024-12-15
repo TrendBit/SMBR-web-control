@@ -3,9 +3,9 @@ var apiUpdateWorkerUpdate;
 
 
 (function() {
-    setInterval(updateSite(document), 5000);
+    setInterval(() => {updateSite(document);}, 5000);
     
-    onloadQueue.push( () => updateSite());
+    onloadQueue.push( () => updateSite(document));
     
     apiUpdateWorkerUpdate = async (element) => {
         element.disabled = true;
