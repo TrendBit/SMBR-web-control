@@ -1,11 +1,13 @@
 # Changelog SMBR Web Control
 This version number is trying to stick to the __MAJOR__.__MINOR__ identifiers but there are some exceptions (marked with a prefix # in the MINOR part).
 
+# 0.1.4
+- added refresh button framework for widgets in dashboard panel and device panel
+
 # 0.1.3
 - added reset buttons to every module
 - added set all to 0 button to LedArray widget
 - cosmetical changes to header-right part of widget
-
 
 # 0.1.2
 - added a basic refresh that fetches new modules from the restAPI
