@@ -1,7 +1,7 @@
 <div class="widget" id="module-list">
     <div class="header">
         <h1>Module list</h1>
-        <button class="reset_button button1 hoverSpin" onclick="moduleApiUpdateWorkerUpdate(this)">
+        <button class="reset_button button1 hoverSpin" onclick="restartModule(this)">
             <img src="<%= getIcon("refresh") %>" alt="refresh" title="refresh">
         </button>
         <div class="top">
@@ -23,7 +23,6 @@
         </thead>
         <tbody id="moduleList">
             <script>
-                table = document.getElementsByClassName(moduleList-refreshButton);
                 async function restartModule(element){
                     parentElement = element.parentNode.parentNode;
                     

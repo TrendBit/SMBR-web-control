@@ -1,6 +1,9 @@
 # Changelog SMBR Web Control
 This version number is trying to stick to the __MAJOR__.__MINOR__ identifiers but there are some exceptions (marked with a prefix # in the MINOR part).
 
+# 0.1.5
+- added a new widget - kinetic fluorometer
+
 # 0.1.4
 - added refresh button framework for widgets in dashboard panel and device panel
 

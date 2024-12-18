@@ -176,3 +176,13 @@ function rgbToHex(r, g, b) {
 function mapRangeToRange(number, inMin,inMax, outMin,outMax){
     return ((number - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
 }
+function enforceMinMax(el) {
+    if (el.value != "") {
+      if (parseInt(el.value) < parseInt(el.min)) {
+        el.value = el.min;
+      }
+      if (parseInt(el.value) > parseInt(el.max)) {
+        el.value = el.max;
+      }
+    }
+  }

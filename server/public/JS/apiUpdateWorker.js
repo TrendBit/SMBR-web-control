@@ -3,7 +3,7 @@ var apiUpdateWorkerUpdate;
 
 
 (function() {
-    setInterval(() => {updateSite(document);}, 5000);
+    setInterval(() => {updateSite(document);}, 50000);
     
     onloadQueue.push( () => updateSite(document));
     

@@ -106,6 +106,9 @@ app.locals.getColor = function(index) {
     return colorArray[index%colorArray.length];
 }
 
+
+
+
 app.locals.getSubColor = function(index, degree) {
     return darkenHexColor(app.locals.getColor(index),degree*20);
 }
@@ -170,6 +173,10 @@ app.get('/module-list-refresh',  async (req, res) => {
     
     res.send(JSON.stringify(await webConfigAssembler.getLoadedModulesRefresh())).status(200);
 })
+
+app.get('/fluoro-curve',(req, res) => {
+    res.send(JSON.stringify(webConfigAssembler.getFluoroCurve())).status(200);
+});
 
 app.delete('/delete-file', (req,res) => {
     const fileDir = req.headers['target-directory'];

@@ -2,6 +2,7 @@
 var currNumOfCharts = 0;
 %>
 <script>
+     
     const startMilis = Date.now();
     var chartArray = [];
 
@@ -89,6 +90,9 @@ var currNumOfCharts = 0;
                     <% if(DashboardPanel.CoolSpektrometerWidget){  %>
                         <%- include('panels/dashboard/CoolSpektrometerWidget.ejs') %>
                     <% } %>     
+                    <% if(DashboardPanel.KineticFluorometerWidget){  %>
+                        <%- include('panels/dashboard/KineticFluorometerWidget.ejs', {currNumOfCharts: currNumOfCharts++}) %>
+                    <% } %>   
                     <% if(DashboardPanel.ControlWidget){  %>
                         <%- include('panels/dashboard/ControlWidget.ejs') %>
                     <% } %>    

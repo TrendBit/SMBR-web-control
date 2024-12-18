@@ -13,7 +13,9 @@
                     ></p>
                 </div>
             <% }); %>
-            
+            <button class="reset_button button1 hoverSpin" onclick="apiUpdateWorkerUpdate(this)">
+                <img src="<%= getIcon("refresh") %>" alt="refresh" title="refresh">
+            </button>
         </div>
         <div class="top">
             <p>ERROR</p>
@@ -96,9 +98,9 @@
         </tbody>
     </table>
     <div class="apiChart">
-        <div style="display: none;">
+        <div>
+            <canvas id="Temperature-Widget-Chart" chartIndex="<%= currNumOfCharts++ %>" history="<%= DashboardPanel.TemperatureWidget.chart.history %>"></canvas>
         </div>
-        <canvas id="Temperature-Widget-Chart" chartIndex="<%= currNumOfCharts++ %>" history="<%= DashboardPanel.TemperatureWidget.chart.history %>"></canvas>
     </div>
     
     <script>
@@ -156,6 +158,7 @@
                         datasets: getEmptyDatasets(apiFetchers.length),
                     },
                     options: {
+                        maintainAspectRatio: false,
                         responsive: true,
                         animations: false,
                         elements: {
