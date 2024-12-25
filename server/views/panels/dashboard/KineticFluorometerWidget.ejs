@@ -26,6 +26,7 @@
         <div>
             <canvas id="KineticFluorometer-Widget-Chart" chartIndex="<%= currNumOfCharts++ %>"></canvas>
         </div>
+        <p>use [shift] and scroll wheel to zoom </p>
     </div>
     <div class="widget horizontal" id="KineticFluorometer-controlPanel">
         <div id="KineticFluorometer-testInfo">
@@ -121,7 +122,6 @@
             <div> 
                 <h3>Gain</h3>  
                 <select class="button1">
-                    <option>null</option>
                     <option>1</option>
                     <option>10</option>
                     <option>50</option>
@@ -202,7 +202,8 @@
 
 
             chart.data.labels = mergTS;
-
+            chart.options.plugins.zoom.limits.x.max = mergTS[mergTS.length-1];
+            chart.options.plugins.zoom.limits.x.min = mergTS[0];
             
             chart.data.datasets[0].data = data.current.detector.map(function (value, index) {
                 return {x:data.current.timestamps[index], y:value}
@@ -250,6 +251,7 @@
                 options: {
                     maintainAspectRatio: false,
                     responsive: true,
+                    animations: false,
                     elements: {
                         point:{
                             radius: 1
@@ -264,8 +266,31 @@
                         legend:{
                             display: true,
                             position: "bottom"
-                        }
+                        },
+                        zoom: {
+                            zoom: {
+                                mode: 'x',
+                                wheel: {
+                                    enabled: true,
+                                    modifierKey: "shift",
+                                },
+                                pinch: {
+                                    enabled: true,
+                                },
+                            },
+                            limits: {
+                                x: {min: 0, max: 100}
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: (item) => {
+                                    return item[0].label + ' µs';
+                                }
+                            },
+                        },
                     },
+                    
                     scales: {
                         x: {
                             display: true,
@@ -274,16 +299,19 @@
                             },
                             type: 'logarithmic',
                             ticks: {
+                                fontSize: 40,
                                 callback: function (value) {
-                                    var out = value;
+                                    value = Math.round(value);
+                                    var out = value + 'µs';
                                     if (value>=1000){
-                                        out = (value/1000) + 'k'
+                                        out = (value/1000) + 'ms';
                                     }
                                     if (value>=1000000){
-                                        out = (value/1000000) + 'M'
+                                        out = (value/1000000) + 's';
                                     }
                                     return out;
-                                }
+                                },
+                                
                             }
                         },
                         y: {

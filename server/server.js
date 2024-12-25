@@ -25,6 +25,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use("/experiments" ,express.static(path.join(__dirname, 'experiments')));
 app.use("/configs" ,express.static(path.join(__dirname, 'configs')));
 app.use("/node_modules/chart.js",express.static(path.join(__dirname,'node_modules','chart.js')))
+app.use("/node_modules/hammerjs",express.static(path.join(__dirname,'node_modules','hammerjs')))
+app.use("/node_modules/chartjs-plugin-zoom",express.static(path.join(__dirname,'node_modules','chartjs-plugin-zoom')))
 app.use("/node_modules/codemirror",express.static(path.join(__dirname,'node_modules','codemirror')))
 app.use("/node_modules/@codemirror",express.static(path.join(__dirname,'node_modules','@codemirror')))
 

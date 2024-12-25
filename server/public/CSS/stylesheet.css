@@ -780,11 +780,26 @@ body {
 
     #KineticFluorometer-Widget {
       grid-row: span 3;
+      grid-column: span 2;
+      
+      .apiChart{
+        p{
+          position: absolute;
+          width: fit-content;
+          height: fit-content;
+          top: unset;
+          left: 5px;
+          bottom: 5px;
+          color: rgba(var(--bg-color-5-rgb),0.5);
+        }
+      }
 
       #KineticFluorometer-controlPanel {
         display: flex;
         justify-content: space-between;
         gap: 3px;
+        border-style: none;
+        border-top-style: solid;
         
         #KineticFluorometer-testInfo {
           padding: 0;
