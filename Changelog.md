@@ -1,7 +1,12 @@
 # Changelog SMBR Web Control
 This version number is trying to stick to the __MAJOR__.__MINOR__ identifiers but there are some exceptions (marked with a prefix # in the MINOR part).
 
-# 0.1.5
+# 0.1.5.1
+- updated new test menu
+- added `slider2 handlers`, `enforceMin` and `enforceMax`
+- fixed some UI issues
+
+# 0.1.5.1
 - added units to kinetic fluorometer chart and a zoom feature using the `chartjs-plugin-zoom` plugin
 
 # 0.1.5

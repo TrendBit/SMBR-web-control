@@ -77,6 +77,24 @@ input[type=number] {
 
 /*global class rules*/
 
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px; 
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(var(--bg-color-4-rgb),0.4);
+    border-radius: 4px; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(var(--bg-color-4-rgb),0.9);
+}
+
+::-webkit-scrollbar-track {
+    background-color: transparent; 
+}
+
 p {
   margin: 0;
 }
@@ -108,8 +126,17 @@ body {
   box-sizing: border-box;
 }
 
+.horflex{
+  display: flex;
+  flex-direction: row;
+  >*{
+    flex: 1 1 auto;
+  }
+}
+
 .button1,
-.button2 {
+.button2,
+.radial1{
   background-color: var(--bg-color-1);
   cursor: pointer;
   border: var(--bg-color-4) 1px solid;
@@ -121,8 +148,10 @@ body {
 
 
 
+
 .button1:hover:enabled,
-.button2:hover:enabled {
+.button2:hover:enabled,
+.radial1:hover {
   background-color: var(--bg-color-3) !important;
   border-color: var(--acc-color-3) !important;
 }
@@ -176,6 +205,34 @@ body {
     filter: grayscale(0.8) !important;
   }
 }
+
+
+
+.radial1{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  >input{
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+  >*{
+    padding: 0;
+    margin: 0;
+    width: min-content;
+  }
+}
+
+.radial1:has(input[type="radio"]:checked){
+  border-color: var(--acc-color-2);
+}
+
+
 
 
 .headerButton {
@@ -380,6 +437,23 @@ body {
   vertical-align: bottom;
 }
 
+
+.slider2{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  
+  >*{
+    flex: 1 0 auto;
+  }
+  >.slider{
+    flex: 0 0 auto;
+    margin: 0;
+    margin-right: 10px; 
+  }
+}
+
 .widget {
   display: flex;
   flex-direction: column;
@@ -388,6 +462,7 @@ body {
   border-radius: 5px;
   border: var(--bg-color-4) 1px solid;
   min-height: min-content;
+  min-width: min-content;
   height: fit-content;
   overflow: hidden;
 
@@ -539,6 +614,7 @@ body {
 
   .slider-labels>* {
     margin: 0;
+    min-width: min-content;
     /*! color: var(--bg-color-5); */
   }
 
@@ -556,14 +632,17 @@ body {
 
 .apiChart {
   position: relative;
-  height: 58%;
-
   flex: 1 1 auto;
-
   min-width: 0px;
   min-height: 0px;
-
   box-sizing: border-box;
+  
+  
+  
+  
+  
+  
+  
 
   >* {
     position: absolute;
@@ -724,7 +803,7 @@ body {
   *.content-panel.hidden {
     /*! transform: scale(0.9); */
     opacity: 0;
-    /*! display: none !important; */
+    display: none !important;
     /*! height: 0px !important; */
     z-index: 0 !important;
 
@@ -760,9 +839,14 @@ body {
 
       .slider1 {
         width: min-content;
+        min-width: min-content;
 
         >* {
           width: 100%;
+        }
+        
+        .slider-labels{
+          min-width: min-content;
         }
 
         slider {
@@ -774,6 +858,9 @@ body {
 
     #Temperature-Widget {
       grid-row: span 2;
+      .apiChart{
+        min-height: 200px;
+      }
     }
 
 
@@ -783,6 +870,7 @@ body {
       grid-column: span 2;
       
       .apiChart{
+        min-height: 500px;
         p{
           position: absolute;
           width: fit-content;
@@ -889,12 +977,12 @@ body {
             padding-top: 0;
 
 
-            input,
+            input
             select,
             >div {
               text-align: right;
               width: 100%;
-              max-width: 50%;
+              max-width: 70%;
             }
 
             >div>* {
@@ -1266,14 +1354,12 @@ body {
 
     .file-editor {
       width: 100%;
-
-      overflow: scroll;
-
+      /* overflow: scroll; */
       display: flex;
       flex-direction: column;
       position: relative;
-
       background-color: var(--bg-color-3);
+      
 
       .fe-header {
         min-height: 30px;
@@ -1504,6 +1590,7 @@ body {
       }
     }
   }
+  overflow-y: scroll;
 }
 
 

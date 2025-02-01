@@ -176,13 +176,41 @@ function rgbToHex(r, g, b) {
 function mapRangeToRange(number, inMin,inMax, outMin,outMax){
     return ((number - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
 }
+function enforceMax(el){
+    if (el.value != "") {
+        if (parseInt(el.value) > parseInt(el.max)) {
+            el.value = el.max;
+        }
+    }
+}
+function enforceMin(el){
+    if (el.value != "") {
+        if (parseInt(el.value) < parseInt(el.min)) {
+            el.value = el.min;
+        }
+    }
+}
 function enforceMinMax(el) {
     if (el.value != "") {
-      if (parseInt(el.value) < parseInt(el.min)) {
-        el.value = el.min;
-      }
-      if (parseInt(el.value) > parseInt(el.max)) {
-        el.value = el.max;
-      }
+        if (parseInt(el.value) < parseInt(el.min)) {
+            el.value = el.min;
+        }
+        if (parseInt(el.value) > parseInt(el.max)) {
+            el.value = el.max;
+        }
     }
-  }
+}
+
+
+function eraseValue(element){
+    element.value = "";
+}
+function slider2Handler(element){
+    const inputLabel = element.parentElement.getElementsByClassName("slider2-inputLabel")[0];
+    inputLabel.getElementsByClassName("left")[0].value = element.value;
+}
+
+function slider2TextInputHandler(element){
+    const slider = element.parentElement.parentElement.getElementsByClassName("slider")[0];
+    slider.value = element.value;
+}
