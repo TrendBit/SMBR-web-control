@@ -885,7 +885,7 @@ body {
       #KineticFluorometer-controlPanel {
         display: flex;
         justify-content: space-between;
-        gap: 3px;
+        gap: 7px;
         border-style: none;
         border-top-style: solid;
         
