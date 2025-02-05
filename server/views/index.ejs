@@ -2,6 +2,7 @@
 var currNumOfCharts = 0;
 %>
 <script>
+     
     const startMilis = Date.now();
     var chartArray = [];
 
@@ -88,7 +89,10 @@ var currNumOfCharts = 0;
                     <% } %>      
                     <% if(DashboardPanel.CoolSpektrometerWidget){  %>
                         <%- include('panels/dashboard/CoolSpektrometerWidget.ejs') %>
-                    <% } %>    
+                    <% } %>     
+                    <% if(DashboardPanel.KineticFluorometerWidget){  %>
+                        <%- include('panels/dashboard/KineticFluorometerWidget.ejs', {currNumOfCharts: currNumOfCharts++}) %>
+                    <% } %>   
                     <% if(DashboardPanel.ControlWidget){  %>
                         <%- include('panels/dashboard/ControlWidget.ejs') %>
                     <% } %>    
@@ -116,6 +120,8 @@ var currNumOfCharts = 0;
     </div>
 
     <script src="/node_modules/chart.js/dist/chart.umd.js"></script>
+    <script src="/node_modules/chartjs-plugin-zoom/dist/chartjs-plugin-zoom.min.js"></script>
+    <script src="/node_modules/hammerjs/hammer.min.js"></script>
     <script type="module" src="/JS/CodeMirror.js"></script>
     <!--
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css"></link>

@@ -3,13 +3,14 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const cors = require('cors');
-const fs = require('node:fs');
+const fs = require('fs');
 const favicon = require('serve-favicon');
 const yaml = require('js-yaml');
 const ajv = require('ajv'); //another json validator
 const toml = require('toml');
 
 const webConfigAssembler = require('./webConfigAssembler.js');
+const readingLogger = require('./readingLogger.js');
 
 const PORT = 80;
 const indexUtilities = require('./indexUtilities.js');
@@ -25,6 +26,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use("/experiments" ,express.static(path.join(__dirname, 'experiments')));
 app.use("/configs" ,express.static(path.join(__dirname, 'configs')));
 app.use("/node_modules/chart.js",express.static(path.join(__dirname,'node_modules','chart.js')))
+app.use("/node_modules/hammerjs",express.static(path.join(__dirname,'node_modules','hammerjs')))
+app.use("/node_modules/chartjs-plugin-zoom",express.static(path.join(__dirname,'node_modules','chartjs-plugin-zoom')))
 app.use("/node_modules/codemirror",express.static(path.join(__dirname,'node_modules','codemirror')))
 app.use("/node_modules/@codemirror",express.static(path.join(__dirname,'node_modules','@codemirror')))
 
@@ -86,6 +89,8 @@ app.locals.getIcon = function(name) {
             return "./UI/UI-elements/subElement.svg"
         case "subElement-last":
             return "./UI/UI-elements/subElement-last.svg"
+        case "refresh":
+            return "./UI/icons/refresh_icon.svg"
         default:
             return "./UI/logo/LogoPlaceholder.svg"
     }
@@ -103,6 +108,9 @@ app.locals.getColor = function(index) {
     ]
     return colorArray[index%colorArray.length];
 }
+
+
+
 
 app.locals.getSubColor = function(index, degree) {
     return darkenHexColor(app.locals.getColor(index),degree*20);
@@ -159,11 +167,46 @@ app.get('/file-list', (req, res) => {
     else{
         res.status(403).send("you don't have permisions to view to this directory");
     }
-})
+});
+
+app.get('/temperature-graph', (req,res) => {
+    const level = req.headers['logging-level'];
+    if(level){
+        var resCache = readingLogger.getTemperatureGraph(level);
+        if(resCache!=[]){
+            res.status(200).send(JSON.stringify(resCache));
+            return;
+        }
+    }
+    res.status(400).send("wrong logging level, please select between 1-3");
+    
+});
+
+app.get('/temperature-graph-recent', (req,res) => {
+    const level = req.headers['logging-level'];
+    const lastReload = req.headers['last-reload'];
+    if(level && lastReload){
+        var resCache = readingLogger.getTemperatureGraphRecent(level,lastReload);
+        if(resCache!=[]){
+            res.status(200).send(JSON.stringify(resCache));
+            return;
+        }
+    }
+    res.status(400).send("wrong logging level, please select between 1-3");
+    
+});
 
 app.get('/module-list', (req, res) => {
     res.send(JSON.stringify(webConfigAssembler.getLoadedModules())).status(200);
 })
+app.get('/module-list-refresh',  async (req, res) => {
+    
+    res.send(JSON.stringify(await webConfigAssembler.getLoadedModulesRefresh())).status(200);
+})
+
+app.get('/fluoro-curve',(req, res) => {
+    res.send(JSON.stringify(webConfigAssembler.getFluoroCurve())).status(200);
+});
 
 app.delete('/delete-file', (req,res) => {
     const fileDir = req.headers['target-directory'];
@@ -374,7 +417,7 @@ app.get('/timeout-test', (req, res) => {
 function getRandWholeNum(lower, upper){
     return Math.round(lower + Math.random()*upper);
 }
-function censor(censor) { //stolen from https://stackoverflow.com/questions/4816099/chrome-sendrequest-error-typeerror-converting-circular-structure-to-json/9653082#9653082
+function censor(censor) {
     var i = 0;
     
     return function(key, value) {

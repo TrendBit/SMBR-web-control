@@ -25,6 +25,7 @@
 #   
 DashboardPanel:
   TemperatureWidget:
+    header: 
     rows:
       - name: "Bottle"
         icon: "bottle"
@@ -64,9 +65,9 @@ DashboardPanel:
 
         sub_rows:
           - name: "Raspberry - chip"
-            port: 8089
-            resource: "/temperature"
-            component: "temperature"
+            port: 80
+            resource: "/test-get"
+            component: "value"
             charted: true
 
           - name: "Board2"
@@ -96,9 +97,15 @@ DashboardPanel:
 
     chart:
       history: 30
-
-  
   LedArrayWidget:
+    header: 
+        rows:
+          - name: "temperature"
+            type: "dataField"
+            port: 80
+            resource: "/test-get"
+            unit: "°C"
+            component: "value"
     sliders:
       - name: "Channel 1"
         min: 0
@@ -121,8 +128,11 @@ DashboardPanel:
         step: 1
         channel: 3
   CoolSpektrometerWidget:
+    header: 
     rows:
-      - name: "Channel 1"
+      - name: "UV"
+        frequency: "430 nm"
+        color: "#6F00FF"
         absolute:
           port: 80
           resource: "/test-get"
@@ -133,7 +143,9 @@ DashboardPanel:
           resource: "/test-get"
           component: "value"
           charted: true
-      - name: "Channel 2"
+      - name: "Blue"
+        frequency: "480 nm"
+        color: "#007FFF"
         absolute:
           port: 80
           resource: "/test-get"
@@ -144,7 +156,9 @@ DashboardPanel:
           resource: "/test-get"
           component: "value"
           charted: true
-      - name: "Channel 3"
+      - name: "Green"
+        frequency: "560 nm"
+        color: "#00FF00"
         absolute:
           port: 80
           resource: "/test-get"
@@ -155,7 +169,35 @@ DashboardPanel:
           resource: "/test-get"
           component: "value"
           charted: true
-      - name: "Channel 4"
+      - name: "Orange"
+        frequency: "630 nm"
+        color: "#FF7F00"
+        absolute:
+          port: 80
+          resource: "/test-get"
+          component: "value"
+          charted: true
+        relative:
+          port: 80
+          resource: "/test-get"
+          component: "value"
+          charted: true
+      - name: "Red"
+        frequency: "678 nm"
+        color: "#FF0000"
+        absolute:
+          port: 80
+          resource: "/test-get"
+          component: "value"
+          charted: true
+        relative:
+          port: 80
+          resource: "/test-get"
+          component: "value"
+          charted: true
+      - name: "IR"
+        frequency: "870 nm"
+        color: "#800000"
         absolute:
           port: 80
           resource: "/test-get"
@@ -167,6 +209,7 @@ DashboardPanel:
           component: "value"
           charted: true
   ControlWidget:
+    header: 
     sliders:
       - name: "Air"
         min: 0
@@ -192,3 +235,5 @@ DashboardPanel:
         step: 0.1
         unit: " "
         defaultValue: 0
+  KineticFluorometerWidget:
+    header: 

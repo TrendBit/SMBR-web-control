@@ -1,4 +1,4 @@
-const fs = require('node:fs');
+const fs = require('fs');
 const yaml = require('js-yaml');
 const axios = require('axios');
 const { networkInterfaces } = require('os');
@@ -21,7 +21,21 @@ var assembledConfig = {};
 
 var localIP = "";
 
+var fluoroCurve  = {};
 
+function reloadFluoroCurve(){
+    try {
+        console.log("loading fluoro curve");
+        const fluoroCurveString = fs.readFileSync("./storage/FluoroCurve.json");
+        fluoroCurve = JSON.parse(fluoroCurveString);
+    } catch (error) {
+        console.error("CANNOT LOAD FLUORO CURVE!");
+    }
+}
+
+function refetchFluoroCurve(){
+
+}
 
 
 async function initialize() {
@@ -48,6 +62,7 @@ async function initialize() {
 
     
     global.initialized = true;
+    reloadFluoroCurve();
 }
 initialize()
 
@@ -56,9 +71,14 @@ initialize()
 
 setInterval(reloadModules, 15000);
 
+var lastConfigRefresh = new Date();
+
 module.exports = {
     getConfig: function(reqHostname) {
-        buildWebConfig();
+        if(lastConfigRefresh.getTime-(new Date()).getTime > 60000){
+            lastConfigRefresh = new Date();
+            buildWebConfig();
+        }
         try {
             const result = yaml.load(fs.readFileSync("webConfig.yaml"));    
             return result;
@@ -73,6 +93,14 @@ module.exports = {
     },
     getLoadedModules: function() {
         return loadedModules;
+    },
+    getLoadedModulesRefresh: async function() {
+        unsuccessfullReloads = 500000;
+        await reloadModules();
+        return loadedModules;
+    },
+    getFluoroCurve: function() {
+        return fluoroCurve;
     }
 }
 
@@ -85,6 +113,7 @@ var unsuccessfullReloads = 0;
 async function reloadModules(){
     if(!localIP){
         if(unsuccessfullReloads++ >= 20){
+            unsuccessfullReloads = 0;
             initialize();
         }else{
             console.warn("unsuccessfullReloads: ",unsuccessfullReloads,"/20");
@@ -109,8 +138,10 @@ async function reloadModules(){
                 console.warn("changes in configuration detected");
                 buildWebConfig();
             }
-            }
-            else{
+        }
+        else{
+            console.log("dwadwajk");
+            localIP = "";
             throw new Error({code:response.status});
         }
     } catch (error) {
@@ -241,7 +272,7 @@ function buildWebConfig(){
     fs.writeFileSync("webConfig.yaml",yaml.dump(assembledConfig));
 }
 
-function censor(censor) { //stolen from https://stackoverflow.com/questions/4816099/chrome-sendrequest-error-typeerror-converting-circular-structure-to-json/9653082#9653082
+function censor(censor) {
     var i = 0;
     
     return function(key, value) {

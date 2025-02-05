@@ -1,5 +1,24 @@
 <div id="LedArray-Widget" class="widget">
-    <h1>LedArray</h1>
+    <div class="header">
+        <h1>Led array</h1>
+        <div class="right">
+            <% if(DashboardPanel.LedArrayWidget.header) DashboardPanel.LedArrayWidget.header.rows.forEach(element => { %>
+                <div>
+                    <p><%= element.name %></p>
+                    <p class="table-dataField api-fetcher"
+                        port="<% if(element.port){%><%=element.port%><%}else{%><%="8089"%><%} %>" 
+                        unit="<% if(element.unit){%><%=element.unit%><%}else{%><%="°C"%><%} %>" 
+                        resource="<%= element.resource %>" 
+                        component="<%= element.component %>"
+                    ></p>
+                </div>
+            <% }); %>
+            <button class="button1" id="LedArray-Widget-setAll0Button">disable</button>
+        </div>
+        <div class="top">
+            <p>ERROR</p>
+        </div>
+    </div>
     <div class="control-panel" id="LedArray-Widget-control-panel">
         <%i = 0; DashboardPanel.LedArrayWidget.sliders.forEach(element => { %>
             <div class="slider1 widget">
@@ -24,8 +43,55 @@
         <% }); %> 
         <script>
             (function() {
+
+                const element = document.getElementById("LedArray-Widget-setAll0Button");
+                
+
                 const controlPanel = document.getElementById("LedArray-Widget-control-panel");
                 const sliders = controlPanel.getElementsByClassName("slider");
+
+                element.onclick = function(){
+                    element.disabled = true;
+                    const controlPanel = document.getElementById("LedArray-Widget-control-panel");
+                    const sliders = controlPanel.getElementsByClassName("slider");
+                    for (let i = 0; i < sliders.length; i++) {
+                        const slider = sliders[i];
+
+                        document.getElementById(slider.getAttribute("valueLabel")).innerHTML = Number(slider.getAttribute("min")) + slider.getAttribute("unit");
+                        if((window.webkitURL != null)){//chrome slider fix
+                            const progress = 0;
+                            if(slider.classList.contains("vertical")){
+                                slider.style.background = "linear-gradient(0deg, var(--acc-color-2) "+0+"%, var(--bg-color-3) "+progress+"%)";
+                            }else{
+                                slider.style.background = "linear-gradient(90deg, var(--acc-color-2) "+0+"%, var(--bg-color-3) "+progress+"%)";
+                            }
+                        }
+                        if((Date.now() - startMilis) - slider.getAttribute("lastUpdate") > 100){
+
+                            setTimeout(function(){
+                                slider.value = Number(slider.getAttribute("min"));
+                                slider.setAttribute("lastUpdate",Date.now()-startMilis);
+                                const url = "http://" + window.location.hostname;
+                                const data = {
+                                    intensity: Math.round(Number(slider.getAttribute("min")))/100,
+                                    channel: Math.round(slider.getAttribute("channel"))
+                                }
+                                sendData(url+":8089/control/set-led-intensity",JSON.stringify(data));
+                                if(i==sliders.length-1){
+                                    setTimeout(function(){
+                                    element.disabled = false;
+                                    },500);
+                                }
+                            },100*i);
+        
+                        }
+                        
+                    }
+                    setTimeout(() => { 
+                        element.disabled = false;
+                    }, 2000);
+                };
+
                 for (let i = 0; i < sliders.length; i++) {
                     const element = sliders[i];
                     element.oninput = function() {

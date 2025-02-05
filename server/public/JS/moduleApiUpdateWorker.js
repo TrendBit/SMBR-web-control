@@ -1,18 +1,31 @@
+var moduleApiUpdateWorkerUpdate;
 (function() {
-setInterval((() => updateSite(false)), 15000);
+setInterval((() => updateSite(false,false)), 15000);
 
 onloadQueue.push(() => updateSite(true));
+moduleApiUpdateWorkerUpdate = async (element) => {
+    element.disabled = true;
+    await updateSite(true,true);
+    element.disabled = false;
+};
+
+
 
 var loadedModules = [];
 var currSetStatus = "";
 
-async function updateSite(skipConextCheck){
+async function updateSite(skipConextCheck, refresh){
     const apiFetchers = document.getElementsByClassName('module-api-fetcher');
     const url = "http://" + window.location.hostname;
 
     var newModules = {};
     try {
-        newModules = await fetchDataAsJson(url+"/module-list");
+        if(refresh){
+            newModules = await fetchDataAsJson(url+"/module-list-refresh");
+        }else{
+            newModules = await fetchDataAsJson(url+"/module-list");
+        }
+        
     } catch (error) {
         setMainPopup("error","lost connection to the server");
         document.getElementById("module-list").getElementsByClassName("name")[0].children[0].innerHTML = "<p>lost connection to the server</p>";

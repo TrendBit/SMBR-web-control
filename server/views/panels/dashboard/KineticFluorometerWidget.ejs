@@ -1,0 +1,370 @@
+<div id="KineticFluorometer-Widget" class="widget">
+    <div class="header">
+        <h1>Kinetic fluorometer</h1>
+        <div class="right">
+            <% if(DashboardPanel.KineticFluorometerWidget.header) DashboardPanel.KineticFluorometerWidget.header.rows.forEach(element => { %>
+                <div>
+                    <p><%= element.name %></p>
+                    <p class="table-dataField api-fetcher"
+                        port="<% if(element.port){%><%=element.port%><%}else{%><%="8089"%><%} %>"
+                        unit="<% if(element.unit){%><%=element.unit%><%}else{%><%="°C"%><%} %>"
+                        resource="<%= element.resource %>"
+                        component="<%= element.component %>"
+                    ></p>
+                </div>
+                <% }); %>
+
+                <button class="reset_button button1 hoverSpin" onclick="fetchNewFluoroCurve(this)">
+                    <img src="<%= getIcon("refresh") %>" alt="refresh" title="refresh">
+                </button>
+        </div>
+        <div class="top">
+            <p>ERROR</p>
+        </div>
+    </div>
+    <div class="apiChart">
+        <div>
+            <canvas id="KineticFluorometer-Widget-Chart" chartIndex="<%= currNumOfCharts++ %>"></canvas>
+        </div>
+        <p>use [shift] and scroll wheel to zoom </p>
+    </div>
+    <div class="widget horizontal" id="KineticFluorometer-controlPanel">
+        <div id="KineticFluorometer-testInfo">
+            <div class="widget tabs-container">
+              <script>
+                function KineticFluorometer_changeTab(element){
+                  const container = element.parentElement.parentElement;
+                  const heads = container.getElementsByClassName("head")[0].children;
+                  const bodies = container.getElementsByClassName("bodies")[0].children;
+                  for (let i = 0; i < bodies.length; i++) {
+                    bodies[i].style.display = "none";                   
+                  }
+                  for (let i = 0; i < heads.length; i++) {
+                    heads[i].classList.remove("active");                   
+                  }
+                  element.classList.add("active");   
+                  bodies[element.getAttribute("tabindex")].style.display = "flex"; 
+                }
+              </script>
+                <div class="head">
+                  <button onclick="KineticFluorometer_changeTab(this)" tabindex="0" class="button1 active"><h2  >current</h2></button> 
+                  <button onclick="KineticFluorometer_changeTab(this)" tabindex="1"  class="button1" ><h2>previous</h2></button>
+                </div>
+                <div class="bodies">
+                  <table>
+                      <tbody>
+                          <tr>
+                              <td class="table-name">samples         </td>
+                              <td class="table-dataField">1000</td>
+                          </tr>
+                          <tr>
+                              <td class="table-name">sampling_time   </td>
+                              <td class="table-dataField">logarithmic</td>
+                          </tr>
+                          <tr>
+                              <td class="table-name">captured_length </td>
+                              <td class="table-dataField">2.0</td>
+                          </tr>
+                          <tr>
+                              <td class="table-name">emitor_intensity</td>
+                              <td class="table-dataField">1.0</td>
+                          </tr>
+                          <tr>
+                              <td class="table-name">detector_gain   </td>
+                              <td class="table-dataField">10.0</td>
+                          </tr>
+                      </tbody>
+                  </table>
+                  <table style="display: none;">
+                    <tbody>
+                        <tr>
+                            <td class="table-name">samples         </td>
+                            <td class="table-dataField">1000</td>
+                        </tr>
+                        <tr>
+                            <td class="table-name">sampling_time   </td>
+                            <td class="table-dataField">linear</td>
+                        </tr>
+                        <tr>
+                            <td class="table-name">captured_length </td>
+                            <td class="table-dataField">4.0</td>
+                        </tr>
+                        <tr>
+                            <td class="table-name">emitor_intensity</td>
+                            <td class="table-dataField">2.0</td>
+                        </tr>
+                        <tr>
+                            <td class="table-name">detector_gain   </td>
+                            <td class="table-dataField">20.0</td>
+                        </tr>
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+        </div>
+        <div class="widget" id="KineticFluorometer-Widget-NewTest">
+            <h2>New test</h2>
+            <div>
+                <h3>Length</h3>
+                <div class="slider2">
+                    <input class="slider" 
+                    type="range" 
+                    min="1" 
+                    max="10" 
+                    step="1"
+                    oninput="slider2Handler(this)">
+                    <div class="button2container slider2-inputLabel">
+                        <input class="button2 left" type="number" min=1 max="10" placeholder="1-10" onblur="enforceMin(this)" onkeyup="enforceMax(this); slider2TextInputHandler(this)"> 
+                        <p     class="button2 right disabled" >s</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3>Intensity</h3>
+                <div class="slider2">
+                    <input class="slider" 
+                    type="range" 
+                    min="10" 
+                    max="100" 
+                    step="1"
+                    oninput="slider2Handler(this)">
+                    <div class="button2container slider2-inputLabel">
+                        <input class="button2 left" type="number" min=10 max="100" placeholder="10-100" onblur="enforceMin(this)" onkeyup="enforceMax(this); slider2TextInputHandler(this)"> 
+                        <p     class="button2 right disabled" >%</p>
+                    </div>
+                </div>
+            </div>
+            <div> 
+                <h3>Gain</h3>
+                <div class="horflex">
+                    <div class="radio1"> 
+                        <input id="KineticFluorometer-gain-1"  name="KineticFluorometer-gain" type="radio"> 
+                        <label for="KineticFluorometer-gain-1" >1 </label>   
+                    </div>
+                    <div class="radio1"> 
+                        <input checked="checked" id="KineticFluorometer-gain-10" name="KineticFluorometer-gain" type="radio"> 
+                        <label for="KineticFluorometer-gain-10">10</label>  
+                    </div>
+                    <div class="radio1"> 
+                        <input id="KineticFluorometer-gain-50" name="KineticFluorometer-gain" type="radio"> 
+                        <label for="KineticFluorometer-gain-50">50</label>  
+                    </div>                    
+                </div>
+            </div>
+    
+            <button class="button1"><p>Start a new test</p></button>
+        </div>
+    </div>
+    
+    <script>
+        async function fetchNewFluoroCurve(element){
+            if(element){
+                element.disabled = true;
+                setTimeout(() => {
+                    element.disabled = false;
+                },4000);
+            }
+
+            const chartElement = document.getElementById("KineticFluorometer-Widget-Chart")
+            const chartIndex = chartElement.getAttribute("chartIndex");
+            const chart = chartArray[chartIndex];
+            const url = "http://" + window.location.hostname;
+
+            const data = await fetchDataAsJson(url+":80/fluoro-curve");
+
+            console.warn("loading curve data: ",data);
+            
+            currTS = data.current.timestamps;
+            prevTS = data.previous.timestamps;
+            mergTS = [];
+            currHigh = currTS[0] > prevTS[0];
+            currI = 0;
+            prevI = 0;
+            last = -1;
+            
+
+            //merges two sorted arrays
+            for (let i = 0; i < currTS.length+prevTS.length; i++) {//max possible iterations is in an alternating pattern
+                if(currI==currTS.length){
+                    for (let i = prevI; i < prevTS.length; i++) {
+                        if(last != prevTS[i]){
+                            mergTS.push(prevTS[i]);
+                            last = prevTS[i];
+                        }
+                    }
+                    break;
+                }
+                if(prevI==prevTS.length){
+                    for (let i = currI; i < currTS.length; i++) {
+                        if(last != currTS[i]){
+                            mergTS.push(currTS[i]);
+                            last = currTS[i];
+                        }
+                    }
+                    break;
+                }
+                
+                if(currHigh){
+                    if(currTS[currI] < prevTS[prevI]){
+                        mergTS.push(prevTS[prevI++]);
+                        
+                        currHigh = 0;
+                        continue;
+                    }
+                    if(currTS[currI] == prevTS[prevI]){
+                        prevI++;
+                    }
+                    mergTS.push(currTS[currI++]);
+                    continue;                  
+                }else{
+                    if(currTS[currI] > prevTS[prevI]){
+                        mergTS.push(currTS[currI++]);
+                        currHigh = 1;
+                        continue;
+                    }
+                    if(currTS[currI] == prevTS[prevI]){
+                        currI++;
+                    }
+                    mergTS.push(prevTS[prevI++]);
+                    continue;  
+                }         
+            }
+
+            console.warn("SORTED ARRAY",mergTS);
+
+
+
+            chart.data.labels = mergTS;
+            chart.options.plugins.zoom.limits.x.max = mergTS[mergTS.length-1];
+            chart.options.plugins.zoom.limits.x.min = mergTS[0];
+            
+            chart.data.datasets[0].data = data.current.detector.map(function (value, index) {
+                return {x:data.current.timestamps[index], y:value}
+            });
+            chart.data.datasets[1].data = data.previous.detector.map(function (value, index) {
+                return {x:data.previous.timestamps[index], y:value}
+            });
+            console.warn("done: ",chart.data);
+
+            chart.update();
+
+
+            element.disabled = false;
+        }
+
+        onloadQueue.push(() => {
+            const chart = document.getElementById("KineticFluorometer-Widget-Chart")
+            const chartIndex = chart.getAttribute("chartIndex");
+            
+            console.log("Iitializing a new chart\nindex: ",chartIndex);
+            const data = {
+                labels: [],
+                datasets: [
+                {
+                    label: "current",
+                    data: [],
+                    fill: false,
+                    cubicInterpolationMode: 'monotone',
+                    tension: 0.5,
+                },
+                {
+                    label: "previous",
+                    data: [],
+                    fill: false,
+                    cubicInterpolationMode: 'monotone',
+                    tension: 0,
+                }
+                ]
+            };
+
+            console.log("data: ",data)
+            chartArray[chartIndex] = new Chart(chart, {
+                type: 'line',
+                data: data,
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    animations: false,
+                    elements: {
+                        point:{
+                            radius: 1
+                        }
+                    },
+                    interaction:{
+                        mode: "nearest",
+                        axis: "xy",
+                        intersect: false
+                    },
+                    plugins:{
+                        legend:{
+                            display: true,
+                            position: "bottom"
+                        },
+                        zoom: {
+                            zoom: {
+                                mode: 'x',
+                                wheel: {
+                                    enabled: true,
+                                    modifierKey: "shift",
+                                },
+                                pinch: {
+                                    enabled: true,
+                                },
+                            },
+                            limits: {
+                                x: {min: 0, max: 100}
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: (item) => {
+                                    return item[0].label + ' µs';
+                                }
+                            },
+                        },
+                    },
+                    
+                    scales: {
+                        x: {
+                            display: true,
+                            grid:{
+                                color: "rgb(50,50,50)"
+                            },
+                            type: 'logarithmic',
+                            ticks: {
+                                fontSize: 40,
+                                callback: function (value) {
+                                    value = Math.round(value);
+                                    var out = value + 'µs';
+                                    if (value>=1000){
+                                        out = (value/1000) + 'ms';
+                                    }
+                                    if (value>=1000000){
+                                        out = (value/1000000) + 's';
+                                    }
+                                    return out;
+                                },
+                                
+                            }
+                        },
+                        y: {
+                            display: true,
+                            grid:{
+                                color: "rgb(50,50,50)"
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 1
+                        }
+                    },
+                    grid: {
+                        color: "red"
+                    }
+                },
+            });
+            fetchNewFluoroCurve(null);
+        });
+
+
+    </script>
+
+</div>

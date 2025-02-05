@@ -13,9 +13,7 @@ experiment:
     - wait
  
 
-stirrer:
-  speed: 0.1
-  length: 20
+
 
 aerator:
   intensity: 0.1

@@ -1,9 +1,49 @@
 <div id="CoolSpektrometer-Widget" class="widget">
-    <h1>Spektral</h1>
+    <div class="header">
+        <h1>Transmissive spectrometer</h1>
+        <div class="right">
+            <% if(DashboardPanel.CoolSpektrometerWidget.header) DashboardPanel.CoolSpektrometerWidget.header.rows.forEach(element => { %>
+                <div>
+                    <p><%= element.name %></p>
+                    <p class="table-dataField api-fetcher"
+                        port="<% if(element.port){%><%=element.port%><%}else{%><%="8089"%><%} %>" 
+                        unit="<% if(element.unit){%><%=element.unit%><%}else{%><%="°C"%><%} %>" 
+                        resource="<%= element.resource %>" 
+                        component="<%= element.component %>"
+                    ></p>
+                </div>
+                <% }); %>
+
+
+                
+                <button class="reset_button button1 hoverSpin" onclick="apiUpdateWorkerUpdate(this)">
+                    <img src="<%= getIcon("refresh") %>" alt="refresh" title="refresh">
+                </button>
+        </div>
+        <div class="top">
+            <p>ERROR</p>
+        </div>
+    </div>
+    <script>
+        function CoolSpektrometer_SetReference(element){
+            var parentWidget = document.getElementById("CoolSpektrometer-Widget");
+            var relative_dataFields = parentWidget.getElementsByClassName("CoolSpektrometer-relative");
+            var absolute_dataFields = parentWidget.getElementsByClassName("CoolSpektrometer-absolute");
+
+            for (let i = 0; i < relative_dataFields.length; i++) {
+                const relative = relative_dataFields[i];
+                const absolute = absolute_dataFields[i];
+
+                relative = 0;
+                
+            }
+        }
+    </script>
     <table class="table-widget-segment">
         <thead>
             <tr>
                 <th>color</th>
+                <th>frequency</th>
                 <th>name</th>
                 <th>absolute</th>
                 <th>relative</th>
@@ -15,14 +55,19 @@
                 <tr class="table-master">
                     <td class="table-color">
                         <img src="<%= getIcon("dot") %>" alt="dot">
-                        <div class="colorFilter" colorFilter="<%= getColor(i++) %>"></div>
+                        <div class="colorFilter" colorFilter="<% if(element.color){%><%= element.color%><%}else{%><%= getColor(i++)%><%}%>"></div>
+                    </td>
+                    
+
+                    <td class="table-dataField font_italic">
+                        <%= element.frequency %>
                     </td>
 
                     <td class="table-name">
                         <%= element.name %>
                     </td>
 
-                    <td class="table-dataField api-fetcher"
+                    <td class="table-dataField api-fetcher CoolSpektrometer-absolute"
                         port="<% if(element.absolute.port){%><%=element.absolute.port%><%}else{%><%="8089"%><%} %>" 
                         unit="<% if(element.absolute.unit){%><%=element.absolute.unit%><%}else{%><%="lm"%><%} %>" 
                         resource="<%= element.absolute.resource %>" 
@@ -33,7 +78,7 @@
                     >
                     </td>
                     
-                    <td class="table-dataField api-fetcher"
+                    <td class="table-dataField api-fetcher CoolSpektrometer-relative"
                         port="<% if(element.relative.port){%><%=element.relative.port%><%}else{%><%="8089"%><%} %>" 
                         unit="<% if(element.relative.unit){%><%=element.relative.unit%><%}else{%><%="%"%><%} %>" 
                         resource="<%= element.relative.resource %>" 
@@ -45,6 +90,25 @@
                     </td>
                 </tr>
             <% }); %>
+            <tr class="table-master">
+                <td class="table-color">
+                    
+                </td>
+                
+
+                <td class="table-dataField font_italic">
+                </td>
+
+                <td class="table-name">
+                </td>
+
+                <td class="table-dataField" colspan="2">
+                    <button id="CoolSpektrometer-SetReferenceBtn" class="button1" onclick="CoolSpektrometer_SetReference(this)">
+                        <p>set reference</p>
+                    </button>
+                </td>
+            </tr>
+
         </tbody>
     </table>
 </div>

@@ -1,10 +1,20 @@
+var apiUpdateWorkerUpdate;
+
+
+
 (function() {
-setInterval(updateSite, 5000);
+    setInterval(() => {updateSite(document);}, 5000);
+    
+    onloadQueue.push( () => updateSite(document));
+    
+    apiUpdateWorkerUpdate = async (element) => {
+        element.disabled = true;
+        await updateSite(element.parentNode.parentNode.parentNode);
+        element.disabled = false;
+    };
 
-onloadQueue.push( () => updateSite());
-
-async function updateSite(){
-    const apiFetchers = document.getElementsByClassName('api-fetcher');
+async function updateSite(root){
+    const apiFetchers = root.getElementsByClassName('api-fetcher');
     const url = "http://" + window.location.hostname;
     console.log(currContext);
     if(currContext == 0){

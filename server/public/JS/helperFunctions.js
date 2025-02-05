@@ -85,13 +85,14 @@ async function streamToString(stream) {
     return Buffer.concat(chunks).toString("utf-8");
 }
 
-
-async function fetchDataAsJson(url) {
+// adding additionalHeaders will cause this to not work on RestApi endpoints
+async function fetchDataAsJson(url,additionalHeaders = {}) {
     const response = await fetch(url,
                             {
                                 method: "GET",
                                 headers: {
                                     'Content-Type': 'text/plain', //it has to be plain text else it will send a complex request with an additional OPTIONS request
+                                    ...additionalHeaders
                                 },
                                 signal: AbortSignal.timeout( 10000 )                           
                             }
@@ -114,18 +115,23 @@ async function fetchData(url) {
 }
 
 async function sendData(url, data) {
+    console.debug("sending to ",url,": ",data);
     const response = await fetch(url, {
-        method: 'POST',
-        referrerPolicy: "unsafe-url",
-        headers: {
-            'Content-Type': 'application/json'
+        "credentials": "omit",
+        "headers": {
+            "Accept": "application/json",
+            "Accept-Language": "cs,sk;q=0.8,en-US;q=0.5,en;q=0.3",
+            "Content-Type": "application/json",
         },
-        body: data
+        "body": data,
+        "method": "POST",
+        "mode": "cors"
     });
     return await response;
 }
 
-function censor(censor) { //stolen from https://stackoverflow.com/questions/4816099/chrome-sendrequest-error-typeerror-converting-circular-structure-to-json/9653082#9653082
+
+function censor(censor) {
     var i = 0;
     
     return function(key, value) {
@@ -170,4 +176,64 @@ function rgbToHex(r, g, b) {
 
 function mapRangeToRange(number, inMin,inMax, outMin,outMax){
     return ((number - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+}
+function enforceMax(el){
+    if (el.value != "") {
+        if (parseInt(el.value) > parseInt(el.max)) {
+            el.value = el.max;
+        }
+    }
+}
+function enforceMin(el){
+    if (el.value != "") {
+        if (parseInt(el.value) < parseInt(el.min)) {
+            el.value = el.min;
+        }
+    }
+}
+function enforceMinMax(el) {
+    if (el.value != "") {
+        if (parseInt(el.value) < parseInt(el.min)) {
+            el.value = el.min;
+        }
+        if (parseInt(el.value) > parseInt(el.max)) {
+            el.value = el.max;
+        }
+    }
+}
+
+
+function eraseValue(element){
+    element.value = "";
+}
+function slider2Handler(element){
+    const inputLabel = element.parentElement.getElementsByClassName("slider2-inputLabel")[0];
+    inputLabel.getElementsByClassName("left")[0].value = element.value;
+}
+
+function slider2TextInputHandler(element){
+    const slider = element.parentElement.parentElement.getElementsByClassName("slider")[0];
+    slider.value = element.value;
+}
+
+
+
+function formatTime(formatString,timestamp =new Date()){
+    const seconds = timestamp.getSeconds();
+    const minutes = timestamp.getMinutes();
+    const hours   = timestamp.getHours();
+
+    formatString = formatString.replaceAll("ss",seconds);
+    formatString = formatString.replaceAll("mm",minutes);
+    formatString = formatString.replaceAll("hh",hours);
+    formatString = formatString.replaceAll("do",timestamp.getDate());
+    formatString = formatString.replaceAll("dd",timestamp.getDay());
+    formatString = formatString.replaceAll("mo",timestamp.getMonth());
+    formatString = formatString.replaceAll("yyyy",timestamp.getFullYear());
+
+    formatString = formatString.replaceAll("SS",(seconds<10)?"0"+seconds:seconds);
+    formatString = formatString.replaceAll("MM",(minutes<10)?"0"+minutes:minutes);
+    formatString = formatString.replaceAll("HH",(hours<10)?"0"+hours:hours);
+
+    return formatString;
 }
