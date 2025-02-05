@@ -71,9 +71,14 @@ initialize()
 
 setInterval(reloadModules, 15000);
 
+var lastConfigRefresh = new Date();
+
 module.exports = {
     getConfig: function(reqHostname) {
-        buildWebConfig();
+        if(lastConfigRefresh.getTime-(new Date()).getTime > 60000){
+            lastConfigRefresh = new Date();
+            buildWebConfig();
+        }
         try {
             const result = yaml.load(fs.readFileSync("webConfig.yaml"));    
             return result;
@@ -267,7 +272,7 @@ function buildWebConfig(){
     fs.writeFileSync("webConfig.yaml",yaml.dump(assembledConfig));
 }
 
-function censor(censor) { //stolen from https://stackoverflow.com/questions/4816099/chrome-sendrequest-error-typeerror-converting-circular-structure-to-json/9653082#9653082
+function censor(censor) {
     var i = 0;
     
     return function(key, value) {

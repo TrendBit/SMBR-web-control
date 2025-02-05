@@ -82,6 +82,7 @@
                             resource="<%= sub_element.resource %>" 
                             component="<%= sub_element.component %>"
                             charted="<% if(element.charted){%><%=element.charted%><%}else{%><%="false"%><%} %>" 
+                            parent="<%=element.name%>"
                         >
                         </td>
                         
@@ -97,6 +98,20 @@
             <% }); %>
         </tbody>
     </table>
+    <div class="horflex" id="Temperature-Widget-Chart-ContextLen">
+        <div class="radio1 minimal"> 
+            <input checked="checked" id="Temperature-Widget-Chart-ContextLen-1"  name="Temperature-Widget-Chart-ContextLen" type="radio" value="minute" onclick="TemperatureWidgetChart_Reload(this)"> 
+            <label for="Temperature-Widget-Chart-ContextLen-1" >minute</label>   
+        </div>     
+        <div class="radio1 minimal"> 
+            <input id="Temperature-Widget-Chart-ContextLen-2"  name="Temperature-Widget-Chart-ContextLen" type="radio" value="hour" onclick="TemperatureWidgetChart_Reload(this)"> 
+            <label for="Temperature-Widget-Chart-ContextLen-2" >hour</label>   
+        </div>     
+        <div class="radio1 minimal"> 
+            <input id="Temperature-Widget-Chart-ContextLen-3"  name="Temperature-Widget-Chart-ContextLen" type="radio" value="day" onclick="TemperatureWidgetChart_Reload(this)"> 
+            <label for="Temperature-Widget-Chart-ContextLen-3" >day</label>   
+        </div>     
+    </div>
     <div class="apiChart">
         <div>
             <canvas id="Temperature-Widget-Chart" chartIndex="<%= currNumOfCharts++ %>" history="<%= DashboardPanel.TemperatureWidget.chart.history %>"></canvas>
@@ -104,39 +119,128 @@
     </div>
     
     <script>
-        setInterval(() => { //updater
+        async function TemperatureWidgetChart_Reload(radioButton){
             const chart = document.getElementById("Temperature-Widget-Chart");
             const chartIndex = chart.getAttribute("chartIndex");
             const url = "http://" + window.location.hostname;
-            var i = 0;
+            const currRadio = radioButton.value;
+            TemperatureWidgetChart_CurrentRadioButton = currRadio;
             
-            if(chartArray[chartIndex].count <= chart.getAttribute("history")){
-                chartArray[chartIndex].count++;
-            }
-            for (let i = 0; i  < chartArray[chartIndex].apiFetchers.length; i++) {
-                const element = chartArray[chartIndex].apiFetchers[i];
+            const newData = await fetchDataAsJson(url+":80/temperature-graph",{"logging-level":currRadio})
 
-                const dataSet = element.dataSet;
-                if(chartArray[chartIndex].count > chart.getAttribute("history")){
-                    dataSet.data.shift();
+            const chartObj = chartArray[chartIndex];
+            
+            var dataOffset = 0;
+            var newLabels = new Array(newData.length);
+            for (let i = 0; i < newData.length; i++) {
+                if(newData[i].timestamp!=0){
+                    const currTimestamp = new Date(newData[i].timestamp);
+
+                    if(currRadio == "day"){
+                        newLabels[i] = formatTime("da hh",currTimestamp);
+                    }
+                    if(currRadio == "hour"){
+                        newLabels[i] = formatTime("HH:MM",currTimestamp);
+                    }
+                    if(currRadio == "minute"){
+                        newLabels[i] = formatTime("HH:MM:SS",currTimestamp);
+                    }
+                }else{
+                    newLabels[i] = " ";
+                }
+            }
+            chartObj.data.labels = newLabels;
+            
+            for (let d = 0; d < chartObj.data.datasets.length; d++) {
+                const dataset = chartObj.data.datasets[d];
+
+                
+                dataset.data = new Array(newData.length);
+                for (let i = 0; i < newData.length; i++) {
+
+                    if(newData.data === 0){
+                        dataset.data[i] = null;
+                    }else{
+                        dataset.data[i] = newData[i].data[dataset.label];
+                    }
+                    
+                }
+            }
+
+            TemperatureWidgetChart_LastReload = newData[newData.length-1].timestamp;
+
+            chartArray[chartIndex].update();
+        }
+
+        var TemperatureWidgetChart_LastReload = 0;
+        var TemperatureWidgetChart_CurrentRadioButton = "";
+        setInterval(async () => { //updater
+            const chart = document.getElementById("Temperature-Widget-Chart");
+            const chartIndex = chart.getAttribute("chartIndex");
+            const url = "http://" + window.location.hostname;
+            const currRadio = TemperatureWidgetChart_CurrentRadioButton;
+            const chartObj = chartArray[chartIndex];
+            //console.warn("getting lastReload:",TemperatureWidgetChart_LastReload,"logging level:",currRadio)
+            const newData = await fetchDataAsJson(url+":80/temperature-graph-recent",{
+                "logging-level":currRadio,
+                "last-reload":TemperatureWidgetChart_LastReload+10
+            });
+            if(newData.length!=0){
+                TemperatureWidgetChart_LastReload = newData[0].timestamp;
+
+                for (let i = 0; i < chartObj.data.labels.length-newData.length; i++) {
+                    chartObj.data.labels[i] = chartObj.data.labels[i+newData.length];
+
+                    for (let d = 0; d < chartObj.data.datasets.length; d++) {
+                        const dataset = chartObj.data.datasets[d];
+
+                        dataset.data[i] = dataset.data[i+newData.length];
+                    }
+                }
+                
+                for (let i = 0; i < newData.length; i++) {
+                    const index = chartObj.data.labels.length-i-1;
+
+
+                    const currTimestamp = new Date(newData[i].timestamp);
+                    var newTimeStamp = "";
+
+
+
+
+                    if(currRadio == "day"){
+                        newTimeStamp = formatTime("da hh",currTimestamp);
+                    }
+                    if(currRadio == "hour"){
+                        newTimeStamp = formatTime("HH:MM",currTimestamp);
+                    }
+                    if(currRadio == "minute"){
+                        newTimeStamp = formatTime("HH:MM:SS",currTimestamp);
+                    }
+
+
+                    chartObj.data.labels[index] = newTimeStamp;
+
+
+
+                    for (let d = 0; d < chartObj.data.datasets.length; d++) {
+                        const dataset = chartObj.data.datasets[d];
+
+                        dataset.data[index] = newData[i].data[dataset.label];
+                    }
                 }
 
-                dataSet.data.push(element.innerHTML.split(" ")[0]);
-                
-                
-                
 
-                element.classList.remove("error");
-                
-                
+
+
+
+                chartArray[chartIndex].update();
+
             }
-            chartArray[chartIndex].update();
-            
-            
-
-        },2500);
+        
+        },1000);
         onloadQueue.push(() => {
-            const chart = document.getElementById("Temperature-Widget-Chart")
+            const chart = document.getElementById("Temperature-Widget-Chart");
             const chartIndex = chart.getAttribute("chartIndex");
             const possibleApiFetchers = document.getElementById("Temperature-Widget-Table").getElementsByClassName("api-fetcher");
             var colorFilters = [];
@@ -146,6 +250,16 @@
                     apiFetchers.push(possibleApiFetchers[i]);
                     colorFilters.push(possibleApiFetchers[i].parentElement.getElementsByClassName("colorFilter")[0]);
                 }
+            }
+            
+            const radioButtons = document.getElementsByName("Temperature-Widget-Chart-ContextLen");
+            for (let i = 0; i < radioButtons.length; i++) {
+                const radio = radioButtons[i];
+                if(radio.checked){
+                    TemperatureWidgetChart_Reload(radio);
+                    break;
+                }
+                
             }
 
             console.log("Iitializing a new chart\nindex: ",chartIndex,"\nhistory:",chart.getAttribute("history"),"\napiFetchers:",apiFetchers, "\ncolorFilters:",colorFilters);
@@ -217,7 +331,11 @@
                 dataSet.borderColor     = targetColor;
                 dataSet.backgroundColor = darkenHexColor(targetColor,30);
                 
-                const label = element.parentElement.getElementsByClassName("table-name")[0].innerHTML.trim();
+                var label = element.parentElement.getElementsByClassName("table-name")[0].innerHTML.trim();
+                if(element.getAttribute("parent")){
+                    label = element.getAttribute("parent") + "." + label;
+                }
+
                 const splitLabel = label.split(' ');
                 dataSet.label = "";
                 for (let i = 0; i < splitLabel.length; i++) {

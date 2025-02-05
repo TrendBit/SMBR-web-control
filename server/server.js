@@ -10,6 +10,7 @@ const ajv = require('ajv'); //another json validator
 const toml = require('toml');
 
 const webConfigAssembler = require('./webConfigAssembler.js');
+const readingLogger = require('./readingLogger.js');
 
 const PORT = 80;
 const indexUtilities = require('./indexUtilities.js');
@@ -166,7 +167,34 @@ app.get('/file-list', (req, res) => {
     else{
         res.status(403).send("you don't have permisions to view to this directory");
     }
-})
+});
+
+app.get('/temperature-graph', (req,res) => {
+    const level = req.headers['logging-level'];
+    if(level){
+        var resCache = readingLogger.getTemperatureGraph(level);
+        if(resCache!=[]){
+            res.status(200).send(JSON.stringify(resCache));
+            return;
+        }
+    }
+    res.status(400).send("wrong logging level, please select between 1-3");
+    
+});
+
+app.get('/temperature-graph-recent', (req,res) => {
+    const level = req.headers['logging-level'];
+    const lastReload = req.headers['last-reload'];
+    if(level && lastReload){
+        var resCache = readingLogger.getTemperatureGraphRecent(level,lastReload);
+        if(resCache!=[]){
+            res.status(200).send(JSON.stringify(resCache));
+            return;
+        }
+    }
+    res.status(400).send("wrong logging level, please select between 1-3");
+    
+});
 
 app.get('/module-list', (req, res) => {
     res.send(JSON.stringify(webConfigAssembler.getLoadedModules())).status(200);
@@ -389,7 +417,7 @@ app.get('/timeout-test', (req, res) => {
 function getRandWholeNum(lower, upper){
     return Math.round(lower + Math.random()*upper);
 }
-function censor(censor) { //stolen from https://stackoverflow.com/questions/4816099/chrome-sendrequest-error-typeerror-converting-circular-structure-to-json/9653082#9653082
+function censor(censor) {
     var i = 0;
     
     return function(key, value) {

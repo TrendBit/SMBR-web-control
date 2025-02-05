@@ -1,6 +1,9 @@
 # Changelog SMBR Web Control
 This version number is trying to stick to the __MAJOR__.__MINOR__ identifiers but there are some exceptions (marked with a prefix # in the MINOR part).
 
+# 0.1.6
+- temperature chart rework (it is cached on the server and streamed to client)
+
 # 0.1.5.1
 - updated new test menu
 - added `slider2 handlers`, `enforceMin` and `enforceMax`
