@@ -24,6 +24,79 @@
 #graph
 #   
 DashboardPanel:
+  TemperatureWidget:
+    header: 
+    rows:
+      - name: "Bottle"
+        icon: "bottle"
+        port: 80
+        resource: "/test-get"
+        component: "value"
+        charted: true
+        
+        input:
+          min: 0
+          max: 15
+
+        sub_rows:
+          - name: "Top"
+            port: 80
+            resource: "/test-get"
+            component: "value"
+            charted: true
+
+          - name: "Bottom"
+            port: 80
+            resource: "/test-get"
+            component: "value"
+            charted: true
+
+      - name: "LED array"
+        icon: "leds"
+        port: 80
+        resource: "/test-get"
+        component: "value"
+        charted: true
+
+      - name: "Boards"
+        icon: "board"
+        component: "value"
+        charted: false
+
+        sub_rows:
+          - name: "Raspberry - chip"
+            port: 80
+            resource: "/test-get"
+            component: "value"
+            charted: true
+
+          - name: "Board2"
+            port: 80
+            resource: "/test-get"
+            component: "value"
+            charted: true
+
+          - name: "Board3"
+            port: 80
+            resource: "/test-get"
+            component: value
+            charted: false
+
+          - name: "Board4"
+            port: 80
+            resource: "/test-get"
+            component: "value"
+            charted: false
+
+      - name: "Ambient"
+        icon: "temperature_ambient"
+        port: 80
+        resource: "/test-get"
+        component: "value"
+        charted: true
+
+    chart:
+      history: 30
   LedArrayWidget:
     header: 
         rows:

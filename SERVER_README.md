@@ -42,6 +42,7 @@ a simple test for different way to interact with the APIs
 **js-yaml** for parsing yaml
 **axios** for a simpler way to send api requests
 **chart.js** for offline integration of chart.js
+**chalk** for not having to use ansii escape sequences, DOESN'T SUPPORT REQUIRE IMPORTS
 
 ___
 # API

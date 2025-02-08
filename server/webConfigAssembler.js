@@ -5,15 +5,7 @@ const { networkInterfaces } = require('os');
 
 var loadedModules = [
     {
-        module_type: "control",
-        uid: "0x00000000000000000"
-    },
-    {
-        module_type: "loljuhi",
-        uid: "0x00000000004500000"
-    },
-    {
-        module_type: "unknown",
+        module_type: "debug",
         uid: "0x00000000000000000"
     }
 ];
@@ -71,12 +63,13 @@ initialize()
 
 setInterval(reloadModules, 15000);
 
-var lastConfigRefresh = new Date();
+var lastConfigRefresh = new Date(0);
 
 module.exports = {
     getConfig: function(reqHostname) {
-        if(lastConfigRefresh.getTime-(new Date()).getTime > 60000){
-            lastConfigRefresh = new Date();
+        currTime = new Date();
+        if(lastConfigRefresh.getTime() - currTime.getTime() > 5000){
+            lastConfigRefresh = currTime;
             buildWebConfig();
         }
         try {
@@ -157,27 +150,48 @@ async function reloadModules(){
 
 /*
     merges source into target rewriting existing entries in target
+    breaks often because of javascript objects etc. allways check first if something goes wrong
 */
-function deepMerge(source, target){
-    for (const [key, value] of Object.entries(source)){
-        if(Array.isArray(value)){
-            if(Array.isArray(target[key])){
-                target[key] = target[key].concat(value);
-            }else{
-                target[key] = value;
-            }
-        }else if(value instanceof Object){
-            if(target[key]){
-                deepMerge(source[key], target[key]);
-            }
-            else{
+function deepMerge(source, target, tabs="", debug=false){
+    for(var key in source){
+        if(debug)console.log("\x1b[0;36m"+tabs+"merging "+key+":"+source[key]+" type:"+(typeof source[key])+"    to      "+key+":"+target[key]+" type:"+(typeof target[key])+"   \x1b[0m");
+        switch (typeof source[key]) {
+            case "string":
+            case "number":
+                if(debug)console.log(tabs+"1    setting "+key+":"+target[key]+"  to  "+source[key]);
                 target[key] = source[key];
-            }
-        }else{
-            target[key] = value;
+                break;
+
+            case "object":
+                if(source[key] == null){
+                    if(debug)console.log(tabs+"5    skipping "+key+":"+source[key]);
+                    break;
+                }
+                if(target[key] == undefined || target[key] == null){
+                    if(debug)console.log(tabs+"2    adding "+key+":"+source[key]);
+                    target[key] = structuredClone(source[key]);
+                    break;
+                }
+                if(Array.isArray(source[key])){
+                    if(debug)console.log(tabs+"3    working with target array: ["+target[key]+"]");
+                    for(var i = 0; i < source[key].length; i++){
+                        if(debug)console.log(tabs+"4    pushing "+source[key][i]+" type:"+(typeof source[key][i]));
+                        target[key].push(source[key][i]);
+                    }
+
+                }else{
+                    deepMerge(source[key],target[key],tabs+"    ");
+                }
+                break;
+        
+            default:
+                if(debug)console.log(tabs+"5    setting "+key+":"+source[key]);
+                target[key] = structuredClone(source[key]);
+                break;
         }
     }
-  }
+    return target;
+}
 
 
 
@@ -236,33 +250,37 @@ function buildWebConfig(){
         
         switch (element.module_type) {
             //prepared for future modules with different prerequisites
+            case "debug":
+            case "sensor":
+            case "core":
             case "control":
                 var configComponent = "";
+                var loaded = false;
                 try {
-                    console.log("loading \"web_config_components/control.yaml\"");
-                    const configComponentUnfinished = fs.readFileSync("web_config_components/control.yaml", 'utf8')
+                    console.log("loading \"web_config_components/"+element.module_type+".yaml\"");
+                    const configComponentUnfinished = fs.readFileSync("web_config_components/"+element.module_type+".yaml", 'utf8')
                                                         .replace("{{module}}",element.uid);
                     
                     configComponent = yaml.load(configComponentUnfinished);
+                    loaded = true;
                 } catch (error) {
-                    console.error("error while loading, skipping...");
-                    if(!assembledConfig.Errors){
-                        assembledConfig = {Errors: []}
+                    if(assembledConfig.Errors == undefined){
+                        assembledConfig.Errors = [];
                     }
                     assembledConfig.Errors.push({
-                        description:"unable to load \"web_config_components/control.yaml\""
+                        description:"unable to load \"web_config_components/"+element.module_type+".yaml\""
                     });
                     
-                    console.error("unable load \"web_config_components/",element.module_type,".yaml\"")
+                    console.error("unable to load \"web_config_components/"+element.module_type+".yaml\", skipping...")
                 }
-
-                deepMerge(configComponent, assembledConfig);
-                
-                    
+                if(loaded){
+                    deepMerge(configComponent, assembledConfig);
+                }
+                                   
                 break;
             
             default:
-                console.error("unable load \"web_config_components/",element.module_type,".yaml\"")
+                console.error("unknown module, cannot find \"web_config_components/"+element.module_type+".yaml\"")
                 break;
         }
     });

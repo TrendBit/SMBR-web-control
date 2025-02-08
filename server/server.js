@@ -9,6 +9,14 @@ const yaml = require('js-yaml');
 const ajv = require('ajv'); //another json validator
 const toml = require('toml');
 
+//changes all error outputs to RED color
+import("chalk").then(chalk => {
+    const originalError = console.error;
+    console.error = (...args) => {
+        originalError(chalk.default.red(...args));
+    };
+});
+
 const webConfigAssembler = require('./webConfigAssembler.js');
 const readingLogger = require('./readingLogger.js');
 

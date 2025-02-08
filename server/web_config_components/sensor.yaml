@@ -1,0 +1,54 @@
+#TEMPERATUREWIDGET
+#rows[]
+#   name
+#   icon
+#   *unit        (default °C)
+#   *port        (default 8089)
+#   resource     ("" for turning off api fetching)
+#   component
+#   * (default 5)
+#   *input{}     (default null)
+#       max
+#       min
+#   *sub_rows[]  (default null)
+#       name
+#       icon
+#       unit
+#       port
+#       resource
+#       component
+#       
+#       input{}
+#           max
+#           min
+#graph
+#   
+DashboardPanel:
+  TemperatureWidget:
+    rows:
+      - name: "Bottle"
+        icon: "bottle"
+        port: 8089
+        resource: "/sensor/bottle/temperature"
+        component: "temperature"
+        charted: true
+        
+        input:
+          min: 0
+          max: 15
+
+        sub_rows:
+          - name: "Top"
+            port: 80
+            resource: "/sensor/bottle/top/measured_temperature"
+            component: "temperature"
+            charted: false
+
+          - name: "Bottom"
+            port: 80
+            resource: "/sensor/bottle/bottom/measured_temperature"
+            component: "temperature"
+            charted: false
+
+    chart:
+      history: 30

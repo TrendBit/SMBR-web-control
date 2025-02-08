@@ -152,31 +152,37 @@ module.exports = {
 var currentModuleTemps = {};
 function temperatureGraphFetch(){
     var loadedConfig = webConfigAssembler.getConfig("[internal readings logger]");
-    //process.stdout.write("Fetching data... \n");
+    if(loadedConfig.DashboardPanel == undefined) return;
+    if(loadedConfig.DashboardPanel.TemperatureWidget == undefined) return;
+    fetchDataForRows(loadedConfig.DashboardPanel.TemperatureWidget.rows);
     
-    function fetchDataForRows(rows,last){
-        rows.forEach(element => {
-            if(element.charted == true){
-                
-                fetchDataAsJson("http://127.0.0.1:"+element.port+element.resource)
-                .then(response =>{
+
+    //defined to allow recursion for sub"ELements
+    function fetchDataForRows(rows,last=""){
+        if(rows){
+            rows.forEach(element => {
+                if(element.charted == true){                    
+                    fetchDataAsJson("http://127.0.0.1:"+element.port+element.resource)
+                    .then(response =>{
+                        
+                        currentModuleTemps[last + element.name] = Math.round(response[element.component]);
+                    })
+                    .catch(err => {
+                        currentModuleTemps[last + element.name] = null;
+                        console.error("ERROR while trying to fetch current temperature for: "+element.name + "\n"+err);
+                    });
                     
-                    currentModuleTemps[last + element.name] = Math.round(response[element.component]);
-                })
-                .catch(err => {
-                    console.error("ERROR while trying to fetch current temperature for: "+element.name + "\n"+err);
-                });
-                
-                if(element.sub_rows && last === ""){ //stops recursion
-                    fetchDataForRows(element.sub_rows,element.name+".");
+                    if(element.sub_rows && last === ""){ //stops recursion
+                        fetchDataForRows(element.sub_rows,element.name+".");
+                    }
+                    
                 }
-                
-            }
-        });
+            });
+        }
     }
     
+    
     //var loadedConfig = yaml.load(fs.readFileSync("webConfig.yaml"));
-    fetchDataForRows(loadedConfig.DashboardPanel.TemperatureWidget.rows,"");
 }
 
 
@@ -213,7 +219,6 @@ function temperatureGraphReload(){
         lastHour = (new Date()).getHours();
     }
 }
-
 
 
 temperatureGraphFetch();

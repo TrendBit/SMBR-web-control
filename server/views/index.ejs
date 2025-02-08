@@ -111,7 +111,8 @@ var currNumOfCharts = 0;
 
             <% if(locals.DevicePanel){ %>
                 <div id="Device-Panel" class="content-panel container hidden">
-                    <%- include('panels/DevicePanel.ejs') %>            
+                    <%- include('panels/DevicePanel/ModuleListWidget.ejs') %>  
+                    <%- include('panels/DevicePanel/ServiceStatus.ejs') %>   
                 </div>  
             <% } %>
             <div id="mainPopup" onclick="resetMainPopup()"></div>
