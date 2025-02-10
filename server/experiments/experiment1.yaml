@@ -12,7 +12,9 @@ experiment:
     - pump
     - wait
  
-
+ahoj:
+  pet: 5
+  
 stirrer:
   speed: 0.1
   length: 20

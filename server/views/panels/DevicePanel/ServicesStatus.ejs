@@ -1,0 +1,70 @@
+<div class="widget" id="DevicePanel-ServicesStatus">
+    <div class="header">
+        <h1>Service status</h1>
+        <button class="reset_button button1 hoverSpin" onclick="DevicePanel_ServicesStatus_Reload()">
+            <img src="<%= getIcon("refresh") %>" alt="refresh" title="refresh">
+        </button>
+        <div class="top">
+            <p>ERROR</p>
+        </div>
+    </div>
+    <table class="table-widget-segment">
+        <thead>
+            <tr>
+                <th>state</th>
+                <th>service name</th>
+                <th>uptime</th>
+            </tr>
+        </thead>
+        <tbody id="DevicePanel-ServicesStatus-table">
+        </tbody>
+        <script>
+            async function DevicePanel_ServicesStatus_Reload(){
+                console.warn("UPDATING SERVICES");
+                
+                const table = document.getElementById("DevicePanel-ServicesStatus-table");
+                const url = "http://" + window.location.hostname;
+                const serviceInfo = await fetchDataAsJson(url + ":80/services-status"); 
+                table.innerHTML = "";
+
+                console.log(serviceInfo);
+                for (var service in serviceInfo){
+                    var out = "";
+                    var level;
+                    switch (serviceInfo[service].state.trim()) {
+                        case "active":
+                            level="ok";
+                            break;
+                        case "inactive":
+                            level="error";
+                            break;
+                        default:
+                            level="warning";
+                            break;
+                    }
+
+                    console.log("Recieving",service);
+                    out+="<tr>"
+                        out+="<td class='"+level+"'>"+serviceInfo[service].state+"</td>"
+                        out+="<td>"+service.replaceAll(".service","")+"</td>"
+                        const uptime = serviceInfo[service].uptime/1000;
+                        out+="<td>"
+                            out+=Math.round(uptime/86400000  )+  "d "
+                            out+=Math.round((uptime/360)%24  )+  "h "
+                            out+=Math.round((uptime/60)%60   )+  "m "
+                         out+="</td>"
+                    out+="</tr>"
+                    table.innerHTML += out;
+                }
+            }
+            onload.push(
+                DevicePanel_ServicesStatus_Reload()
+            ) 
+            setTimeout(()=>{
+                if(currContext == 3){
+                    DevicePanel_ServicesStatus_Reload();
+                }
+            },10000);
+        </script>
+    </table>
+</div>

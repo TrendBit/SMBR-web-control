@@ -21,6 +21,12 @@
   --acc-color-4: rgb(154, 219, 0);
   --acc-color-4-rgb: 154, 219, 0;
 
+  --err-color-3: rgb(173, 39, 15);
+  --err-color-3-rgb: 173, 39, 15;
+
+  --warn-color-3: rgb(228, 194, 44);
+  --warn-color-3-rgb: 228, 194, 44;
+
 
   --text-color-light: rgb(252, 249, 247);
   --text-color-light-rgb: 252, 249, 247;
@@ -1491,19 +1497,19 @@ body {
       }
 
       .fe-header.warning {
-        border-bottom-color: rgb(228, 194, 44);
+        border-bottom-color: var(--warn-color-3);
 
         .fe-popup {
-          border-color: rgb(228, 194, 44);
+          border-color: var(--warn-color-3);
           background-color: rgba(228, 194, 44, 0.5);
         }
       }
 
       .fe-header.error {
-        border-bottom-color: rgb(173, 39, 15);
+        border-bottom-color: var(--err-color-3);
 
         .fe-popup {
-          border-color: rgb(173, 39, 15);
+          border-color: var(--err-color-3);
           background-color: rgba(173, 39, 15, 0.5);
           flex-direction: column;
         }
@@ -1579,9 +1585,28 @@ body {
   }
 
   #device-Panel {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 400px));
+    gap: 15px;
+    min-height: min-content;
+    max-height: unset;
+    height: min-content;
+
+    *.error{
+      color: var(--err-color-3);
+    }
+    *.warning{
+      color: var(--warn-color-3);
+    }
+    *.ok{
+      color: var(--acc-color-3);
+    }
+
+    >.widget {
+      height: 100%;
+    }
     >*.widget {
       max-width: max-content;
-      height: fit-content;
       max-height: fit-content;
 
       .header {
@@ -1599,8 +1624,14 @@ body {
           img {
             height: 1.2em;
           }
+          margin: auto;
         }
       }
+    }
+    #DevicePanel-moduleList{
+      grid-column: span 2;
+      width: 100%;
+      max-width: 100%;
     }
   }
   overflow-y: scroll;
@@ -1660,8 +1691,8 @@ body {
 }
 
 #mainPopup.warning {
-  border-color: rgb(228, 194, 44);
-  background-color: rgb(228, 194, 44);
+  border-color: var(--warn-color-3);
+  background-color: var(--warn-color-3);
   color: var(--text-color-light);
   display: block;
 }

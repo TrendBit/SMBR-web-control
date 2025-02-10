@@ -15,6 +15,10 @@ import("chalk").then(chalk => {
     console.error = (...args) => {
         originalError(chalk.default.red(...args));
     };
+    const originalWarn = console.warn;
+    console.warn = (...args) => {
+        originalWarn(chalk.default.yellow(...args));
+    };
 });
 
 const webConfigAssembler = require('./webConfigAssembler.js');
@@ -23,6 +27,7 @@ const readingLogger = require('./readingLogger.js');
 const PORT = 80;
 const indexUtilities = require('./indexUtilities.js');
 const { default: def } = require('ajv/dist/vocabularies/applicator/additionalItems.js');
+const { randomInt } = require('crypto');
 const configFilesPath = path.join("..","..","SMBR-config-files");
 
 
@@ -202,6 +207,77 @@ app.get('/temperature-graph-recent', (req,res) => {
     }
     res.status(400).send("wrong logging level, please select between 1-3");
     
+});
+
+app.get('/services-status',async (req,res) => {
+    const util = require('util');
+    const exec = util.promisify(require('child_process').exec);
+
+    const services = [
+        "telegraf.service",
+        "recipe-runner.service",
+        "api-server.service",
+        "core-module.service",
+        "avahi-daemon.service",
+        "avahi-daemon.socket"
+    ];
+    var serviceStats = {};
+    const currentMillis = (new Date()).getTime();
+
+    for(var index in services){
+        const service = services[index];
+        if(process.platform=="linux"){ 
+            var stdObj;
+            try {
+                const command = 
+                    "TIME=0"+
+                    "\nTIME=$(systemctl show "+service+" | grep ActiveEnterTimestampMonotonic | awk -F '=' '{print $2}')"+
+                    "\nif [[ $TIME != 0 ]]; then"+
+                    "\n	TIME=\"$TIME $(cat /proc/uptime | awk '{print $1 * 1000}')\""+
+                    "\n	TIME=$(echo \"$TIME\" | awk '{print $1+$2}')"+
+                    "\nfi"+
+                    "\necho \"$TIME\"";
+                stdObj = await exec(command);
+            } catch (error) {
+                console.error("Error while trying to check service uptime ("+service+"):",error.message);
+                return;
+            }           
+            
+            uptime = stdObj.stdout;
+
+            serviceStats[service] = {
+                uptime: uptime,
+                state: "to be done"
+            }
+
+            try {
+                stdObj = await exec("systemctl show "+service+" --property='ActiveState' | awk -F= '{print $2}'")
+            } catch (error) {
+                console.error("Error while trying to check service state ("+service+"):",error.message);
+                return;
+            }  
+            
+            serviceStats[service].state = stdObj.stdout;
+        }else{//just for debugging purposses
+            serviceStats[service] = {
+                uptime: currentMillis-randomInt(currentMillis),
+            }
+
+            switch (randomInt(3)) {
+                case 0:
+                    serviceStats[service].state = "active"
+                    break;
+                case 1:
+                    serviceStats[service].state = "inactive"
+                    break;
+                default:
+                    serviceStats[service].state = "activating"
+                    break;
+            }
+        }
+
+    }    
+    res.status(200).send(JSON.stringify(serviceStats));
 });
 
 app.get('/module-list', (req, res) => {

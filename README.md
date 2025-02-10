@@ -28,6 +28,8 @@ git clone git@github.com:TrendBit/SMBR-web-control.git
 if you don't have npm installed, install it
 ```
 sudo apt-get install npm
+sudo npm install -g n
+sudo n latest
 ```
 ___
 
