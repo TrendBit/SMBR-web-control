@@ -206,15 +206,71 @@ function enforceMinMax(el) {
 function eraseValue(element){
     element.value = "";
 }
-function slider2Handler(element){
-    const inputLabel = element.parentElement.getElementsByClassName("slider2-inputLabel")[0];
-    inputLabel.getElementsByClassName("left")[0].value = element.value;
+
+
+function sendSliderData(element, data = {},instant = false){
+    if((Date.now()) - element.getAttribute("lastUpdate") > 100 || element.value == element.getAttribute("max") || element.value == element.getAttribute("min") || instant){
+        if(!instant){
+            element.setAttribute("lastUpdate",Date.now());
+        }
+        const url = "http://" + window.location.hostname;
+        sendData(url+":"+element.getAttribute("port")+element.getAttribute("resource"),JSON.stringify(data));
+    }
 }
 
-function slider2TextInputHandler(element){
+function chromeFix_Slider(element){
+    if((window.webkitURL != null)){
+        const progress = mapRangeToRange(element.value,Number(element.getAttribute("max")),Number(element.getAttribute("min")),100,0) 
+        if(element.classList.contains("vertical")){
+            element.style.background = "linear-gradient(0deg, var(--acc-color-2) "+0+"%, var(--bg-color-3) "+progress+"%)";
+        }else{
+            element.style.background = "linear-gradient(90deg, var(--acc-color-2) "+0+"%, var(--bg-color-3) "+progress+"%)";
+        }
+    }
+}
+
+function slider2Handler(element,data){
+    const inputLabel = element.parentElement.getElementsByClassName("slider2-inputLabel")[0];
+    inputLabel.getElementsByClassName("left")[0].value = element.value;
+    chromeFix_Slider(element);
+    sendSliderData(element,data);
+}
+
+function slider2TextInputHandler(element,data){
     const slider = element.parentElement.parentElement.getElementsByClassName("slider")[0];
     slider.value = element.value;
+    chromeFix_Slider(slider);
+    sendSliderData(slider,data,true);
 }
+
+
+function sliderHandler(element, data){
+    const valueLabel = element.parentElement.parentElement.getElementsByClassName("slider-value")[0];
+    valueLabel.innerHTML = (element.value) + element.getAttribute("unit");
+
+    chromeFix_Slider(element);
+    sendSliderData(element,data);
+    
+    
+    
+
+
+
+/*
+    element.oninput = function() {
+    };
+    element.onchange = function() {
+        document.getElementById(element.getAttribute("valueLabel")).innerHTML = (element.value) + element.getAttribute("unit");
+        element.setAttribute("lastUpdate",Date.now()-startMilis);
+        const url = "http://" + window.location.hostname;
+        const data = {
+            intensity: Math.round(element.value)/100,
+            channel: Math.round(element.getAttribute("channel"))
+        }
+        sendData(url+":8089/control/set-led-intensity",JSON.stringify(data));
+    }*/
+}
+
 
 
 
