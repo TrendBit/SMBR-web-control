@@ -2,6 +2,10 @@
 var currNumOfCharts = 0;
 %>
 <script>
+
+    function callback(func){
+        func();
+    }
      
     const startMilis = Date.now();
     var chartArray = [];
@@ -30,6 +34,55 @@ var currNumOfCharts = 0;
             element();
         })
     }
+
+    onloadQueue.push(()=>{
+        const sliders2 = document.getElementsByClassName("slider2");
+        for (let i = 0; i < sliders2.length; i++) {
+            const element = sliders2[i].getElementsByClassName("slider")[0];
+            const url = "http://" + window.location.hostname;
+            setTimeout(() => {
+                if(element.getAttribute("resource")!=undefined){
+                    fetchDataAsJson(url+":"+element.getAttribute("port")+element.getAttribute("resource"))
+                    .then(response => {
+                        slider2Set(element, response[element.getAttribute("component")]);
+                        console.warn("SETTING SLIDER TO",response[element.getAttribute("component")],"FROM ",url+":"+element.getAttribute("port")+element.getAttribute("resource"),element);
+                    })
+                    .catch(error => {
+                        //console.warn("UNABLE TO SET DEFAULT TO SLIDER",element.getAttribute("component"),element,error);
+                        slider2Set(element, element.getAttribute("min")+((element.getAttribute("max")-element.getAttribute("min"))/2));
+                        console.error(element,"\n",error.message);
+                    })
+                }else{
+                    if(element.getAttribute("default")!=undefined){
+                        slider2Set(element,element.getAttribute("default"));
+                    }
+                }
+            },50*i)
+        }
+
+        const sliders1 = document.getElementsByClassName("slider1");
+        for (let i = 0; i < sliders1.length; i++) {
+            const element = sliders1[i].getElementsByClassName("slider")[0];
+            const url = "http://" + window.location.hostname;
+            setTimeout(() => {
+                if(element.getAttribute("resource")!=undefined){
+                    fetchDataAsJson(url+":"+element.getAttribute("port")+element.getAttribute("resource"))
+                    .then(response => {
+                        slider1Set(element, response[element.getAttribute("component")]);
+                        console.warn("SETTING SLIDER TO",response[element.getAttribute("component")],"FROM ",url+":"+element.getAttribute("port")+element.getAttribute("resource"),element);
+
+                    })
+                    .catch(error => {
+                        console.error(element,"\n",error.message);
+                    })
+                }else{
+                    if(element.getAttribute("default")!=undefined){
+                        slider1Set(element,element.getAttribute("default"));
+                    }
+                }
+            },50*i)
+        }
+    });
 
 </script>
 <script src="JS/helperFunctions.js"></script>

@@ -28,6 +28,7 @@ const PORT = 80;
 const indexUtilities = require('./indexUtilities.js');
 const { default: def } = require('ajv/dist/vocabularies/applicator/additionalItems.js');
 const { randomInt } = require('crypto');
+const { uptime } = require('process');
 const configFilesPath = path.join("..","..","SMBR-config-files");
 
 
@@ -229,21 +230,17 @@ app.get('/services-status',async (req,res) => {
         if(process.platform=="linux"){ 
             var stdObj;
             try {
-                const command = 
-                    "TIME=0"+
-                    "\nTIME=$(systemctl show "+service+" | grep ActiveEnterTimestampMonotonic | awk -F '=' '{print $2}')"+
-                    "\nif [[ $TIME != 0 ]]; then"+
-                    "\n	TIME=\"$TIME $(cat /proc/uptime | awk '{print $1 * 1000}')\""+
-                    "\n	TIME=$(echo \"$TIME\" | awk '{print $1+$2}')"+
-                    "\nfi"+
-                    "\necho \"$TIME\"";
+                const command = "systemctl status "+service+" | grep Active | awk -F \";\" '{print $2}' | sed 's/ ago//'";
                 stdObj = await exec(command);
             } catch (error) {
                 console.error("Error while trying to check service uptime ("+service+"):",error.message);
                 return;
             }           
             
-            uptime = stdObj.stdout;
+            var uptime = stdObj.stdout + "";
+            if(uptime.includes(service)){
+                uptime = 0;
+            }
 
             serviceStats[service] = {
                 uptime: uptime,
@@ -260,7 +257,7 @@ app.get('/services-status',async (req,res) => {
             serviceStats[service].state = stdObj.stdout;
         }else{//just for debugging purposses
             serviceStats[service] = {
-                uptime: currentMillis-randomInt(currentMillis),
+                uptime: randomInt(60)+"min " +randomInt(60)+"s",
             }
 
             switch (randomInt(3)) {

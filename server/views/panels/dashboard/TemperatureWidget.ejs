@@ -137,7 +137,7 @@
                     const currTimestamp = new Date(newData[i].timestamp);
 
                     if(currRadio == "day"){
-                        newLabels[i] = formatTime("da hh",currTimestamp);
+                        newLabels[i] = formatTime("dd.mo hh h",currTimestamp);
                     }
                     if(currRadio == "hour"){
                         newLabels[i] = formatTime("HH:MM",currTimestamp);
@@ -209,7 +209,7 @@
 
 
                     if(currRadio == "day"){
-                        newTimeStamp = formatTime("da hh",currTimestamp);
+                        newTimeStamp = formatTime("dd.mo hh h",currTimestamp);
                     }
                     if(currRadio == "hour"){
                         newTimeStamp = formatTime("HH:MM",currTimestamp);

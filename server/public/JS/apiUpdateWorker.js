@@ -30,7 +30,7 @@ async function updateSite(root){
                 .catch(err => {
                     element.innerHTML = "Null"
                     element.classList.add("error");
-                    console.error(element,err);
+                    console.error(element,err.message);
                 })
 
 

@@ -23,7 +23,7 @@
         <div class="slider1 widget">
             <div class="slider-labels">
                 <h3 class="slider-name"><%= element.name %></h3>
-                <p class="slider-value" id="Control-Widget-slider-value-<%= i  %>">unknown</p>
+                <p class="slider-value" decimal-places="<%= element.decimalPlaces %>">unknown</p>
             </div>
             <div class="slider-slider">
                 <div class="slider-minmax">
@@ -34,42 +34,17 @@
                     type="range" 
                     min="<%= element.min %>" 
                     max="<%= element.max %>" 
+                    offPos="<%= (element.offPos!=undefined)?element.offPos:0 %>"
                     unit="<% if(element.unit){%><%=element.unit%><%}else{%><%="%"%><%} %>"
                     step="<% if(element.step){%><%=element.step%><%}else{%><%="1"%><%} %>"
-                    valueLabel="Control-Widget-slider-value-<%= i++  %>"
                     lastUpdate="0"
+                    port="<%= element.port %>" 
+                    component="<%= element.component %>" 
+                    resource="<%= element.resource %>" 
+                    oninput="slider1Handler(this,{'<%= element.component %>':Number(this.value)});"
                 >
             </div>
         </div>
     <% }); %> 
-    <script>
-        (function() {
-            const controlPanel = document.getElementById("Control-Widget-sliders");
-            const sliders = controlPanel.getElementsByClassName("slider");
-            for (let i = 0; i < sliders.length; i++) {
-                const element = sliders[i];
-                element.oninput = function() {
-                    if((window.webkitURL != null)){//chrome slider fix
-                        const progress = mapRangeToRange(element.value,Number(element.getAttribute("max")),Number(element.getAttribute("min")),100,0) 
-                        if(element.classList.contains("vertical")){
-                            element.style.background = "linear-gradient(0deg, var(--acc-color-2) "+progress+"%, var(--bg-color-3) "+progress+"%)";
-                        }else{
-                            element.style.background = "linear-gradient(90deg, var(--acc-color-2) "+progress+"%, var(--bg-color-3) "+progress+"%)";
-                        }
-                    }
-
-                    document.getElementById(element.getAttribute("valueLabel")).innerHTML = (element.value) + element.getAttribute("unit");
-                    if((Date.now() - startMilis) - element.getAttribute("lastUpdate") > 100 || element.value == element.getAttribute("max") || element.value == element.getAttribute("min")){
-                        element.setAttribute("lastUpdate",Date.now()-startMilis);
-                        
-                    }
-                };
-                element.onchange = function() {
-                    document.getElementById(element.getAttribute("valueLabel")).innerHTML = (element.value) + element.getAttribute("unit");
-                    element.setAttribute("lastUpdate",Date.now()-startMilis);
-                }
-            }
-        })();
-    </script>
     </div>
 </div>

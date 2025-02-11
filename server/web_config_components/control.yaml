@@ -29,30 +29,30 @@ DashboardPanel:
         rows:
           - name: "temperature"
             type: "dataField"
-            port: 80
-            resource: "/test-get"
+            port: 8089
+            resource: "/control/led_temperature"
             unit: "°C"
-            component: "value"
+            component: "temperature"
     sliders:
       - name: "Channel 1"
         min: 0
-        max: 100
-        step: 1
+        max: 1
+        step: 0.01
         channel: 0
       - name: "Channel 2"
         min: 0
-        max: 100
-        step: 1
+        max: 1
+        step: 0.01
         channel: 1
       - name: "Channel 3"
         min: 0
-        max: 100
-        step: 1
+        max: 1
+        step: 0.01
         channel: 2
       - name: "Channel 4"
         min: 0
-        max: 100
-        step: 1
+        max: 1
+        step: 0.01
         channel: 3
   CoolSpektrometerWidget:
     header: 
@@ -138,29 +138,41 @@ DashboardPanel:
   ControlWidget:
     header: 
     sliders:
-      - name: "Air"
+      - name: "Aerator"
         min: 0
         max: 1
-        step: 0.1
+        step: 0.01
         unit: " "
-        defaultValue: 0
-      - name: "Mix"
+        decimalPlaces: 2
+        port: 8089
+        component: "speed"
+        resource: "/control/aerator/speed"
+      - name: "Mixer"
         min: 0
         max: 1
-        step: 0.1
+        step: 0.01
         unit: " "
-        defaultValue: 0
-      - name: "Pump"
+        decimalPlaces: 2
+        port: 8089
+        component: "speed"
+        resource: "/control/mixer/speed"
+      - name: "Cuvette pump"
         min: -1
         max: 1
-        step: 0.1
+        step: 0.05
         unit: " "
-        defaultValue: 0
+        decimalPlaces: 2
+        port: 8089
+        component: "speed"
+        resource: "/control/cuvette_pump/speed"
       - name: "Heater"
         min: -1
         max: 1
-        step: 0.1
+        step: 0.05
         unit: " "
-        defaultValue: 0
+        decimalPlaces: 2
+        port: 8089
+        component: "intesity"
+        resource: "/control/heater/intesity"
   KineticFluorometerWidget:
     header: 

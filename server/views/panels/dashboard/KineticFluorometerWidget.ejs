@@ -249,7 +249,9 @@
             chart.update();
 
 
-            element.disabled = false;
+            if(element){
+                element.disabled = false;
+            }
         }
 
         onloadQueue.push(() => {

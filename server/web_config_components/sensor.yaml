@@ -39,13 +39,13 @@ DashboardPanel:
 
         sub_rows:
           - name: "Top"
-            port: 80
+            port: 8089
             resource: "/sensor/bottle/top/measured_temperature"
             component: "temperature"
             charted: false
 
           - name: "Bottom"
-            port: 80
+            port: 8089
             resource: "/sensor/bottle/bottom/measured_temperature"
             component: "temperature"
             charted: false

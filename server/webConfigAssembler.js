@@ -11,6 +11,8 @@ var loadedModules = [
 ];
 var assembledConfig = {};
 
+const allwaysRebuildConfig = false;
+
 var localIP = "";
 
 var fluoroCurve  = {};
@@ -31,12 +33,12 @@ function refetchFluoroCurve(){
 
 
 async function initialize() {
-    const nets = networkInterfaces();
-    const results = [];
+    //const nets = networkInterfaces();
+    //const results = [];
     console.log("looking for apiServer");
     try {
         console.log("  trying ","http://"+"127.0.0.1"+":8089/system/modules")
-        const response = await axios.get("http://"+"127.0.0.1"+":8089/system/modules", {});
+        const response = await axios.get("http://"+"127.0.0.1"+":8089/system/modules", {timeout: 5000});
         console.log("    API DETECTED");  
         localIP = "127.0.0.1";
     } catch (error) {
@@ -68,7 +70,7 @@ var lastConfigRefresh = new Date(0);
 module.exports = {
     getConfig: function(reqHostname) {
         currTime = new Date();
-        if(lastConfigRefresh.getTime() - currTime.getTime() > 5000){
+        if(lastConfigRefresh.getTime() - currTime.getTime() > 5000 || allwaysRebuildConfig){
             lastConfigRefresh = currTime;
             buildWebConfig();
         }
@@ -133,7 +135,6 @@ async function reloadModules(){
             }
         }
         else{
-            console.log("dwadwajk");
             localIP = "";
             throw new Error({code:response.status});
         }

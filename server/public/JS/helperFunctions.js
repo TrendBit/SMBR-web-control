@@ -87,47 +87,59 @@ async function streamToString(stream) {
 
 // adding additionalHeaders will cause this to not work on RestApi endpoints
 async function fetchDataAsJson(url,additionalHeaders = {}) {
-    const response = await fetch(url,
-                            {
-                                method: "GET",
-                                headers: {
-                                    'Content-Type': 'text/plain', //it has to be plain text else it will send a complex request with an additional OPTIONS request
-                                    ...additionalHeaders
-                                },
-                                signal: AbortSignal.timeout( 10000 )                           
-                            }
-                        );
-    //console.log(response);
-    return response.json()
+    try {
+        const response = await fetch(url,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        'Content-Type': 'text/plain', //it has to be plain text else it will send a complex request with an additional OPTIONS request
+                                        ...additionalHeaders
+                                    },
+                                    signal: AbortSignal.timeout( 10000 )                           
+                                }
+                            );
+        //console.log(response);
+        return response.json()
+    } catch (error) {
+        console.debug("unable to fetch resource: ",url);
+    }
 }
 
 async function fetchData(url) {
-    const response = await fetch(url,
-                            {
-                                method: "GET",
-                                headers: {
-                                    'Content-Type': 'text/plain', //it has to be plain text else it will send a complex request with an additional OPTIONS request
+    try {
+        const response = await fetch(url,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        'Content-Type': 'text/plain', //it has to be plain text else it will send a complex request with an additional OPTIONS request
+                                    }
                                 }
-                            }
-                        );
-    //console.log(response);
-    return response
+                            );
+        //console.log(response);
+        return response
+    } catch (error) {
+        console.debug("unable to fetch resource: ",url);
+    }
 }
 
 async function sendData(url, data) {
     console.debug("sending to ",url,": ",data);
-    const response = await fetch(url, {
-        "credentials": "omit",
-        "headers": {
-            "Accept": "application/json",
-            "Accept-Language": "cs,sk;q=0.8,en-US;q=0.5,en;q=0.3",
-            "Content-Type": "application/json",
-        },
-        "body": data,
-        "method": "POST",
-        "mode": "cors"
-    });
-    return await response;
+    try {        
+        const response = await fetch(url, {
+            "credentials": "omit",
+            "headers": {
+                "Accept": "application/json",
+                "Accept-Language": "cs,sk;q=0.8,en-US;q=0.5,en;q=0.3",
+                "Content-Type": "application/json",
+            },
+            "body": data,
+            "method": "POST",
+            "mode": "cors"
+        });   
+        return await response;
+    } catch (error) {
+        console.debug("unable to send data to resource: ",url);
+    }
 }
 
 
@@ -209,7 +221,11 @@ function eraseValue(element){
 
 
 function sendSliderData(element, data = {},instant = false){
-    if((Date.now()) - element.getAttribute("lastUpdate") > 100 || element.value == element.getAttribute("max") || element.value == element.getAttribute("min") || instant){
+    if((Date.now()) - element.getAttribute("lastUpdate") > 100 
+    || element.value == element.getAttribute("max") 
+    || element.value == element.getAttribute("min") 
+    || instant
+    || element.value == element.getAttribute("offPos")){
         if(!instant){
             element.setAttribute("lastUpdate",Date.now());
         }
@@ -222,53 +238,64 @@ function chromeFix_Slider(element){
     if((window.webkitURL != null)){
         const progress = mapRangeToRange(element.value,Number(element.getAttribute("max")),Number(element.getAttribute("min")),100,0) 
         if(element.classList.contains("vertical")){
-            element.style.background = "linear-gradient(0deg, var(--acc-color-2) "+0+"%, var(--bg-color-3) "+progress+"%)";
+            element.style.background = "linear-gradient(0deg, var(--acc-color-2) "+progress+"%, var(--bg-color-3) "+progress+"%)";
         }else{
-            element.style.background = "linear-gradient(90deg, var(--acc-color-2) "+0+"%, var(--bg-color-3) "+progress+"%)";
+            element.style.background = "linear-gradient(90deg, var(--acc-color-2) "+progress+"%, var(--bg-color-3) "+progress+"%)";
         }
     }
 }
 
+function slider2Set(element,value){
+    if(element.classList.contains("slider")){ //it was called on slider
+        element.value = value;
+        const inputLabel = element.parentElement.getElementsByClassName("slider2-inputLabel")[0];
+        inputLabel.getElementsByClassName("left")[0].value = value;
+        chromeFix_Slider(element);
+    }else{ //it was probably called on container
+        slider2Set(element.getElementsByClassName("slider")[0],value);
+    }
+}
+
 function slider2Handler(element,data){
-    const inputLabel = element.parentElement.getElementsByClassName("slider2-inputLabel")[0];
-    inputLabel.getElementsByClassName("left")[0].value = element.value;
-    chromeFix_Slider(element);
+    slider2Set(element,element.value)
     sendSliderData(element,data);
 }
 
+
 function slider2TextInputHandler(element,data){
     const slider = element.parentElement.parentElement.getElementsByClassName("slider")[0];
-    slider.value = element.value;
-    chromeFix_Slider(slider);
+    slider2Set(slider, element.value);
     sendSliderData(slider,data,true);
 }
 
 
-function sliderHandler(element, data){
-    const valueLabel = element.parentElement.parentElement.getElementsByClassName("slider-value")[0];
-    valueLabel.innerHTML = (element.value) + element.getAttribute("unit");
-
-    chromeFix_Slider(element);
-    sendSliderData(element,data);
-    
-    
-    
-
-
-
-/*
-    element.oninput = function() {
-    };
-    element.onchange = function() {
-        document.getElementById(element.getAttribute("valueLabel")).innerHTML = (element.value) + element.getAttribute("unit");
-        element.setAttribute("lastUpdate",Date.now()-startMilis);
-        const url = "http://" + window.location.hostname;
-        const data = {
-            intensity: Math.round(element.value)/100,
-            channel: Math.round(element.getAttribute("channel"))
+function slider1Set(element, value){
+    if(element.classList.contains("slider")){ //it was called on slider
+        element.value = value;
+        const valueLabel = element.parentElement.parentElement.getElementsByClassName("slider-value")[0];
+        const valueModifier = valueLabel.getAttribute("value-modifier");
+        
+        var numberLabel = 0;
+        if(valueModifier!=undefined){
+            numberLabel = Number(element.value)*valueModifier;
+        }else{
+            numberLabel =Number(element.value);
         }
-        sendData(url+":8089/control/set-led-intensity",JSON.stringify(data));
-    }*/
+        var numberOfDecimalPLaces = valueLabel.getAttribute("decimal-places");
+        if(numberOfDecimalPLaces==undefined){
+            numberOfDecimalPLaces = 0;
+        }
+        valueLabel.innerHTML = numberLabel.toFixed(numberOfDecimalPLaces) + element.getAttribute("unit") ;
+        chromeFix_Slider(element);
+    }else{ //it was probably called on container
+        slider1Set(element.getElementsByClassName("slider")[0],value);
+    }    
+}
+
+function slider1Handler(element, data){
+    slider1Set(element,element.value);
+
+    sendSliderData(element,data);
 }
 
 
@@ -282,8 +309,8 @@ function formatTime(formatString,timestamp =new Date()){
     formatString = formatString.replaceAll("ss",seconds);
     formatString = formatString.replaceAll("mm",minutes);
     formatString = formatString.replaceAll("hh",hours);
-    formatString = formatString.replaceAll("do",timestamp.getDate());
-    formatString = formatString.replaceAll("dd",timestamp.getDay());
+    formatString = formatString.replaceAll("dd",timestamp.getDate());
+    formatString = formatString.replaceAll("wd",timestamp.getDay());
     formatString = formatString.replaceAll("mo",timestamp.getMonth());
     formatString = formatString.replaceAll("yyyy",timestamp.getFullYear());
 

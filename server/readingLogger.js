@@ -169,7 +169,7 @@ function temperatureGraphFetch(){
                     })
                     .catch(err => {
                         currentModuleTemps[last + element.name] = null;
-                        console.error("ERROR while trying to fetch current temperature for: "+element.name + "\n"+err);
+                        console.error("ERROR while trying to fetch current temperature for: "+element.name + "\n"+err.message);
                     });
                     
                     if(element.sub_rows && last === ""){ //stops recursion

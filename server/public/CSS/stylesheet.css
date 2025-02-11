@@ -1023,7 +1023,7 @@ body {
     }
 
     #Control-Widget {
-      grid-row: span 1;
+      grid-row: span 2;
 
       #Control-Widget-sliders {
         padding-top: 0;
@@ -1041,7 +1041,7 @@ body {
 
           >*.slider-labels {
             width: min-content;
-            min-width: 80px;
+            min-width: 120px;
           }
 
           >*.slider-slider {
