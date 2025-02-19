@@ -104,6 +104,26 @@ var currNumOfCharts = 0;
         <button onclick="toggleClass_ByID('SIDEBAR', 'collapsed')"><img src="<%= getIcon("mini_logo") %>"></button>
         <h1>PhenoBottle</h1>
         <div>
+            <p>hostname: </p>
+            <p 
+                class="api-fetcher bold"
+                port="8089"
+                unit=""
+                resource="/core/hostname" 
+                component="hostname"   
+            ></p>
+        </div>
+        <div>
+            <p>Short ID: </p>
+            <p 
+                class="api-fetcher bold"
+                port="8089"
+                unit=""
+                resource="/core/sid" 
+                component="sid"   
+            ></p>
+        </div>
+        <div>
             <p id="hotbar-clock">16:22</p>
             <p id="hotbar-date">11.07.2024</p>
         </div>
@@ -166,6 +186,7 @@ var currNumOfCharts = 0;
                 <div id="Device-Panel" class="content-panel container hidden">
                     <%- include('panels/DevicePanel/ModuleListWidget.ejs') %>  
                     <%- include('panels/DevicePanel/ServicesStatus.ejs') %>   
+                    <%- include('panels/DevicePanel/DeviceInfoWidget.ejs') %>
                 </div>  
             <% } %>
             <div id="mainPopup" onclick="resetMainPopup()"></div>

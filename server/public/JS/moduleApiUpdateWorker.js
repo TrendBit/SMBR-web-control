@@ -76,7 +76,19 @@ async function updateSite(skipConextCheck, refresh){
 
                 fetchDataAsJson(url+":"+port+element.getAttribute("resource"))
                 .then(response => {
-                    element.innerHTML = Math.round(response[element.getAttribute("component")]) + " " + element.getAttribute("unit")
+                    var component = "";
+                    if(element.getAttribute("component") != ""){
+                        component = element.getAttribute("component");
+                    }else{
+                        const parts = element.getAttribute("resource").split("/");
+                        component = parts[parts.length-1];
+                    }
+                    if(isNaN(response[component])){
+                        element.innerHTML = response[component];
+                        console.debug(response[component]);
+                    }else{
+                        element.innerHTML = Math.round(response[component]) + " " + element.getAttribute("unit")
+                    }
                     element.classList.remove("error");
                 })
                 .catch(err => {

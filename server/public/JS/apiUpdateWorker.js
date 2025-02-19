@@ -24,7 +24,12 @@ async function updateSite(root){
             if (element.getAttribute("resource")!="") {
                 fetchDataAsJson(url+":"+element.getAttribute("port")+element.getAttribute("resource"))
                 .then(response => {
-                    element.innerHTML = Math.round(response[element.getAttribute("component")]) + " " + element.getAttribute("unit")
+                    if(isNaN(response[element.getAttribute("component")])){
+                        element.innerHTML = response[element.getAttribute("component")];
+                        console.debug(response[element.getAttribute("component")]);
+                    }else{
+                        element.innerHTML = Math.round(response[element.getAttribute("component")]) + " " + element.getAttribute("unit")
+                    }
                     element.classList.remove("error");
                 })
                 .catch(err => {

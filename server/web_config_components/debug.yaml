@@ -23,6 +23,43 @@
 #           min
 #graph
 #   
+
+
+DevicePanel:
+  DeviceInfoWidget:
+    header:
+    rows:
+      - name: "SID"
+        port: 8089
+        resource: "/core/sid"
+      - name: "IP address"
+        port: 8089
+        resource: "/core/ip_address"
+        component: "ipAddress"
+      - name: "Hostname"
+        port: 8089
+        resource: "/core/hostname"
+      - name: "Serial number"
+        port: 8089
+        resource: "/core/serial"
+      - name: "Supply voltage"
+        port: 8089
+        resource: "/core/supply/5v"
+        component: "voltage"
+      - name: "Supply vin"
+        port: 8089
+        resource: "/core/supply/vin"
+        component: "voltage"
+      - name: "Supply poe"
+        port: 8089
+        resource: "/core/supply/poe"
+        component: "voltage"
+      - name: "Supply current"
+        port: 8089
+        resource: "/core/supply/current"
+      - name: "Supply power_draw"
+        port: 8089
+        resource: "/core/supply/pwoer_draw"
 DashboardPanel:
   TemperatureWidget:
     header: 
