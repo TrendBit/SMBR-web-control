@@ -83,6 +83,15 @@ input[type=number] {
 
 /*global class rules*/
 
+*.bold{
+  font-weight: bold !important;
+}
+*.right-align{
+  text-align: right !important;
+}
+*.left-align{
+  text-align: left !important;
+}
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px; 
@@ -1023,7 +1032,7 @@ body {
     }
 
     #Control-Widget {
-      grid-row: span 2;
+      grid-row: span 1;
 
       #Control-Widget-sliders {
         padding-top: 0;
@@ -1586,7 +1595,7 @@ body {
 
   #device-Panel {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 400px));
+    grid-template-columns: repeat(auto-fill, minmax(100px, 300px));
     gap: 15px;
     min-height: min-content;
     max-height: unset;
@@ -1606,7 +1615,7 @@ body {
       height: 100%;
     }
     >*.widget {
-      max-width: max-content;
+      /*! max-width: max-content; */
       max-height: fit-content;
 
       .header {
@@ -1632,6 +1641,13 @@ body {
       grid-column: span 2;
       width: 100%;
       max-width: 100%;
+    }
+    #DevicePanel-DeviceInfo{
+      max-width: max-content;
+      grid-row: span 2;
+      td.table-dataField{
+        min-width: 40px;
+      }
     }
   }
   overflow-y: scroll;

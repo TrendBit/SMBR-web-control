@@ -1,3 +1,57 @@
+DevicePanel:
+  DeviceInfoWidget:
+    header: null
+    rows:
+      - name: SID
+        port: 8089
+        resource: /core/sid
+      - name: IP address
+        port: 8089
+        resource: /core/ip_address
+        component: ipAddress
+      - name: Hostname
+        port: 8089
+        resource: /core/hostname
+      - name: Serial number
+        port: 8089
+        resource: /core/serial
+      - name: Supply voltage
+        port: 8089
+        resource: /core/supply/5v
+        component: voltage
+      - name: Supply vin
+        port: 8089
+        resource: /core/supply/vin
+        component: voltage
+      - name: Supply poe
+        port: 8089
+        resource: /core/supply/poe
+        component: voltage
+      - name: Supply current
+        port: 8089
+        resource: /core/supply/current
+      - name: Supply power_draw
+        port: 8089
+        resource: /core/supply/pwoer_draw
+  modules:
+    - name: debug
+      id: '0x00000000000000000'
+      instance: unidentified
+      data:
+        - unit: ms
+          resource: /debug/ping
+          component: time_ms
+        - unit: °C
+          resource: /debug/core_temp
+          component: temperature
+        - unit: °C
+          port: 80
+          resource: /test-get
+          component: value
+        - unit: '%'
+          port: 80
+          resource: /test-get
+          component: value
 DashboardPanel:
   TemperatureWidget:
     header: null
@@ -213,23 +267,3 @@ DashboardPanel:
         resource: /control/heater/intesity
   KineticFluorometerWidget:
     header: null
-DevicePanel:
-  modules:
-    - name: debug
-      id: '0x00000000000000000'
-      instance: unidentified
-      data:
-        - unit: ms
-          resource: /debug/ping
-          component: time_ms
-        - unit: °C
-          resource: /debug/core_temp
-          component: temperature
-        - unit: °C
-          port: 80
-          resource: /test-get
-          component: value
-        - unit: '%'
-          port: 80
-          resource: /test-get
-          component: value
