@@ -2,7 +2,10 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const webConfigAssembler = require('./webConfigAssembler.js');
 
-
+Number.prototype.countDecimals = function () {
+    if(Math.floor(this.valueOf()) === this.valueOf()) return 0;
+    return this.toString().split(".")[1].length || 0; 
+}
 
 class temperatureData {
     constructor(capacity) {
@@ -39,10 +42,13 @@ class temperatureData {
 
     getAvg(time, scale){
         var acc = {};
-        var cnt = 0;
+        var cnts = {};
+        var decimals = {};
         const firstData = this.getHistory(0).data;
         for(var field in firstData){
             acc[field] = 0;
+            cnts[field] = 0;   
+            decimals[field] = 20; 
         }
         
         for(var i in this.arr){
@@ -60,15 +66,20 @@ class temperatureData {
                 default:
             }
             if(elTime == time){
-                cnt++;
                 for(var field in this.arr[i].data){
-                    acc[field] += this.arr[i].data[field];
+                    if(!isNaN(this.arr[i].data[field])){
+                        if(decimals[field]==20){
+                            decimals[field] = Number(this.arr[i].data[field]).countDecimals();
+                        }
+                        acc[field] += Number(this.arr[i].data[field]);
+                        cnts[field]++;
+                    }
                 }
             }
         }
         
         for(var field in acc){
-            acc[field] = Math.round(acc[field] / cnt);
+            acc[field] = Number(acc[field] / cnts[field]).toFixed(decimals[field]);
         }
         
         return acc;
@@ -148,14 +159,28 @@ module.exports = {
     }
 }
 
+function deepEqual(x, y) {
+    const ok = Object.keys, tx = typeof x, ty = typeof y;
+    return x && y && tx === 'object' && tx === ty ? (
+      ok(x).length === ok(y).length &&
+        ok(x).every(key => deepEqual(x[key], y[key]))
+    ) : (x === y);
+  }
 
+var loadedConfig = webConfigAssembler.getConfig("[internal readings logger]");
 var currentModuleTemps = {};
 function temperatureGraphFetch(){
-    var loadedConfig = webConfigAssembler.getConfig("[internal readings logger]");
     if(loadedConfig.DashboardPanel == undefined) return;
     if(loadedConfig.DashboardPanel.TemperatureWidget == undefined) return;
+
+    const newConfig = webConfigAssembler.getConfig("[internal readings logger]");
+    if(!deepEqual(newConfig,loadedConfig)){
+        loadedConfig = newConfig;
+        currentModuleTemps = {};
+    }
+
     fetchDataForRows(loadedConfig.DashboardPanel.TemperatureWidget.rows);
-    
+
 
     //defined to allow recursion for sub"ELements
     function fetchDataForRows(rows,last=""){
@@ -164,8 +189,8 @@ function temperatureGraphFetch(){
                 if(element.charted == true){                    
                     fetchDataAsJson("http://127.0.0.1:"+element.port+element.resource)
                     .then(response =>{
-                        
-                        currentModuleTemps[last + element.name] = Math.round(response[element.component]);
+                        numberOfDecimalPLaces=(element.decimalPlaces)?element.decimalPlaces:0;
+                        currentModuleTemps[last + element.name] = Number(response[element.component]).toFixed(numberOfDecimalPLaces);
                     })
                     .catch(err => {
                         currentModuleTemps[last + element.name] = null;

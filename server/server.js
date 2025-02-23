@@ -37,8 +37,6 @@ app.use(cors());
 
 //opens the ./public/ directory for outer connections
 app.use(express.static(path.join(__dirname, 'public')));
-app.use("/experiments" ,express.static(path.join(__dirname, 'experiments')));
-app.use("/configs" ,express.static(path.join(__dirname, 'configs')));
 app.use("/node_modules/chart.js",express.static(path.join(__dirname,'node_modules','chart.js')))
 app.use("/node_modules/hammerjs",express.static(path.join(__dirname,'node_modules','hammerjs')))
 app.use("/node_modules/chartjs-plugin-zoom",express.static(path.join(__dirname,'node_modules','chartjs-plugin-zoom')))
@@ -171,17 +169,12 @@ app.get('/', (req, res) => {
 });
 
 
-const allowedDirectories = ["experiments","configs"];
+const allowedDirectories = {
+    "experiments":{
+        path: path.join(configFilesPath,"experiments")
+    }
+}
 
-app.get('/file-list', (req, res) => {
-    const fileDir = req.headers['target-directory'];
-    if(allowedDirectories.includes(fileDir)){
-        res.status(200).send(JSON.stringify(fs.readdirSync(fileDir)));
-    }
-    else{
-        res.status(403).send("you don't have permisions to view to this directory");
-    }
-});
 
 app.get('/temperature-graph', (req,res) => {
     const level = req.headers['logging-level'];
@@ -213,7 +206,7 @@ app.get('/temperature-graph-recent', (req,res) => {
 app.get('/services-status',async (req,res) => {
     const util = require('util');
     const exec = util.promisify(require('child_process').exec);
-
+    
     const services = [
         "telegraf.service",
         "recipe-runner.service",
@@ -224,7 +217,7 @@ app.get('/services-status',async (req,res) => {
     ];
     var serviceStats = {};
     const currentMillis = (new Date()).getTime();
-
+    
     for(var index in services){
         const service = services[index];
         if(process.platform=="linux"){ 
@@ -241,12 +234,12 @@ app.get('/services-status',async (req,res) => {
             if(uptime.includes(service)){
                 uptime = 0;
             }
-
+            
             serviceStats[service] = {
                 uptime: uptime,
                 state: "to be done"
             }
-
+            
             try {
                 stdObj = await exec("systemctl show "+service+" --property='ActiveState' | awk -F= '{print $2}'")
             } catch (error) {
@@ -259,23 +252,28 @@ app.get('/services-status',async (req,res) => {
             serviceStats[service] = {
                 uptime: randomInt(60)+"min " +randomInt(60)+"s",
             }
-
+            
             switch (randomInt(3)) {
                 case 0:
                     serviceStats[service].state = "active"
                     break;
-                case 1:
-                    serviceStats[service].state = "inactive"
-                    break;
-                default:
-                    serviceStats[service].state = "activating"
-                    break;
-            }
-        }
-
-    }    
-    res.status(200).send(JSON.stringify(serviceStats));
-});
+                    case 1:
+                        serviceStats[service].state = "inactive"
+                        break;
+                        default:
+                            serviceStats[service].state = "activating"
+                            break;
+                        }
+                    }
+                    
+                }    
+                res.status(200).send(JSON.stringify(serviceStats));
+            });
+            
+            
+            
+            
+            
 
 app.get('/module-list', (req, res) => {
     res.send(JSON.stringify(webConfigAssembler.getLoadedModules())).status(200);
@@ -290,56 +288,115 @@ app.get('/fluoro-curve',(req, res) => {
 });
 
 
-
-app.delete('/delete-file', (req,res) => {
+app.delete('/delete-file', async (req, res) => {
     const fileDir = req.headers['target-directory'];
-    const fileName = req.headers['file-name'];
+    const fileName = req.headers['target-file'];
+    
 
-    if(fileName){
-        if(allowedDirectories.includes(fileDir)){
-            if(fs.readdirSync(fileDir).includes(fileName)){
+    if (fileName!=undefined && fileDir!=undefined) {
+        if(allowedDirectories[fileDir]!=undefined){
+            var files = undefined;
+            try {
+                files = fs.readdirSync(allowedDirectories[fileDir].path);
+            } catch (error) {
+                res.status(404).send("directory not found");
+                return;
+            }
+            if(files.includes(fileName)){
                 try {
-                    fs.unlinkSync(path.join(fileDir, fileName));
+                    fs.unlinkSync(path.join(allowedDirectories[fileDir].path,fileName));
                 } catch (error) {
-                    console.error("File delete error",error);
-                    res.status(500).send("internal error");
-                    return
+                    res.status(404).send("insufficient permisions");
+                    return;
                 }
+    
                 res.status(200).send("file deleted successfully");
-                return
-            }            
-            else{
-                res.status(122).send("file does not exist");
-                return
+                return;
+            }else{
+                res.status(404).send("file not found");
+                return;
             }
         }
         else{
-            res.status(403).send("you don't have permisions to write to this directory");
-            return
-            //console.log("unsuccessfull (403)\n----------------");
+            res.status(403).send("you don't have permisions to view this directory");
+            return;
         }
     }
-    else{
+    else {
         res.status(400).send("missing headers");
         return
         //console.log("unsuccessfull (400)\n----------------");
     }
-    
+
 })
+
+app.get('/file-list', async (req, res) => {
+    const fileDir = req.headers['target-directory'];
+
+    if(allowedDirectories[fileDir]!=undefined){
+        var files = undefined;
+        try {
+            files = fs.readdirSync(allowedDirectories[fileDir].path);
+        } catch (error) {
+            res.status(404).send("directory not found");
+            return;
+        }
+        res.status(200).send(JSON.stringify(files));
+        return;
+    }
+    else{
+        res.status(403).send("you don't have permisions to view this directory");
+        return;
+    }
+});
+
+app.get('/read-file', async (req, res) => {
+    const fileDir = req.headers['target-directory'];
+    const file    = req.headers['target-file'];
+
+    if(allowedDirectories[fileDir]!=undefined){
+        var files = undefined;
+        try {
+            files = fs.readdirSync(allowedDirectories[fileDir].path);
+        } catch (error) {
+            res.status(404).send("directory not found");
+            return;
+        }
+        if(files.includes(file)){
+            var fileData = "";
+            try {
+                fileData = fs.readFileSync(path.join(allowedDirectories[fileDir].path,file),'utf8');
+            } catch (error) {
+                res.status(404).send("file cannot be opened");
+                return;
+            }
+
+            res.status(200).send(fileData);
+            return;
+        }else{
+            res.status(404).send("file not found");
+            return;
+        }
+    }
+    else{
+        res.status(403).send("you don't have permisions to view this directory");
+        return;
+    }
+});
 
 app.post('/send-file', (req, res) => {
     const fileDir = req.headers['target-directory'];
-    const fileName = req.headers['file-name'];
+    const fileName = req.headers['target-file'];
     const maxBodySize = 50000;
-
+    
     const textEncoder = new TextEncoder();
     if(textEncoder.encode(req.body).length > maxBodySize){
         res.status(413).send("body too large (max size: "+maxBodySize+" bytes)");
         return
     }
     //console.log("send-file api activated\n----------------\nfileDir: "+fileDir+"\nfileName: "+fileName);
-    if(fileName){
-        if(allowedDirectories.includes(fileDir)){
+    if(fileName!=undefined && fileDir!=undefined){
+        if(allowedDirectories[fileDir]!=undefined){
             var fileData = "";
             if(req.body != undefined){
                 fileData = req.body;
@@ -402,14 +459,14 @@ app.post('/send-file', (req, res) => {
 })
 app.post('/create-file', (req, res) => {
     const fileDir = req.headers['target-directory'];
-    const fileName = req.headers['file-name'];
+    const fileName = req.headers['target-file'];
     const maxBodySize = 50000;
 
     //console.log("send-file api activated\n----------------\nfileDir: "+fileDir+"\nfileName: "+fileName);
     if(fileName){
-        if(allowedDirectories.includes(fileDir)){
-            fs.writeFileSync("./"+fileDir + "/" +fileName, "");
-            res.status(200).send("file transfer successfull");               
+        if(allowedDirectories[fileDir]!=undefined){
+            fs.writeFileSync(path.join(allowedDirectories[fileDir].path,fileName), "");
+            res.status(200).send("file creation successfull");               
         }
         else{
             res.status(403).send("you don't have permisions to write to this directory");

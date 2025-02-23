@@ -31,5 +31,6 @@ DevicePanel:
         port: 8089
         resource: "/core/supply/current"
       - name: "Supply power_draw"
+        unit: ""
         port: 8089
         resource: "/core/supply/power_draw"

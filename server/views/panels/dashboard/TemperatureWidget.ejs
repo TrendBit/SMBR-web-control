@@ -54,6 +54,7 @@
                         resource="<%= element.resource %>" 
                         component="<%= element.component %>"
                         charted="<%= element.charted %>" 
+                        decimal-places="<%= element.decimalPlaces %>"
                     >
                     </td>
                     
@@ -83,6 +84,7 @@
                             component="<%= sub_element.component %>"
                             charted="<% if(element.charted){%><%=element.charted%><%}else{%><%="false"%><%} %>" 
                             parent="<%=element.name%>"
+                            decimal-places="<%= element.decimalPlaces %>"
                         >
                         </td>
                         

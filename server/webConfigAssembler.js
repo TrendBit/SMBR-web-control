@@ -69,8 +69,8 @@ var lastConfigRefresh = new Date(0);
 
 module.exports = {
     getConfig: function(reqHostname) {
-        currTime = new Date();
-        if(lastConfigRefresh.getTime() - currTime.getTime() > 5000 || allwaysRebuildConfig){
+        var currTime = new Date();
+        if((currTime.getTime() - lastConfigRefresh.getTime()) > 30000 || allwaysRebuildConfig){
             lastConfigRefresh = currTime;
             buildWebConfig();
         }

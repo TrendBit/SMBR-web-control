@@ -1,6 +1,6 @@
 <div class="widget" id="DevicePanel-DeviceInfo">
     <div class="header">
-        <h1>Service status</h1>
+        <h1>Device information</h1>
         <button class="reset_button button1 hoverSpin" onclick="moduleApiUpdateWorkerUpdate(this)">
             <img src="<%= getIcon("refresh") %>" alt="refresh" title="refresh">
         </button>
@@ -15,7 +15,7 @@
                 <th>value</th>
             </tr>
         </thead>
-        <tbody id="DevicePanel-ServicesStatus-table">
+        <tbody id="DevicePanel-DeviceInfo-table">
             <%if(DevicePanel.DeviceInfoWidget) DevicePanel.DeviceInfoWidget.rows.forEach(element => {%>
                 <tr>
                     <td class="table-name"><%= element.name %></td>

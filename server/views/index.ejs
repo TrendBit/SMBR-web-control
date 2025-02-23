@@ -196,9 +196,7 @@ var currNumOfCharts = 0;
 
     <script src="/node_modules/chart.js/dist/chart.umd.js"></script>
     <script src="/node_modules/chartjs-plugin-zoom/dist/chartjs-plugin-zoom.min.js"></script>
-    <script src="/node_modules/hammerjs/hammer.min.js"></script>
-    <script type="module" src="/JS/CodeMirror.js"></script>
-    <!--
+    <script src="/node_modules/hammerjs/hammer.min.js"></script>    <!--
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css"></link>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js" integrity="sha512-8RnEqURPUc5aqFEN04aQEiPlSAdE0jlFS/9iGgUyNtwFnSKCXhmB6ZTNl7LnDtDWKabJIASzXrzD0K+LYexU9g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/yaml/yaml.min.js" integrity="sha512-+aXDZ93WyextRiAZpsRuJyiAZ38ztttUyO/H3FZx4gOAOv4/k9C6Um1CvHVtaowHZ2h7kH0d+orWvdBLPVwb4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -326,6 +324,7 @@ var currNumOfCharts = 0;
             rootPanelElement.getElementsByClassName("fe-fileName")[0].innerHTML = "";
             reloadFileList();
             editors[type].setValue("");
+            editors[type].refresh();
         }
 
         /*
@@ -345,9 +344,11 @@ var currNumOfCharts = 0;
 
             var popupLevel = 0; 
             var statusCache = 0;
+            
+            const url = "http://" + window.location.hostname;
 
             //gets the selected file data
-            fetchData(type + "/" + fileName) 
+            fetchData(url + "/read-file", {"target-directory":type, "target-file":fileName}) 
             .then(response => {
                 
                 statusCache = response.status;
@@ -359,8 +360,11 @@ var currNumOfCharts = 0;
                 // `data` is now a string containing the response body
                 if(statusCache!=200){
                     switch(statusCache){
+                        case 403:
+                            throw new Error("insufficient permissions");
+                            break;
                         case 404:
-                            throw new Error("the file does not exist anymore");
+                            throw new Error("the file does not exist");
                             break; 
                         case 500:
                             throw new Error("internal server error");
@@ -374,13 +378,15 @@ var currNumOfCharts = 0;
                 }
                 else{
                     editors[type].setValue(data);
+                    editors[type].refresh();
                 }                
             })
             .catch(error => {
-                console.error('error while loading a file into editor:', error);
-                setEditorHeaderPopup(type, "error","error while loading the file:" +  error);
+                console.error('error while loading a file into editor: ', error);
+                setEditorHeaderPopup(type, "error","error while loading the file: " +  error);
                 popupLevel=2;
                 editors[type].setValue("error occured"); 
+                editors[type].refresh();
             });
 
             //split the file name by point, than pop the last part as file extension and reasamble the rest into the file name
@@ -412,8 +418,8 @@ var currNumOfCharts = 0;
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'text/plain',
-                    'file-name': currFile.fileNameFull,
-                    'target-directory': type
+                    'target-file': currFile.fileNameFull,
+                    'target-directory': type,
                 },
                 signal: AbortSignal.timeout( 1000 )    
             }).then( response => {
@@ -447,7 +453,7 @@ var currNumOfCharts = 0;
                         method: 'POST',
                         headers: {
                             'Content-Type': 'text/plain',
-                            'file-name': currFile.fileNameFull,
+                            'target-file': currFile.fileNameFull,
                             'target-directory': type
                         },
                         body: currFile.data,
@@ -502,7 +508,7 @@ var currNumOfCharts = 0;
                         method: 'POST',
                         headers: {
                             'Content-Type': 'text/plain',
-                            'file-name': fileName,
+                            'target-file': fileName,
                             'target-directory': type
                         },
                         signal: AbortSignal.timeout( 1000 )    

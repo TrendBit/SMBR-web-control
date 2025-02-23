@@ -1,0 +1,38 @@
+api_server:
+  url: "ajpk"
+  
+experiment:
+  cycle_length: 600
+  init_process:
+    - heater_on
+    - illumination_on
+    - pump
+  loop_process:
+    - measure_fluorescence
+    - measure_transmittance
+    - mix
+    - air
+    - pump
+    - wait
+
+mixer:
+  rpm: 0.1
+  length: 20
+
+aerator:
+  volume: 0.1
+  length: 10
+
+heater:
+  temperature: 22
+
+pump:
+  flowrate: 0.1
+  volume: 10
+
+illumination:
+  variant: "Basic RGBW"
+  channel_0: 0.2
+  channel_1: 0.3
+  channel_2: 0.0
+  channel_3: 0.0

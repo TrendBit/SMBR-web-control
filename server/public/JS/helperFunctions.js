@@ -105,13 +105,14 @@ async function fetchDataAsJson(url,additionalHeaders = {}) {
     }
 }
 
-async function fetchData(url) {
+async function fetchData(url,additionalHeaders = {}) {
     try {
         const response = await fetch(url,
                                 {
                                     method: "GET",
                                     headers: {
                                         'Content-Type': 'text/plain', //it has to be plain text else it will send a complex request with an additional OPTIONS request
+                                        ...additionalHeaders
                                     }
                                 }
                             );

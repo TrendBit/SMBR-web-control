@@ -28,7 +28,12 @@ async function updateSite(root){
                         element.innerHTML = response[element.getAttribute("component")];
                         console.debug(response[element.getAttribute("component")]);
                     }else{
-                        element.innerHTML = Math.round(response[element.getAttribute("component")]) + " " + element.getAttribute("unit")
+                        var numberOfDecimalPLaces = element.getAttribute("decimal-places");
+                        if(numberOfDecimalPLaces==undefined){
+                            numberOfDecimalPLaces = 0;
+                        }
+                        var numberLabel = Number(response[element.getAttribute("component")]);
+                        element.innerHTML = numberLabel.toFixed(numberOfDecimalPLaces) + " " + element.getAttribute("unit")
                     }
                     element.classList.remove("error");
                 })
