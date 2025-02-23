@@ -10,6 +10,7 @@ const ajv = require('ajv'); //another json validator
 const toml = require('toml');
 
 //colors all error outputs RED and warn outputs in YELLOW
+//colors all error outputs RED and warn outputs in YELLOW
 import("chalk").then(chalk => {
     const originalError = console.error;
     console.error = (...args) => {
@@ -286,6 +287,8 @@ app.get('/module-list-refresh',  async (req, res) => {
 app.get('/fluoro-curve',(req, res) => {
     res.send(JSON.stringify(webConfigAssembler.getFluoroCurve())).status(200);
 });
+
+
 
 
 app.delete('/delete-file', async (req, res) => {
