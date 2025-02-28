@@ -1,6 +1,11 @@
 # Changelog SMBR Web Control
 This version number is trying to stick to the __MAJOR__.__MINOR__ identifiers but there are some exceptions (marked with a prefix # in the MINOR part).
 
+# 0.1.6 hotfix
+- fixed numerous bad entrys in configs
+- cleaned console output
+- implemented remaining module temperature and load enpoints
+
 # 0.1.6
 - temperature chart rework (it is cached on the server and streamed to client)
 

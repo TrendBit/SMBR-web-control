@@ -16,7 +16,6 @@ var apiUpdateWorkerUpdate;
 async function updateSite(root){
     const apiFetchers = root.getElementsByClassName('api-fetcher');
     const url = "http://" + window.location.hostname;
-    console.log(currContext);
     if(currContext == 0){
         for (let i = 0; i < apiFetchers.length; i++) {
             const element = apiFetchers[i];
@@ -26,7 +25,6 @@ async function updateSite(root){
                 .then(response => {
                     if(isNaN(response[element.getAttribute("component")])){
                         element.innerHTML = response[element.getAttribute("component")];
-                        console.debug(response[element.getAttribute("component")]);
                     }else{
                         var numberOfDecimalPLaces = element.getAttribute("decimal-places");
                         if(numberOfDecimalPLaces==undefined){

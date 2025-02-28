@@ -16,21 +16,30 @@ DevicePanel:
         port: 8089
         resource: "/core/serial"
       - name: "Supply voltage"
+        unit: "V"
+        decimalPlaces: 2
         port: 8089
         resource: "/core/supply/5v"
         component: "voltage"
       - name: "Supply vin"
+        unit: "V"
+        decimalPlaces: 2
         port: 8089
         resource: "/core/supply/vin"
         component: "voltage"
       - name: "Supply poe"
+        unit: "V"
+        decimalPlaces: 2
         port: 8089
         resource: "/core/supply/poe"
         component: "voltage"
       - name: "Supply current"
+        unit: "A"
+        decimalPlaces: 2
         port: 8089
         resource: "/core/supply/current"
       - name: "Supply power_draw"
-        unit: ""
+        unit: "W"
+        decimalPlaces: 2
         port: 8089
         resource: "/core/supply/power_draw"

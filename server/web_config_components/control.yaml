@@ -172,7 +172,7 @@ DashboardPanel:
         unit: " "
         decimalPlaces: 2
         port: 8089
-        component: "intesity"
-        resource: "/control/heater/intesity"
+        component: "intensity"
+        resource: "/control/heater/intensity"
   KineticFluorometerWidget:
     header: 

@@ -231,18 +231,18 @@ function buildWebConfig(){
                     component: "temperature"
                 },
                 {
-                    unit: "°C",
-                    port: 80,
-                    resource: "/test-get", 
+                    unit: "%",
+                    //port: 80,
+                    resource: "/"+element.module_type+"/board_temp",
                     /*resource: "/"+element.module_type+"/ping",*/
-                    component: "value"
+                    component: "temperature"
                 },
                 {
-                    unit: "%",
-                    port: 80,
-                    resource: "/test-get",
+                    unit: "°C",
+                    //port: 80,
+                    resource: "/"+element.module_type+"/load", 
                     /*resource: "/"+element.module_type+"/ping",*/
-                    component: "value"
+                    component: "load"
                 }
             ]
         });

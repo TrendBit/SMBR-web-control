@@ -23,7 +23,8 @@
                         unit="<% if(element.unit){%><%=element.unit%><%}else{%><%=""%><%} %>" 
                         resource="<%= element.resource %>" 
                         component="<%= element.component %>"
-                        port="<% element.port%>"
+                        port="<%= element.port%>"
+                        decimal-places="<%= element.decimalPlaces %>"
                     ></td>
                 </tr>
             <%});%>

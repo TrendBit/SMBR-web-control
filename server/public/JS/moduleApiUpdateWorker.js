@@ -83,13 +83,19 @@ async function updateSite(skipConextCheck, refresh){
                         const parts = element.getAttribute("resource").split("/");
                         component = parts[parts.length-1];
                     }
+                    
                     if(isNaN(response[component])){
                         element.innerHTML = response[component];
-                        console.debug(response[component]);
                     }else{
-                        element.innerHTML = Math.round(response[component]) + " " + element.getAttribute("unit")
+                        var numberOfDecimalPLaces = element.getAttribute("decimal-places");
+                        if(numberOfDecimalPLaces==undefined){
+                            numberOfDecimalPLaces = 0;
+                        }
+                        var numberLabel = Number(response[component]);
+                        element.innerHTML = numberLabel.toFixed(numberOfDecimalPLaces) + " " + element.getAttribute("unit")
                     }
                     element.classList.remove("error");
+                    
                 })
                 .catch(err => {
                     element.innerHTML = "Null";
