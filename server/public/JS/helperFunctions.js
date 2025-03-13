@@ -192,24 +192,36 @@ function mapRangeToRange(number, inMin,inMax, outMin,outMax){
 }
 function enforceMax(el){
     if (el.value != "") {
-        if (parseInt(el.value) > parseInt(el.max)) {
+        if(isNaN(el.value)){
+            el.value = el.value.slice(0,-1)
+            enforceMax(el)
+        }
+        if (Number(el.value) > Number(el.max)) {
             el.value = el.max;
         }
     }
 }
 function enforceMin(el){
     if (el.value != "") {
-        if (parseInt(el.value) < parseInt(el.min)) {
+        if(isNaN(el.value)){
+            el.value = el.value.slice(0,-1)
+            enforceMax(el)
+        }
+        if (Number(el.value) < Number(el.min)) {
             el.value = el.min;
         }
     }
 }
 function enforceMinMax(el) {
     if (el.value != "") {
-        if (parseInt(el.value) < parseInt(el.min)) {
+        if(isNaN(el.value)){
+            el.value = el.value.slice(0,-1)
+            enforceMax(el)
+        }
+        if (Number(el.value) < Number(el.min)) {
             el.value = el.min;
         }
-        if (parseInt(el.value) > parseInt(el.max)) {
+        if (Number(el.value) > Number(el.max)) {
             el.value = el.max;
         }
     }
