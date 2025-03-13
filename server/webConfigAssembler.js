@@ -231,7 +231,7 @@ function buildWebConfig(){
                     component: "temperature"
                 },
                 {
-                    unit: "%",
+                    unit: "°C",
                     //port: 80,
                     resource: "/"+element.module_type+"/board_temp",
                     /*resource: "/"+element.module_type+"/ping",*/

@@ -23,20 +23,33 @@ async function updateSite(root){
             if (element.getAttribute("resource")!="") {
                 fetchDataAsJson(url+":"+element.getAttribute("port")+element.getAttribute("resource"))
                 .then(response => {
+                    innerVal = ""
                     if(isNaN(response[element.getAttribute("component")])){
-                        element.innerHTML = response[element.getAttribute("component")];
+                        innerVal = response[element.getAttribute("component")];
                     }else{
                         var numberOfDecimalPLaces = element.getAttribute("decimal-places");
                         if(numberOfDecimalPLaces==undefined){
                             numberOfDecimalPLaces = 0;
                         }
                         var numberLabel = Number(response[element.getAttribute("component")]);
-                        element.innerHTML = numberLabel.toFixed(numberOfDecimalPLaces) + " " + element.getAttribute("unit")
+
+                        innerVal = numberLabel.toFixed(numberOfDecimalPLaces) + " " + element.getAttribute("unit")
+                    }
+
+                    
+                    if(element.getAttribute("to-placeholder") != undefined){
+                        element.placeholder = innerVal
+                    }else{
+                        element.innerHTML = innerVal
                     }
                     element.classList.remove("error");
                 })
                 .catch(err => {
-                    element.innerHTML = "Null"
+                    if(element.getAttribute("to-placeholder") != undefined){
+                        element.placeholder = "Null"
+                    }else{
+                        element.innerHTML = "Null"
+                    }
                     element.classList.add("error");
                     console.error(element,err.message);
                 })

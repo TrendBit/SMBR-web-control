@@ -60,8 +60,38 @@
                     
                     <td class="table-target">
                         <% if(element.input) {%> 
-                            <input type='number' class="button1" min="<%= element.input.min %>" max="<%= element.input.max %>" placeholder="nan"> 
-                            <input type="button" class="button1" value=">">
+                            <div class="button2container">
+                                <input 
+                                    type='text' 
+                                    onblur="enforceMin(this)" 
+                                    onkeyup="enforceMax(this)" 
+                                    class="button2 left api-fetcher" 
+                                    min="<%= element.input.min %>" 
+                                    max="<%= element.input.max %>" 
+                                    placeholder="null"
+                                    <% if(element.input.reciever){ const reciever = element.input.reciever%>
+                                        port="<% if(reciever.port){%><%=reciever.port%><%}else{%><%="8089"%><%} %>"
+                                        unit="<% if(reciever.unit){%><%=reciever.unit%><%}else{%><%=""%><%} %>" 
+                                        resource="<%= reciever.resource %>" 
+                                        component="<%= reciever.component %>"
+                                        decimal-places="<%= reciever.decimalPlaces %>"
+                                        to-placeholder="true"
+                                    <% } %>
+                                    > 
+                                
+                                <input 
+                                    type="button" 
+                                    onclick="button2Handler(this,placeholderReset=true)" 
+                                    class="button2 right" 
+                                    value=">"
+                                    port="<% if(element.input.port){%><%=element.input.port%><%}else{%><%="8089"%><%} %>"
+                                    unit="<% if(element.input.unit){%><%=element.input.unit%><%}else{%><%=""%><%} %>" 
+                                    resource="<%= element.input.resource %>" 
+                                    component="<%= element.input.component %>"
+                                    decimal-places="<%= element.input.decimalPlaces %>"
+                                    component-type="<%= element.input.componentType%>"
+                                >
+                            </div>
                         <% } %>
                     </td>
                 </tr>
@@ -90,8 +120,38 @@
                         
                         <td class="table-target">
                             <% if(sub_element.input) {%> 
-                                <input type='number' class="button1" min="<%= sub_element.input.min %>" max="<%= sub_element.input.max %>"> 
-                                <input type="button" class="button1" value=">">
+                                <div class="button2container">
+                                    <input 
+                                        type='text' 
+                                        onblur="enforceMin(this)" 
+                                        onkeyup="enforceMax(this)" 
+                                        class="button2 left api-fetcher" 
+                                        min="<%= sub_element.input.min %>" 
+                                        max="<%= sub_element.input.max %>" 
+                                        placeholder="null"
+                                        <% if(sub_element.input.reciever){ const reciever = sub_element.input.reciever%>
+                                            port="<% if(reciever.port){%><%=reciever.port%><%}else{%><%="8089"%><%} %>"
+                                            unit="<% if(reciever.unit){%><%=reciever.unit%><%}else{%><%=""%><%} %>" 
+                                            resource="<%= reciever.resource %>" 
+                                            component="<%= reciever.component %>"
+                                            decimal-places="<%= reciever.decimalPlaces %>"
+                                            to-placeholder="true"
+                                        <% } %>
+                                        > 
+                                    
+                                    <input 
+                                        type="button" 
+                                        onclick="button2Handler(this,placeholderReset=true)" 
+                                        class="button2 right" 
+                                        value=">"
+                                        port="<% if(sub_element.input.port){%><%=sub_element.input.port%><%}else{%><%="8089"%><%} %>"
+                                        unit="<% if(sub_element.input.unit){%><%=sub_element.input.unit%><%}else{%><%=""%><%} %>" 
+                                        resource="<%= sub_elesub_element.inputment.resource %>" 
+                                        component="<%= sub_element.input.component %>"
+                                        decimal-places="<%= sub_element.input.decimalPlaces %>"
+                                        component-type="<%= sub_element.input.componentType%>"
+                                    >
+                                </div>
                             <% } %>
                         </td>
                     </tr>
@@ -304,6 +364,8 @@
                             },
                             y: {
                                 display: true,
+                                suggestedMax: 40,
+                                suggestedMin: 10,
                                 grid:{
                                     color: "rgb(50,50,50)"
                                 }

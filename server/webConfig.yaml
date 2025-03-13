@@ -36,7 +36,6 @@ DevicePanel:
   modules:
     - name: debug
       id: '0x00000000000000000'
-      instance: unidentified
       data:
         - unit: ms
           resource: /debug/ping
@@ -45,13 +44,11 @@ DevicePanel:
           resource: /debug/core_temp
           component: temperature
         - unit: °C
-          port: 80
-          resource: /test-get
-          component: value
+          resource: /debug/board_temp
+          component: temperature
         - unit: '%'
-          port: 80
-          resource: /test-get
-          component: value
+          resource: /debug/load
+          component: load
 DashboardPanel:
   TemperatureWidget:
     header: null
@@ -64,7 +61,14 @@ DashboardPanel:
         charted: true
         input:
           min: 0
-          max: 15
+          max: 90
+          resource: /test-set
+          component: value
+          componentType: number
+          reciever:
+            port: 80
+            resource: /test-get
+            component: value
         sub_rows:
           - name: Top
             port: 80

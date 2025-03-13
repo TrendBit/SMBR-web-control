@@ -73,7 +73,14 @@ DashboardPanel:
         
         input:
           min: 0
-          max: 15
+          max: 90
+          resource: "/test-set"
+          component: "value"
+          componentType: "number"
+          reciever:
+            port: 80
+            resource: "/test-get"
+            component: "value"
 
         sub_rows:
           - name: "Top"

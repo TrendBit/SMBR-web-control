@@ -140,6 +140,7 @@ async function sendData(url, data) {
         return await response;
     } catch (error) {
         console.debug("unable to send data to resource: ",url);
+        return 0;
     }
 }
 
@@ -309,6 +310,51 @@ function slider1Handler(element, data){
     slider1Set(element,element.value);
 
     sendSliderData(element,data);
+}
+
+
+//should be called on the sender of a button2 (the other one will be used as input data)
+async function button2Handler(element,placeholderReset=false){
+    const currSide = element.classList.contains("left")
+    const dataElement = element.parentElement.getElementsByClassName((currSide)?"right":"left")[0]
+    var data = {}
+    var value = dataElement.value
+
+    
+
+    if(element.getAttribute("component-type") == "number"){
+        if(value === ""){ //catches an edgecase where "" == 0 and Number("") == 0
+            console.debug("button2Handler: not sending ",data,"to ",":"+element.getAttribute("port")+element.getAttribute("resource"),element)
+            return
+        }
+
+        value = Number(value);
+        console.debug("button2Handler sending number")
+    }else{
+        console.debug("button2Handler ¨not sending number",element.getAttribute("component-type"),element)
+    }
+
+    data[element.getAttribute("component")] = value
+
+    if(placeholderReset){
+        dataElement.value = ""
+        dataElement.placeholder = "..."
+    }
+    
+    const url = "http://" + window.location.hostname;
+    console.debug("button2Handler: sending ",data,"to ",url+":"+element.getAttribute("port")+element.getAttribute("resource"),element)
+    res = await sendData(url+":"+element.getAttribute("port")+element.getAttribute("resource"),JSON.stringify(data));
+    console.debug("button2Handler:",res.status)
+    if(res == 0){
+        dataElement.value = "Err"
+        return
+    }
+    if(res.status != 200){
+        dataElement.value = "NetErr"
+        return
+    }
+
+
 }
 
 

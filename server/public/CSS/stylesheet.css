@@ -337,6 +337,10 @@ body {
         min-width: 60px;
         display: flex;
 
+        div.button2container{
+          width: 100%;
+        }
+
         input {
           padding: 0px 5px;
         }
