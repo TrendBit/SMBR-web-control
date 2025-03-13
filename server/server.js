@@ -210,9 +210,10 @@ app.get('/services-status',async (req,res) => {
     
     const services = [
         "telegraf.service",
-        "recipe-runner.service",
-        "api-server.service",
-        "core-module.service",
+        "reactor-can-watch.service",
+        "reactor-script-api.service",
+        "reactor-api-server.service",
+        "reactor-core-module.service",
         "avahi-daemon.service",
         "avahi-daemon.socket"
     ];

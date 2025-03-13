@@ -218,7 +218,7 @@ function buildWebConfig(){
         moduleConfig.DevicePanel.modules.push({
             name: element.module_type,
             id: element.uid,
-            instance: "unidentified",
+            instance: element.instance,
             data:[
                 {
                     unit: "ms",
@@ -238,7 +238,7 @@ function buildWebConfig(){
                     component: "temperature"
                 },
                 {
-                    unit: "°C",
+                    unit: "%",
                     //port: 80,
                     resource: "/"+element.module_type+"/load", 
                     /*resource: "/"+element.module_type+"/ping",*/
