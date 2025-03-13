@@ -30,7 +30,7 @@ DashboardPanel:
           - name: "temperature"
             type: "dataField"
             port: 8089
-            resource: "/control/led_temperature"
+            resource: "/control/led_panel/temperature"
             unit: "°C"
             component: "temperature"
     sliders:

@@ -37,7 +37,7 @@
                         port="8089"
                         offPos="<%= (element.offPos!=undefined)?element.offPos:0 %>"
                         component="intensity"
-                        resource="/control/led_intensity/channel<%= element.channel %>"
+                        resource="/control/led_panel/intensity/<%= element.channel %>"
                         oninput="slider1Handler(this,{'intensity':Number(this.value)});"
                     >
                 </div>
@@ -50,7 +50,7 @@
             element.disabled = true;
             const url = "http://" + window.location.hostname;
             
-            sendData(url+":8089/control/led_intensity","{\"intensity\": [0,0,0,0]}")
+            sendData(url+":8089/control/led_panel/intensity","{\"intensity\": [0,0,0,0]}")
 
             const sliderContainers = document.getElementById("LedArray-Widget-control-panel").getElementsByClassName("slider1");
             for (let i = 0; i < sliderContainers.length; i++) {
