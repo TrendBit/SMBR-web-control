@@ -35,6 +35,7 @@
                         case "active":
                             level="ok";
                             break;
+                        case "failed":
                         case "inactive":
                             level="error";
                             break;
@@ -53,7 +54,7 @@
                 }
             }
             onloadQueue.push(()=>DevicePanel_ServicesStatus_Reload()); 
-            setTimeout(()=>{
+            setInterval(()=>{
                 if(currContext == 3){
                     DevicePanel_ServicesStatus_Reload();
                 }
