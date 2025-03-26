@@ -14,14 +14,17 @@ var apiUpdateWorkerUpdate;
     };
 
 async function updateSite(root){
+    if(root == document && currContext.el != null){
+        root = currContext.el
+    }
     const apiFetchers = root.getElementsByClassName('api-fetcher');
-    const url = "http://" + window.location.hostname;
-    if(currContext == 0){
+
+    if(currContext.id == 0){
         for (let i = 0; i < apiFetchers.length; i++) {
             const element = apiFetchers[i];
             
             if (element.getAttribute("resource")!="") {
-                fetchDataAsJson(url+":"+element.getAttribute("port")+element.getAttribute("resource"))
+                fetchDataAsJson(":"+element.getAttribute("port")+element.getAttribute("resource"))
                 .then(response => {
                     innerVal = ""
                     if(isNaN(response[element.getAttribute("component")])){
@@ -51,7 +54,13 @@ async function updateSite(root){
                         element.innerHTML = "Null"
                     }
                     element.classList.add("error");
-                    console.error(element,err.message);
+                    //console.error(element,err.message);
+                    console.debug("unable to fetch resource: ",
+                        ":"+element.getAttribute("port")+element.getAttribute("resource"),
+                        "\n",
+                        err.message,
+                        element
+                    );
                 })
 
 
@@ -60,7 +69,7 @@ async function updateSite(root){
                 try{
                     element.innerHTML = 
                             Math.round((await 
-                                fetchDataAsJson(url+":"+element.getAttribute("port")+element.getAttribute("resource"))
+                                fetchDataAsJson(":"+element.getAttribute("port")+element.getAttribute("resource"))
                             )[element.getAttribute("component")])
                             + " " 
                             + element.getAttribute("unit");

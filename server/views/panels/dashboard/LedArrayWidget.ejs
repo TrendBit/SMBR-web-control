@@ -48,9 +48,7 @@
     <script>
         function LedArray_Widget_disableButton(element){
             element.disabled = true;
-            const url = "http://" + window.location.hostname;
-            
-            sendData(url+":8089/control/led_panel/intensity","{\"intensity\": [0,0,0,0]}")
+            sendData(":8089/control/led_panel/intensity","{\"intensity\": [0,0,0,0]}")
 
             const sliderContainers = document.getElementById("LedArray-Widget-control-panel").getElementsByClassName("slider1");
             for (let i = 0; i < sliderContainers.length; i++) {

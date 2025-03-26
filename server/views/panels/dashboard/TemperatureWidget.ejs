@@ -184,11 +184,10 @@
         async function TemperatureWidgetChart_Reload(radioButton){
             const chart = document.getElementById("Temperature-Widget-Chart");
             const chartIndex = chart.getAttribute("chartIndex");
-            const url = "http://" + window.location.hostname;
             const currRadio = radioButton.value;
             TemperatureWidgetChart_CurrentRadioButton = currRadio;
             
-            const newData = await fetchDataAsJson(url+":80/temperature-graph",{"logging-level":currRadio})
+            const newData = await fetchDataAsJson(":80/temperature-graph",{"logging-level":currRadio})
 
             const chartObj = chartArray[chartIndex];
             
@@ -239,11 +238,10 @@
         setInterval(async () => { //updater
             const chart = document.getElementById("Temperature-Widget-Chart");
             const chartIndex = chart.getAttribute("chartIndex");
-            const url = "http://" + window.location.hostname;
             const currRadio = TemperatureWidgetChart_CurrentRadioButton;
             const chartObj = chartArray[chartIndex];
             //console.warn("getting lastReload:",TemperatureWidgetChart_LastReload,"logging level:",currRadio)
-            const newData = await fetchDataAsJson(url+":80/temperature-graph-recent",{
+            const newData = await fetchDataAsJson(":80/temperature-graph-recent",{
                 "logging-level":currRadio,
                 "last-reload":TemperatureWidgetChart_LastReload+10
             });

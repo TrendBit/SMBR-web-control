@@ -168,9 +168,8 @@
             const chartElement = document.getElementById("KineticFluorometer-Widget-Chart")
             const chartIndex = chartElement.getAttribute("chartIndex");
             const chart = chartArray[chartIndex];
-            const url = "http://" + window.location.hostname;
 
-            const data = await fetchDataAsJson(url+":80/fluoro-curve");
+            const data = await fetchDataAsJson(":80/fluoro-curve");
 
             console.warn("loading curve data: ",data);
             

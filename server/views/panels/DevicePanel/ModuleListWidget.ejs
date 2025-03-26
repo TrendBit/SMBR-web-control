@@ -31,8 +31,7 @@
                     const confirmationPayload = {
                         "uid" : "" + targetModuleID
                     }
-                    const url = "http://" + window.location.hostname;
-                    response = await sendData(url+":8089/"+targetModuleNAME+"/restart","{\n  \"uid\": \""+targetModuleID+"\"\n}");
+                    response = await sendData(":8089/"+targetModuleNAME+"/restart","{\n  \"uid\": \""+targetModuleID+"\"\n}");
                     if(response.status != 200){
                         setMainPopup("error","couldn't restart module "+targetModuleNAME+" ["+targetModuleID+"] got error code: "+response.status);
                     }

@@ -86,62 +86,74 @@ async function streamToString(stream) {
 }
 
 // adding additionalHeaders will cause this to not work on RestApi endpoints
-async function fetchDataAsJson(url,additionalHeaders = {}) {
-    try {
-        const response = await fetch(url,
-                                {
-                                    method: "GET",
-                                    headers: {
-                                        'Content-Type': 'text/plain', //it has to be plain text else it will send a complex request with an additional OPTIONS request
-                                        ...additionalHeaders
-                                    },
-                                    signal: AbortSignal.timeout( 10000 )                           
-                                }
-                            );
-        //console.log(response);
-        return response.json()
-    } catch (error) {
-        console.debug("unable to fetch resource: ",url);
-    }
+async function fetchDataAsJson(urlIn,additionalHeaders = {}, setMethod="GET") {
+    const url = "http://" + window.location.hostname + urlIn;
+    const response = await fetch(url,
+                            {
+                                method: setMethod,
+                                headers: {
+                                    'Content-Type': 'text/plain', //it has to be plain text else it will send a complex request with an additional OPTIONS request
+                                    ...additionalHeaders
+                                },
+                                signal: AbortSignal.timeout( 10000 )                           
+                            }
+                        );
+    //console.log(response);
+    return response.json()
+
 }
 
-async function fetchData(url,additionalHeaders = {}) {
-    try {
-        const response = await fetch(url,
-                                {
-                                    method: "GET",
-                                    headers: {
-                                        'Content-Type': 'text/plain', //it has to be plain text else it will send a complex request with an additional OPTIONS request
-                                        ...additionalHeaders
-                                    }
+async function fetchData(urlIn,additionalHeaders = {}, setMethod="GET") {
+    const url = "http://" + window.location.hostname + urlIn;
+
+
+    const response = await fetch(url,
+                            {
+                                method: setMethod,
+                                headers: {
+                                    'Content-Type': 'text/plain', //it has to be plain text else it will send a complex request with an additional OPTIONS request
+                                    ...additionalHeaders
                                 }
-                            );
-        //console.log(response);
-        return response
-    } catch (error) {
-        console.debug("unable to fetch resource: ",url);
-    }
+                            }
+                        );
+    //console.log(response);
+    return response
+
 }
 
-async function sendData(url, data) {
+async function sendData(urlIn, data,additionalHeaders = {}, setMethod="POST") {
+    const url = "http://" + window.location.hostname + urlIn;
+
     console.debug("sending to ",url,": ",data);
-    try {        
-        const response = await fetch(url, {
-            "credentials": "omit",
-            "headers": {
-                "Accept": "application/json",
-                "Accept-Language": "cs,sk;q=0.8,en-US;q=0.5,en;q=0.3",
-                "Content-Type": "application/json",
-            },
-            "body": data,
-            "method": "POST",
-            "mode": "cors"
-        });   
-        return await response;
-    } catch (error) {
-        console.debug("unable to send data to resource: ",url);
-        return 0;
+    const response = await fetch(url, {
+        "credentials": "omit",
+        "headers": {
+            "Accept": "application/json",
+            "Accept-Language": "cs,sk;q=0.8,en-US;q=0.5,en;q=0.3",
+            "Content-Type": "application/json",
+            ...additionalHeaders
+        },
+        "body": data,
+        "method": setMethod,
+        "mode": "cors",
+        signal: AbortSignal.timeout( 10000 )  
+    });   
+    return response;
+}
+
+async function streamToString(readableStream) {
+    const reader = readableStream.getReader();
+    const decoder = new TextDecoder();
+    let result = '';
+
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        result += decoder.decode(value, { stream: true });
     }
+
+    result += decoder.decode();
+    return result;
 }
 
 
@@ -243,8 +255,7 @@ function sendSliderData(element, data = {},instant = false){
         if(!instant){
             element.setAttribute("lastUpdate",Date.now());
         }
-        const url = "http://" + window.location.hostname;
-        sendData(url+":"+element.getAttribute("port")+element.getAttribute("resource"),JSON.stringify(data));
+        sendData(":"+element.getAttribute("port")+element.getAttribute("resource"),JSON.stringify(data));
     }
 }
 
@@ -341,9 +352,8 @@ async function button2Handler(element,placeholderReset=false){
         dataElement.placeholder = "..."
     }
     
-    const url = "http://" + window.location.hostname;
-    console.debug("button2Handler: sending ",data,"to ",url+":"+element.getAttribute("port")+element.getAttribute("resource"),element)
-    res = await sendData(url+":"+element.getAttribute("port")+element.getAttribute("resource"),JSON.stringify(data));
+    console.debug("button2Handler: sending ",data,"to ",":"+element.getAttribute("port")+element.getAttribute("resource"),element)
+    res = await sendData(":"+element.getAttribute("port")+element.getAttribute("resource"),JSON.stringify(data));
     console.debug("button2Handler:",res.status)
     if(res == 0){
         dataElement.value = "Err"
@@ -357,6 +367,14 @@ async function button2Handler(element,placeholderReset=false){
 
 }
 
+
+function getHandlerObj(element, id){
+    if(element.getAttribute("handler-id") == id){
+        return element.handler;
+    }else{
+        return getHandlerObj(element.parentElement,id)
+    }
+}
 
 
 

@@ -23,8 +23,18 @@
                 console.warn("UPDATING SERVICES");
                 
                 const table = document.getElementById("DevicePanel-ServicesStatus-table");
-                const url = "http://" + window.location.hostname;
-                const serviceInfo = await fetchDataAsJson(url + ":80/services-status"); 
+                var serviceInfo; 
+                try {
+                    serviceInfo = await fetchDataAsJson(url + ":80/services-status");             
+                } catch (err) {
+                    console.debug(
+                                "DevicePanel_ServicesStatus_Reload: unable to fetch resource: ",
+                                ":80/services-status", 
+                                "\n", 
+                                err.message
+                            );
+                    return;
+                }
                 table.innerHTML = "";
 
                 console.log(serviceInfo);
@@ -44,7 +54,6 @@
                             break;
                     }
 
-                    console.log("Recieving",service);
                     out+="<tr>"
                         out+="<td class='"+level+"'>"+serviceInfo[service].state+"</td>"
                         out+="<td>"+service.replaceAll(".service","")+"</td>"
