@@ -247,6 +247,9 @@ function eraseValue(element){
 
 
 function sendSliderData(element, data = {},instant = false){
+    if(element.getAttribute("resource") == undefined){
+        return;
+    }
     if((Date.now()) - element.getAttribute("lastUpdate") > 100 
     || element.value == element.getAttribute("max") 
     || element.value == element.getAttribute("min") 
