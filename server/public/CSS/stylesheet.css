@@ -82,6 +82,19 @@ input[type=number] {
 }
 
 /*global class rules*/
+.loadingBarBackground{
+  background: linear-gradient(90deg, var(--acc-color-2) 50%, transparent 50%);
+  background-size: 300% 100%;
+  background-position: 80% 50%;
+}
+@keyframes loadingBarBackground {
+  0% {
+  	background-position: 75% 50%;
+  }
+  100% {
+  	background-position: 25% 50%;
+  }
+}
 
 *.bold{
   font-weight: bold !important;
@@ -914,14 +927,14 @@ body {
         }
       }
 
-      #KineticFluorometer-controlPanel {
+      .KineticFluorometer-controlPanel {
         display: flex;
         justify-content: space-between;
         gap: 7px;
         border-style: none;
         border-top-style: solid;
         
-        #KineticFluorometer-testInfo {
+        .KineticFluorometer-testInfo {
           padding: 0;
           width: 50%;
           height: 100%;
@@ -987,7 +1000,7 @@ body {
         }
         
 
-        #KineticFluorometer-Widget-NewTest {
+        .KineticFluorometer-Widget-NewTest {
           padding: 0;
           width: 50%;
           height: 100%;
@@ -1027,6 +1040,7 @@ body {
             border-left-color: transparent;
             border-right-color: transparent;
             border-radius: 0;
+            position: relative;
           }
           box-sizing: border-box;
         }
