@@ -501,6 +501,7 @@ app.get('/test-get', (req, res) => {
 
 app.post('/test-post',(req, res) => {
     console.log(req);
+    res.status(200).send("{}");
 });
 
 
