@@ -294,3 +294,16 @@ DashboardPanel:
 
   KineticFluorometerWidget:
     header: 
+      rows:
+        - name: "temperature"
+          type: "dataField"
+          port: 80
+          resource: "/test-get"
+          unit: "°C"
+          component: "value"
+    chart:
+      resource: "/fluoro-curve"
+      port: "80"
+    newTest:
+      resource: "/test-post"
+      port: "80"

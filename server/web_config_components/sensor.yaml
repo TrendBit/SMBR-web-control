@@ -62,3 +62,19 @@ DashboardPanel:
 
     chart:
       history: 30
+  
+  KineticFluorometerWidget:
+    header: 
+      rows:
+        - name: "temperature"
+          type: "dataField"
+          port: 8089
+          resource: "/sensor/fluorometer/detector/temperature"
+          unit: "°C"
+          component: "temperature"
+    chart:
+      resource: "/sensor/fluorometer/ojip/read_last"
+      port: "8089"
+    newTest:
+      resource: "/sensor/fluorometer/ojip/capture"
+      port: "8089"
