@@ -12,17 +12,29 @@ var apiUpdateWorkerUpdate;
         await updateSite(element.parentNode.parentNode.parentNode);
         element.disabled = false;
     };
-
+var updateIndex = 0;
 async function updateSite(root){
     if(root == document && currContext.el != null){
         root = currContext.el
     }
     const apiFetchers = root.getElementsByClassName('api-fetcher');
-
+    
     if(currContext.id == 0){
         for (let i = 0; i < apiFetchers.length; i++) {
             const element = apiFetchers[i];
-            
+            if(element.getAttribute("update-cost")!=undefined){
+                if(updateIndex%element.getAttribute("update-cost") != 0){
+                    continue;
+                }
+            }
+            if(element.classList.contains("handler")!=""){
+                try {
+                    element.handler.update();         
+                } catch (error) {
+
+                }
+                continue; 
+            }
             if (element.getAttribute("resource")!="") {
                 fetchDataAsJson(":"+element.getAttribute("port")+element.getAttribute("resource"))
                 .then(response => {
@@ -35,10 +47,10 @@ async function updateSite(root){
                             numberOfDecimalPLaces = 0;
                         }
                         var numberLabel = Number(response[element.getAttribute("component")]);
-
+                        
                         innerVal = numberLabel.toFixed(numberOfDecimalPLaces) + " " + element.getAttribute("unit")
                     }
-
+                    
                     
                     if(element.getAttribute("to-placeholder") != undefined){
                         element.placeholder = innerVal
@@ -62,25 +74,12 @@ async function updateSite(root){
                         element
                     );
                 })
-
-
-
-                /*
-                try{
-                    element.innerHTML = 
-                            Math.round((await 
-                                fetchDataAsJson(":"+element.getAttribute("port")+element.getAttribute("resource"))
-                            )[element.getAttribute("component")])
-                            + " " 
-                            + element.getAttribute("unit");
-                }
-                catch(err){
-                    console.error(err);
-                }*/
                 
+                       
             }
         }
     }
     
+    updateIndex++;
 }
 })();
