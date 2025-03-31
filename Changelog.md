@@ -1,6 +1,11 @@
 # Changelog SMBR Web Control
 This version number is trying to stick to the __MAJOR__.__MINOR__ identifiers but there are some exceptions (marked with a prefix # in the MINOR part).
 
+# 0.1.7
+- fixed ServiceStatus not loading
+- added support for fluoroCurve oajip endpoints
+- added support for new spectrometer endpoints
+
 # 0.1.6 hotfix
 - fixed numerous bad entrys in configs
 - cleaned console output
