@@ -25,7 +25,7 @@
                 const table = document.getElementById("DevicePanel-ServicesStatus-table");
                 var serviceInfo; 
                 try {
-                    serviceInfo = await fetchDataAsJson(url + ":80/services-status");             
+                    serviceInfo = await fetchDataAsJson(":80/services-status");             
                 } catch (err) {
                     console.debug(
                                 "DevicePanel_ServicesStatus_Reload: unable to fetch resource: ",
