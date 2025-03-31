@@ -1,4 +1,4 @@
-<div id="KineticFluorometer-Widget" class="widget handler" handler-id="FluoroMeterHandler">
+<div id="KineticFluorometer-Widget" class="widget handler api-fetcher" update-cost="15" handler-id="FluoroMeterHandler">
     <div class="header">
         <h1>Kinetic fluorometer</h1>
         <div class="right">
@@ -421,7 +421,7 @@
 
             connectChart(chartObj){
                 this.chart.obj = chartObj;
-                this.fetchData();
+                //this.fetchData();
             }
 
             loadData(data){
@@ -600,6 +600,10 @@
                     const responseData = await response.json();
                     this.loadData(responseData);
                 }
+            }
+
+            update(){
+                this.fetchData(undefined, true);
             }
         }
 
