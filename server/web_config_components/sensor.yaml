@@ -62,7 +62,34 @@ DashboardPanel:
 
     chart:
       history: 30
-  
+  CoolSpektrometerWidget:
+    header: 
+      rows:
+          - name: "temperature"
+            type: "dataField"
+            port: 8089
+            resource: "/sensor/spectrophotometer/emitor_temperature"
+            unit: "°C"
+            component: "temperature"
+    rows:
+      - name: "UV"
+        frequency: "430 nm"
+        color: "#6F00FF"
+      - name: "Blue"
+        frequency: "480 nm"
+        color: "#007FFF"
+      - name: "Green"
+        frequency: "560 nm"
+        color: "#00FF00"
+      - name: "Orange"
+        frequency: "630 nm"
+        color: "#FF7F00"
+      - name: "Red"
+        frequency: "678 nm"
+        color: "#FF0000"
+      - name: "IR"
+        frequency: "870 nm"
+        color: "#800000"
   KineticFluorometerWidget:
     header: 
       rows:

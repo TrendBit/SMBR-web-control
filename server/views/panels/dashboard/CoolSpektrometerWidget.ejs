@@ -1,4 +1,4 @@
-<div id="CoolSpektrometer-Widget" class="widget">
+<div id="CoolSpektrometer-Widget" class="widget handler api-fetcher" update-cost="5" handler-id="SpectrometerHandler">
     <div class="header">
         <h1>Transmissive spectrometer</h1>
         <div class="right">
@@ -16,7 +16,7 @@
 
 
                 
-                <button class="reset_button button1 hoverSpin" onclick="apiUpdateWorkerUpdate(this)">
+                <button class="reset_button button1 hoverSpin" onclick="getHandlerObj(this,'SpectrometerHandler').update()">
                     <img src="<%= getIcon("refresh") %>" alt="refresh" title="refresh">
                 </button>
         </div>
@@ -24,21 +24,6 @@
             <p>ERROR</p>
         </div>
     </div>
-    <script>
-        function CoolSpektrometer_SetReference(element){
-            var parentWidget = document.getElementById("CoolSpektrometer-Widget");
-            var relative_dataFields = parentWidget.getElementsByClassName("CoolSpektrometer-relative");
-            var absolute_dataFields = parentWidget.getElementsByClassName("CoolSpektrometer-absolute");
-
-            for (let i = 0; i < relative_dataFields.length; i++) {
-                const relative = relative_dataFields[i];
-                const absolute = absolute_dataFields[i];
-
-                relative = 0;
-                
-            }
-        }
-    </script>
     <table class="table-widget-segment">
         <thead>
             <tr>
@@ -67,24 +52,12 @@
                         <%= element.name %>
                     </td>
 
-                    <td class="table-dataField api-fetcher CoolSpektrometer-absolute"
-                        port="<% if(element.absolute.port){%><%=element.absolute.port%><%}else{%><%="8089"%><%} %>" 
-                        unit="<% if(element.absolute.unit){%><%=element.absolute.unit%><%}else{%><%="lm"%><%} %>" 
-                        resource="<%= element.absolute.resource %>" 
-                        component="<%= element.absolute.component %>"
-                        pull_period="<%= element.absolute.pull_period %>"
-                        charted="<% if(element.relative.charted){%><%=element.relative.charted%><%}else{%><%="false"%><%} %>" 
+                    <td class="table-dataField CoolSpektrometer-absolute api-data"
                         label="absolute"
                     >
                     </td>
                     
-                    <td class="table-dataField api-fetcher CoolSpektrometer-relative"
-                        port="<% if(element.relative.port){%><%=element.relative.port%><%}else{%><%="8089"%><%} %>" 
-                        unit="<% if(element.relative.unit){%><%=element.relative.unit%><%}else{%><%="%"%><%} %>" 
-                        resource="<%= element.relative.resource %>" 
-                        component="<%= element.relative.component %>"
-                        pull_period="<%= element.relative.pull_period %>"
-                        charted="<% if(element.relative.charted){%><%=element.relative.charted%><%}else{%><%="false"%><%} %>" 
+                    <td class="table-dataField CoolSpektrometer-relative api-data"
                         label="relative"
                     >
                     </td>
@@ -103,7 +76,7 @@
                 </td>
 
                 <td class="table-dataField" colspan="2">
-                    <button id="CoolSpektrometer-SetReferenceBtn" class="button1" onclick="CoolSpektrometer_SetReference(this)">
+                    <button id="CoolSpektrometer-SetReferenceBtn" class="button1" onclick="getHandlerObj(this,'SpectrometerHandler').setReference()">
                         <p>set reference</p>
                     </button>
                 </td>
@@ -111,4 +84,52 @@
 
         </tbody>
     </table>
+    <script>
+        handlers["SpectrometerHandler"] = class SpectrometerHandler {
+            constructor(element) {
+                console.log("CREATING SpectrometerHandler")
+
+                this.relative_dataFields = element.getElementsByClassName("CoolSpektrometer-relative");
+                this.absolute_dataFields = element.getElementsByClassName("CoolSpektrometer-absolute");
+
+                console.log("SpectrometerHandler", this)
+            }
+            
+            async setReference(){
+                await sendData(":8089/sensor/spectrophotometer/calibrate", "{}");
+                this.update();
+            }
+            
+            update(){
+                console.log("UPDATING SpectrometerHandler")
+
+                for (let i = 0; i < this.relative_dataFields.length; i++) {
+                    this.relative_dataFields[i].innerHTML = "Null";                   
+                    this.relative_dataFields[i].classList.add("error");
+                }
+                for (let i = 0; i < this.absolute_dataFields.length; i++) {
+                    this.absolute_dataFields[i].innerHTML = "Null";                   
+                    this.absolute_dataFields[i].classList.add("error");
+                }
+
+                var response;
+                try {
+                    response = fetchDataAsJson(":8089/sensor/spectrophotometer/measure_all");
+                } catch (error) {
+                    console.error("SpectrometerHandler: cannot fetch new spectrometer data: \n",error)
+                }
+
+                for (let i = 0; i < response.samples.length; i++) {
+                    const element = response.samples[i];
+                    this.relative_dataFields[element.channel].innerHTML = element.relative_value + "%";
+                    this.relative_dataFields[i].classList.remove("error");
+                    this.absolute_dataFields[element.channel].innerHTML = element.absolute_value + "lm";    
+                    this.absolute_dataFields[i].classList.remove("error");
+                }
+
+            }
+
+        }
+    </script>
 </div>
+
