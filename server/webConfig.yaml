@@ -150,86 +150,33 @@ DashboardPanel:
         step: 0.01
         channel: 3
   CoolSpektrometerWidget:
-    header: null
+    header:
+      rows:
+        - name: temperature
+          type: dataField
+          port: 80
+          resource: /test-get
+          unit: °C
+          component: value
     rows:
       - name: UV
         frequency: 430 nm
         color: '#6F00FF'
-        absolute:
-          port: 80
-          resource: /test-get
-          component: value
-          charted: true
-        relative:
-          port: 80
-          resource: /test-get
-          component: value
-          charted: true
       - name: Blue
         frequency: 480 nm
         color: '#007FFF'
-        absolute:
-          port: 80
-          resource: /test-get
-          component: value
-          charted: true
-        relative:
-          port: 80
-          resource: /test-get
-          component: value
-          charted: true
       - name: Green
         frequency: 560 nm
         color: '#00FF00'
-        absolute:
-          port: 80
-          resource: /test-get
-          component: value
-          charted: true
-        relative:
-          port: 80
-          resource: /test-get
-          component: value
-          charted: true
       - name: Orange
         frequency: 630 nm
         color: '#FF7F00'
-        absolute:
-          port: 80
-          resource: /test-get
-          component: value
-          charted: true
-        relative:
-          port: 80
-          resource: /test-get
-          component: value
-          charted: true
       - name: Red
         frequency: 678 nm
         color: '#FF0000'
-        absolute:
-          port: 80
-          resource: /test-get
-          component: value
-          charted: true
-        relative:
-          port: 80
-          resource: /test-get
-          component: value
-          charted: true
       - name: IR
         frequency: 870 nm
         color: '#800000'
-        absolute:
-          port: 80
-          resource: /test-get
-          component: value
-          charted: true
-        relative:
-          port: 80
-          resource: /test-get
-          component: value
-          charted: true
   ControlWidget:
     header: null
     sliders:
@@ -270,4 +217,17 @@ DashboardPanel:
         component: intesity
         resource: /control/heater/intesity
   KineticFluorometerWidget:
-    header: null
+    header:
+      rows:
+        - name: temperature
+          type: dataField
+          port: 80
+          resource: /test-get
+          unit: °C
+          component: value
+    chart:
+      resource: /fluoro-curve
+      port: '80'
+    newTest:
+      resource: /test-post
+      port: '80'
