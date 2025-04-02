@@ -160,15 +160,15 @@
                 <h3>Gain</h3>
                 <div class="horflex KineticFluorometer-NewTest-gain" >
                     <div class="radio1"> 
-                        <input  name="KineticFluorometer-NewTest-gain" type="radio" value="1"> 
+                        <input  name="KineticFluorometer-NewTest-gain" type="radio" value="x1"> 
                         <label for="KineticFluorometer-gain-1" >1 </label>   
                     </div>
                     <div class="radio1"> 
-                        <input checked="checked" name="KineticFluorometer-NewTest-gain" type="radio" value="10"> 
+                        <input checked="checked" name="KineticFluorometer-NewTest-gain" type="radio" value="x10"> 
                         <label for="KineticFluorometer-gain-10">10</label>  
                     </div>
                     <div class="radio1"> 
-                        <input name="KineticFluorometer-NewTest-gain" type="radio" value="50"> 
+                        <input name="KineticFluorometer-NewTest-gain" type="radio" value="x50"> 
                         <label for="KineticFluorometer-gain-50">50</label>  
                     </div>                    
                 </div>
@@ -448,12 +448,12 @@
                     }
                 }
                 const samples = data.samples;
-                const timestamps = samples.map(sample => sample.time_ms);
+                const timestamps = samples.map(sample => sample.time_ms*1000);
                 const raw_values = samples.map(sample => sample.raw_value);
                 const relative_values = samples.map(sample => sample.relative_value);
                 const absolute_values = samples.map(sample => sample.absolute_value);
 
-                this.chart.obj.data.labels = timestamps*1000;
+                this.chart.obj.data.labels = timestamps;
                 this.chart.obj.options.plugins.zoom.limits.x.max = timestamps[timestamps.length-1];
                 this.chart.obj.options.plugins.zoom.limits.x.min = timestamps[0];
                 
@@ -576,7 +576,7 @@
                 for (let i = 0; i < this.newTest.gain.children.length; i++) {
                     const element = this.newTest.gain.children[i].children[0];
                     if(element.checked == true){
-                        gain = Number(element.value);
+                        gain = element.value;
                     }
                 }
                 if(length=="" || intensity == "" || gain =="" ){
@@ -584,13 +584,13 @@
                 }
 
                 const data = {
-                    "detector_gain": gain,
+                    //"detector_gain": gain,
                     "emitor_intensity": intensity/100,
-                    "timebase": "logarithmic",
-                    "length_ms": length*1000,
-                    "sample_count": 1000
+                    //"timebase": "logarithmic",
+                    //"length_ms": length*1000,
+                    //"sample_count": 1000
                 }
-
+                const queryData = "?gain="+gain+"&timing=Logarithmic&length_ms="+Number(length*1000).toFixed(0)+"&sample_count=1000"
                 const timeout = length*3;
                 
                 this.newTest.startButton.disabled = true;
@@ -603,11 +603,12 @@
 
                 var response;
                 try {
-                    response = await sendData(":" + this.newTest.startButton.getAttribute("port") + this.newTest.startButton.getAttribute("resource"),JSON.stringify(data));
+                    response = await sendData(":" + this.newTest.startButton.getAttribute("port") + this.newTest.startButton.getAttribute("resource")+queryData,JSON.stringify(data));
                 }catch(err){
                     console.error("FluoroMeterHandler: cannot start a new capture: ",err);
                     this.newTest.startButton.disabled = false;
                     this.newTest.startButton.style.animation= "";  
+                    return
                 }
                 if(response.status != 200){
                     this.newTest.startButton.disabled = false;
