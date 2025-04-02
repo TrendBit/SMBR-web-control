@@ -59,7 +59,13 @@ DashboardPanel:
             component: "temperature"
             charted: false
             decimalPlaces: 2
-
+      - name: "Heater plate"
+        icon: "dot"
+        port: 8089
+        resource: "/control/heater/plate_temperature"
+        component: "temperature"
+        decimalPlaces: 2
+        charted: false
     chart:
       history: 30
   CoolSpektrometerWidget:
