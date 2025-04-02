@@ -99,6 +99,9 @@ async function fetchDataAsJson(urlIn,additionalHeaders = {}, setMethod="GET") {
                             }
                         );
     //console.log(response);
+    if(response.status != 200){
+        throw Error("server responded with code: ",response.status);
+    }
     return response.json()
 
 }
