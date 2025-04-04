@@ -3,6 +3,7 @@
         <h1>Kinetic fluorometer</h1>
         <div class="right">
             <% if(DashboardPanel.KineticFluorometerWidget.header) DashboardPanel.KineticFluorometerWidget.header.rows.forEach(element => { %>
+                
                 <div>
                     <p><%= element.name %></p>
                     <p class="table-dataField api-fetcher"
@@ -13,10 +14,16 @@
                     ></p>
                 </div>
                 <% }); %>
-
+                <button class="button1 exportButton" onclick="getHandlerObj(this,'FluoroMeterHandler').exportGraphAsImage()" disabled="true">
+                    <img src="<%= getIcon("dot") %>" alt="export graph" title="export graph">
+                </button>
+                <button class="button1 exportButton" onclick="getHandlerObj(this,'FluoroMeterHandler').exportDataToFile()" disabled="true">
+                    <img src="<%= getIcon("upload") %>" alt="export data" title="export data">
+                </button>
                 <button class="reset_button button1 hoverSpin" onclick="getHandlerObj(this,'FluoroMeterHandler').fetchData(this,true)">
                     <img src="<%= getIcon("refresh") %>" alt="refresh" title="refresh">
                 </button>
+                
         </div>
         <div class="top">
             <p>ERROR</p>
@@ -26,7 +33,7 @@
         <div>
             <canvas 
             id="KineticFluorometer-Widget-Chart" 
-            class="KineticFluorometer-Widget-Chart" 
+            class="KineticFluorometer-Widget-Chart inactive-chart" 
             chartIndex="<%= currNumOfCharts++ %>"
             resource="<%= DashboardPanel.KineticFluorometerWidget.chart.resource %>"
             port="<%= DashboardPanel.KineticFluorometerWidget.chart.port %>"
@@ -431,6 +438,8 @@
                 }
 
                 this.currentDataID = 0;
+                this.currentData = {};
+                this.exportButtons = element.getElementsByClassName("exportButton");
 
                 console.log(this)
             }
@@ -440,7 +449,22 @@
                 //this.fetchData();
             }
 
+            exportDataToFile(){
+                var filename = 'KineticFluorometerData_';
+                filename+=new Date().toLocaleDateString().replaceAll(" ","").replaceAll(".","-") + "_" + new Date().toLocaleTimeString().replaceAll(":","-");
+                downloadStringAsFile(JSON.stringify(this.currentData, null, 2),filename);
+            }
+
+            exportGraphAsImage(){
+                var filename = 'KineticFluorometerChart_';
+                filename+=new Date().toLocaleDateString().replaceAll(" ","").replaceAll(".","-") + "_" + new Date().toLocaleTimeString().replaceAll(":","-");
+                downloadCanvas(this.chart.element,filename)
+            }
+
+
             loadData(data){
+                this.currentData = data;
+                this.enableChart();
                 this.info.current.element.innerHTML = "";
                 for(var field in data){
                     if(field != "samples"){
@@ -448,6 +472,10 @@
                     }
                 }
                 const samples = data.samples;
+                if(samples == undefined){
+                    this.disableChart();
+                    return;
+                }
                 const timestamps = samples.map(sample => sample.time_ms*1000);
                 const raw_values = samples.map(sample => sample.raw_value);
                 const relative_values = samples.map(sample => sample.relative_value);
@@ -546,6 +574,20 @@
                 this.chart.obj.update();
             }
 
+            disableChart(){
+                this.chart.element.classList.add("inactive-chart");
+                for (let i = 0; i < this.exportButtons.length; i++) {
+                    this.exportButtons[i].disabled = true;
+                }
+            }
+
+            enableChart(){
+                this.chart.element.classList.remove("inactive-chart");
+                for (let i = 0; i < this.exportButtons.length; i++) {
+                    this.exportButtons[i].disabled = false;
+                }
+            }
+
             async fetchData(element, forced = false){
                 if(element!=undefined){
                     element.disabled = true;
@@ -557,7 +599,15 @@
                 try {
                     data = await fetchDataAsJson(":" + this.chart.element.getAttribute("port") + this.chart.element.getAttribute("resource"));
                 } catch (error) {
-                    console.error("FluoroMeterHandler: Cannot fetch new data error: \n",error);
+                    this.disableChart();
+                    if(error.fetchErrorCode){
+                        console.error("server responded with code: ",error.response.status);
+                        if(error.response.status == 500){
+                            this.loadData(await error.response.json());
+                        }
+                    }else{
+                        console.error("FluoroMeterHandler: Cannot fetch new data error: \n",error);
+                    }
                     return;
                 }
                 if(data.measurement_id != this.currentDataID || forced){

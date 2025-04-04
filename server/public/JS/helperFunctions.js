@@ -100,7 +100,10 @@ async function fetchDataAsJson(urlIn,additionalHeaders = {}, setMethod="GET") {
                         );
     //console.log(response);
     if(response.status != 200){
-        throw Error("server responded with code: ",response.status);
+        err = Error("server responded with code: ",response.status);
+        err.response = response;
+        err.fetchErrorCode = true;
+        throw err;
     }
     return response.json()
 
@@ -402,4 +405,32 @@ function formatTime(formatString,timestamp =new Date()){
     formatString = formatString.replaceAll("HH",(hours<10)?"0"+hours:hours);
 
     return formatString;
+}
+
+function downloadStringAsFile(content, filename, contentType = 'text/plain') {
+    const blob = new Blob([content], { type: contentType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+
+    document.body.appendChild(a);
+    a.click();
+
+    setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }, 100);
+}
+
+function downloadCanvas(canvasElement, filename = 'image.png') {
+    const dataUrl = canvasElement.toDataURL('image/png');
+
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = filename;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
