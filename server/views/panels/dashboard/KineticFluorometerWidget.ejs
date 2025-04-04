@@ -465,6 +465,7 @@
             loadData(data){
                 this.currentData = data;
                 this.enableChart();
+                this.chart.obj.resetZoom();
                 this.info.current.element.innerHTML = "";
                 for(var field in data){
                     if(field != "samples"){
@@ -670,7 +671,7 @@
             }
 
             update(){
-                this.fetchData(undefined, true);
+                this.fetchData(undefined, false);
             }
         }
 
