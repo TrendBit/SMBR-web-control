@@ -486,10 +486,10 @@
                 this.chart.obj.options.plugins.zoom.limits.x.max = timestamps[timestamps.length-1];
                 this.chart.obj.options.plugins.zoom.limits.x.min = timestamps[0];
                 
-                this.chart.obj.data.datasets[0].data = relative_values.map(function (value, index) {
+                this.chart.obj.data.datasets[0].data = absolute_values.map(function (value, index) {
                     return {x:timestamps[index], y:value}
                 });
-                this.chart.obj.data.datasets[1].data = absolute_values.map(function (value, index) {
+                this.chart.obj.data.datasets[1].data = relative_values.map(function (value, index) {
                     return {x:timestamps[index], y:value}
                 });
                 this.chart.obj.data.datasets[2].data = raw_values.map(function (value, index) {
