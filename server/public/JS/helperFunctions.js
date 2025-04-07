@@ -407,7 +407,7 @@ function formatTime(formatString,timestamp =new Date()){
     return formatString;
 }
 
-function downloadStringAsFile(content, filename, contentType = 'text/plain') {
+function downloadStringAsFile(content, filename, contentType = 'application/json') {
     const blob = new Blob([content], { type: contentType });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
