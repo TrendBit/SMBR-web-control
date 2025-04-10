@@ -344,7 +344,21 @@ async function button2Handler(element,placeholderReset=false){
     }
 }
 
-
+async function button1Handler(element){
+    element.disabled = true;
+    setTimeout(()=>{
+        element.disabled = false;
+    },4000);
+    console.debug("button1Handler: getting :"+element.getAttribute("port")+element.getAttribute("resource"),element)
+    try {
+        res = await fetchData(":"+element.getAttribute("port")+element.getAttribute("resource"));
+        if(res.status != 200){
+            throw Error("unable to get endpoint:"+element.getAttribute("port")+element.getAttribute("resource"),element)
+        }
+    } catch (error) {
+        console.debug("button1Handler: ERROR:"+error.message);
+    }    
+    element.disabled = false;
 }
 
 
