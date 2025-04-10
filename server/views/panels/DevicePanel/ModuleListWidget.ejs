@@ -49,7 +49,7 @@
                     <td class="table-dataField"><%= element.instance %></td>
     
                     <%element.data.forEach(dataField => { %>
-                        <td class="module-api-fetcher table-dataField"
+                        <td class="api-fetcher table-dataField"
                             unit="<% if(dataField.unit){%><%=dataField.unit%><%}else{%><%="°C"%><%} %>" 
                             resource="<%= dataField.resource %>" 
                             component="<%= dataField.component %>"
