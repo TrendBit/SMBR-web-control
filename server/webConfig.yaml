@@ -32,7 +32,7 @@ DevicePanel:
         resource: /core/supply/current
       - name: Supply power_draw
         port: 8089
-        resource: /core/supply/pwoer_draw
+        resource: /core/supply/power_draw
   modules:
     - name: debug
       id: '0x00000000000000000'
@@ -69,6 +69,10 @@ DashboardPanel:
             port: 80
             resource: /test-get
             component: value
+        inputReset:
+          port: 80
+          resource: /test-get
+          component: value
         sub_rows:
           - name: Top
             port: 80
@@ -216,6 +220,10 @@ DashboardPanel:
         port: 8089
         component: intesity
         resource: /control/heater/intesity
+        button:
+          label: disable
+          port: 8089
+          resource: /control/heater/intesity
   KineticFluorometerWidget:
     header:
       rows:
