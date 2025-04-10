@@ -193,227 +193,10 @@
     </div>
     
     <script>
-        async function fetchNewFluoroCurve(element){
-            if(element){
-                element.disabled = true;
-                setTimeout(() => {
-                    element.disabled = false;
-                },4000);
-            }
-
-            const chartElement = document.getElementById("KineticFluorometer-Widget-Chart")
-            const chartIndex = chartElement.getAttribute("chartIndex");
-            const chart = chartArray[chartIndex];
-
-            const data = await fetchDataAsJson(":80/fluoro-curve");
-
-            console.warn("loading curve data: ",data);
-            
-            currTS = data.current.timestamps;
-            prevTS = data.previous.timestamps;
-            mergTS = [];
-            currHigh = currTS[0] > prevTS[0];
-            currI = 0;
-            prevI = 0;
-            last = -1;
-            
-
-            //merges two sorted arrays
-            for (let i = 0; i < currTS.length+prevTS.length; i++) {//max possible iterations is in an alternating pattern
-                if(currI==currTS.length){
-                    for (let i = prevI; i < prevTS.length; i++) {
-                        if(last != prevTS[i]){
-                            mergTS.push(prevTS[i]);
-                            last = prevTS[i];
-                        }
-                    }
-                    break;
-                }
-                if(prevI==prevTS.length){
-                    for (let i = currI; i < currTS.length; i++) {
-                        if(last != currTS[i]){
-                            mergTS.push(currTS[i]);
-                            last = currTS[i];
-                        }
-                    }
-                    break;
-                }
-                
-                if(currHigh){
-                    if(currTS[currI] < prevTS[prevI]){
-                        mergTS.push(prevTS[prevI++]);
-                        
-                        currHigh = 0;
-                        continue;
-                    }
-                    if(currTS[currI] == prevTS[prevI]){
-                        prevI++;
-                    }
-                    mergTS.push(currTS[currI++]);
-                    continue;                  
-                }else{
-                    if(currTS[currI] > prevTS[prevI]){
-                        mergTS.push(currTS[currI++]);
-                        currHigh = 1;
-                        continue;
-                    }
-                    if(currTS[currI] == prevTS[prevI]){
-                        currI++;
-                    }
-                    mergTS.push(prevTS[prevI++]);
-                    continue;  
-                }         
-            }
-
-            console.warn("SORTED ARRAY",mergTS);
-
-
-
-            chart.data.labels = mergTS;
-            chart.options.plugins.zoom.limits.x.max = mergTS[mergTS.length-1];
-            chart.options.plugins.zoom.limits.x.min = mergTS[0];
-            
-            chart.data.datasets[0].data = data.current.detector.map(function (value, index) {
-                return {x:data.current.timestamps[index], y:value}
-            });
-            chart.data.datasets[1].data = data.previous.detector.map(function (value, index) {
-                return {x:data.previous.timestamps[index], y:value}
-            });
-            console.warn("done: ",chart.data);
-
-            chart.update();
-
-
-            if(element){
-                element.disabled = false;
-            }
-        }
-
-        onloadQueue.push(() => {
-            const chart = document.getElementById("KineticFluorometer-Widget-Chart")
-            const chartIndex = chart.getAttribute("chartIndex");
-            
-            console.log("Iitializing a new chart\nindex: ",chartIndex);
-            const data = {
-                labels: [],
-                datasets: [
-                {
-                    label: "absolute",
-                    data: [],
-                    fill: false,
-                    cubicInterpolationMode: 'monotone',
-                    tension: 0.5,
-                },
-                {
-                    label: "relative",
-                    data: [],
-                    fill: false,
-                    cubicInterpolationMode: 'monotone',
-                    tension: 0.5,
-                },
-                {
-                    label: "raw",
-                    data: [],
-                    fill: false,
-                    cubicInterpolationMode: 'monotone',
-                    tension: 0,
-                    hidden: true,
-                }
-                ]
-            };
-
-            console.log("data: ",data)
-            chartArray[chartIndex] = new Chart(chart, {
-                type: 'line',
-                data: data,
-                options: {
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    animations: false,
-                    elements: {
-                        point:{
-                            radius: 1
-                        }
-                    },
-                    interaction:{
-                        mode: "nearest",
-                        axis: "xy",
-                        intersect: false
-                    },
-                    plugins:{
-                        legend:{
-                            display: true,
-                            position: "bottom"
-                        },
-                        zoom: {
-                            zoom: {
-                                mode: 'x',
-                                wheel: {
-                                    enabled: true,
-                                    modifierKey: "shift",
-                                },
-                                pinch: {
-                                    enabled: true,
-                                },
-                            },
-                            limits: {
-                                x: {min: 0, max: 100}
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                title: (item) => {
-                                    return item[0].label + ' µs';
-                                }
-                            },
-                        },
-                    },
-                    
-                    scales: {
-                        x: {
-                            display: true,
-                            grid:{
-                                color: "rgb(50,50,50)"
-                            },
-                            type: 'logarithmic',
-                            ticks: {
-                                fontSize: 40,
-                                callback: function (value) {
-                                    value = Math.round(value);
-                                    var out = value + 'µs';
-                                    if (value>=1000){
-                                        out = (value/1000) + 'ms';
-                                    }
-                                    if (value>=1000000){
-                                        out = (value/1000000) + 's';
-                                    }
-                                    return out;
-                                },
-                                
-                            }
-                        },
-                        y: {
-                            display: true,
-                            grid:{
-                                color: "rgb(50,50,50)"
-                            },
-                            suggestedMin: 0,
-                            suggestedMax: 1
-                        }
-                    },
-                    grid: {
-                        color: "red"
-                    }
-                },
-            });
-            //fetchNewFluoroCurve(null);
-            getHandlerObj(chart,'FluoroMeterHandler').connectChart(chartArray[chartIndex]);
-        });
 
         handlers["FluoroMeterHandler"] = class FluoroMeterHandler {
             constructor(element) {
                 console.log("CREATING FluoroMeterHandler")
-
                 this.element = element;
                 this.chart = {
                     obj:null,
@@ -441,12 +224,129 @@
                 this.currentData = {};
                 this.exportButtons = element.getElementsByClassName("exportButton");
 
-                console.log(this)
+                this.initChart();
+                console.log(this);
+
             }
 
-            connectChart(chartObj){
-                this.chart.obj = chartObj;
-                //this.fetchData();
+            initChart(){
+                const chart = this.chart.element;
+                const chartIndex = chart.getAttribute("chartIndex");
+                
+                console.log("Iitializing a new chart\nindex: ",chartIndex);
+                const data = {
+                    labels: [],
+                    datasets: [
+                    {
+                        label: "absolute",
+                        data: [],
+                        fill: false,
+                        cubicInterpolationMode: 'monotone',
+                        tension: 0.5,
+                    },
+                    {
+                        label: "relative",
+                        data: [],
+                        fill: false,
+                        cubicInterpolationMode: 'monotone',
+                        tension: 0.5,
+                    },
+                    {
+                        label: "raw",
+                        data: [],
+                        fill: false,
+                        cubicInterpolationMode: 'monotone',
+                        tension: 0,
+                        hidden: true,
+                    }
+                    ]
+                };
+
+                console.log("data: ",data)
+                chartArray[chartIndex] = new Chart(chart, {
+                    type: 'line',
+                    data: data,
+                    options: {
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        animations: false,
+                        elements: {
+                            point:{
+                                radius: 1
+                            }
+                        },
+                        interaction:{
+                            mode: "nearest",
+                            axis: "xy",
+                            intersect: false
+                        },
+                        plugins:{
+                            legend:{
+                                display: true,
+                                position: "bottom"
+                            },
+                            zoom: {
+                                zoom: {
+                                    mode: 'x',
+                                    wheel: {
+                                        enabled: true,
+                                        modifierKey: "shift",
+                                    },
+                                    pinch: {
+                                        enabled: true,
+                                    },
+                                },
+                                limits: {
+                                    x: {min: 0, max: 100}
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    title: (item) => {
+                                        return item[0].label + ' µs';
+                                    }
+                                },
+                            },
+                        },
+                        
+                        scales: {
+                            x: {
+                                display: true,
+                                grid:{
+                                    color: "rgb(50,50,50)"
+                                },
+                                type: 'logarithmic',
+                                ticks: {
+                                    fontSize: 40,
+                                    callback: function (value) {
+                                        value = Math.round(value);
+                                        var out = value + 'µs';
+                                        if (value>=1000){
+                                            out = (value/1000) + 'ms';
+                                        }
+                                        if (value>=1000000){
+                                            out = (value/1000000) + 's';
+                                        }
+                                        return out;
+                                    },
+                                    
+                                }
+                            },
+                            y: {
+                                display: true,
+                                grid:{
+                                    color: "rgb(50,50,50)"
+                                },
+                                suggestedMin: 0,
+                                suggestedMax: 1
+                            }
+                        },
+                        grid: {
+                            color: "red"
+                        }
+                    },
+                });
+                this.chart.obj = chartArray[chartIndex];
             }
 
             exportDataToFile(){
