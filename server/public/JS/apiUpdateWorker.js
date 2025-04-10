@@ -26,54 +26,56 @@ async function updateSite(root){
             if(updateIndex%element.getAttribute("update-cost") != 0){
                 continue;
             }
-            if(element.classList.contains("handler")!=""){
-                try {
-                    element.handler.update();         
-                } catch (error) {
+        }
+        if(element.classList.contains("handler")!=""){
+            try {
+                element.handler.update();         
+            } catch (error) {
 
-                }
-                continue; 
             }
-            if (element.getAttribute("resource")!="") {
-                fetchDataAsJson(":"+element.getAttribute("port")+element.getAttribute("resource"))
-                .then(response => {
-                    innerVal = ""
-                    if(isNaN(response[element.getAttribute("component")])){
-                        innerVal = response[element.getAttribute("component")];
-                    }else{
-                        var numberOfDecimalPLaces = element.getAttribute("decimal-places");
-                        if(numberOfDecimalPLaces==undefined){
-                            numberOfDecimalPLaces = 0;
-                        }
-                        var numberLabel = Number(response[element.getAttribute("component")]);
-                        
-                        innerVal = numberLabel.toFixed(numberOfDecimalPLaces) + " " + element.getAttribute("unit")
+            continue; 
+        }
+        if (element.getAttribute("resource")!="") {
+            fetchDataAsJson(":"+element.getAttribute("port")+element.getAttribute("resource"))
+            .then(response => {
+                innerVal = ""
+                if(isNaN(response[element.getAttribute("component")])){
+                    innerVal = response[element.getAttribute("component")];
+                }else{
+                    var numberOfDecimalPLaces = element.getAttribute("decimal-places");
+                    if(numberOfDecimalPLaces==undefined){
+                        numberOfDecimalPLaces = 0;
                     }
+                    var numberLabel = Number(response[element.getAttribute("component")]);
                     
-                    
-                    if(element.getAttribute("to-placeholder") != undefined){
-                        element.placeholder = innerVal
-                    }else{
-                        element.innerHTML = innerVal
-                    }
-                    element.classList.remove("error");
-                })
-                .catch(err => {
-                    if(element.getAttribute("to-placeholder") != undefined){
-                        element.placeholder = "Null"
-                    }else{
-                        element.innerHTML = "Null"
-                    }
-                    element.classList.add("error");
-                    //console.error(element,err.message);
-                    console.debug("unable to fetch resource: ",
-                        ":"+element.getAttribute("port")+element.getAttribute("resource"),
-                        "\n",
-                        err.message,
-                        element
-                    );
-                })
+                    innerVal = numberLabel.toFixed(numberOfDecimalPLaces) + " " + element.getAttribute("unit")
+                }
                 
+                
+                if(element.getAttribute("to-placeholder") != undefined){
+                    element.placeholder = innerVal
+                }else{
+                    element.innerHTML = innerVal
+                }
+                element.classList.remove("error");
+            })
+            .catch(err => {
+                if(element.getAttribute("to-placeholder") != undefined){
+                    element.placeholder = "Null"
+                }else{
+                    element.innerHTML = "Null"
+                }
+                element.classList.add("error");
+                //console.error(element,err.message);
+                console.debug("unable to fetch resource: ",
+                    ":"+element.getAttribute("port")+element.getAttribute("resource"),
+                    "\n",
+                    err.message,
+                    element
+                );
+            })
+            
+                    
         }
     }
     
