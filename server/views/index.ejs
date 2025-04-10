@@ -257,6 +257,7 @@ var currNumOfCharts = 0;
                 contentPanelsList[whereTo].classList.add("active");
                 currContext.id = contentPanels[whereTo].id
                 currContext.el = contentPanels[whereTo]
+                apiUpdateWorkerUpdate(contentPanels[whereTo]);
 
                 console.debug("CONTEXT CHANGED: ",currContext)
             }   
