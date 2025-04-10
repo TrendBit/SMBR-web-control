@@ -15,9 +15,9 @@ var apiUpdateWorkerUpdate;
     };
 var updateIndex = 0;
 async function updateSite(root){
-    if(root == document && currContext.el != null){
-        root = currContext.el
-    }
+    //if(root == document && currContext.el != null){
+    //    root = currContext.el
+    //}
     const apiFetchers = root.getElementsByClassName('api-fetcher');
     
     for (let i = 0; i < apiFetchers.length; i++) {

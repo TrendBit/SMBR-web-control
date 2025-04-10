@@ -16,7 +16,7 @@
 
 
                 
-                <button class="reset_button button1 hoverSpin" onclick="getHandlerObj(this,'SpectrometerHandler').update()">
+                <button class="reset_button button1 hoverSpin" onclick="apiUpdateWorkerUpdate(this.parentElement.parentElement.parentElement);getHandlerObj(this,'SpectrometerHandler').update();">
                     <img src="<%= getIcon("refresh") %>" alt="refresh" title="refresh">
                 </button>
         </div>
