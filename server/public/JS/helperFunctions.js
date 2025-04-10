@@ -303,36 +303,6 @@ function slider2TextInputHandler(element,data){
 }
 
 
-function slider1Set(element, value){
-    if(element.classList.contains("slider")){ //it was called on slider
-        element.value = value;
-        const valueLabel = element.parentElement.parentElement.getElementsByClassName("slider-value")[0];
-        const valueModifier = valueLabel.getAttribute("value-modifier");
-        
-        var numberLabel = 0;
-        if(valueModifier!=undefined){
-            numberLabel = Number(element.value)*valueModifier;
-        }else{
-            numberLabel =Number(element.value);
-        }
-        var numberOfDecimalPLaces = valueLabel.getAttribute("decimal-places");
-        if(numberOfDecimalPLaces==undefined){
-            numberOfDecimalPLaces = 0;
-        }
-        valueLabel.innerHTML = numberLabel.toFixed(numberOfDecimalPLaces) + element.getAttribute("unit") ;
-        chromeFix_Slider(element);
-    }else{ //it was probably called on container
-        slider1Set(element.getElementsByClassName("slider")[0],value);
-    }    
-}
-
-function slider1Handler(element, data){
-    slider1Set(element,element.value);
-
-    sendSliderData(element,data);
-}
-
-
 //should be called on the sender of a button2 (the other one will be used as input data)
 async function button2Handler(element,placeholderReset=false){
     const currSide = element.classList.contains("left")

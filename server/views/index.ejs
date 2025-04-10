@@ -28,20 +28,7 @@ var currNumOfCharts = 0;
         return result;
     }
 
-    function initHandlers(){
-        const allHandlers = document.getElementsByClassName("handler");
-        for (let i = 0; i < allHandlers.length; i++) {
-            const element = allHandlers[i];
-            const handlerID = element.getAttribute("handler-id")
-            element.handler = new handlers[handlerID](element);
-
-            try {
-                //element.handler = new handlers[handlerID]();
-            } catch (error) {
-                console.error("UNABLE TO INIT HANDLER "+handlerID+" \n",error.message,element)
-            }
-        }
-    }
+    
 
     const onloadQueue = [];
     function executeOnloadQueue(){
@@ -53,8 +40,6 @@ var currNumOfCharts = 0;
     var handlers={} //global variable containing all handler classes
 
     onloadQueue.push(()=>{
-
-        initHandlers()
         
         const sliders2 = document.getElementsByClassName("slider2");
         for (let i = 0; i < sliders2.length; i++) {
@@ -85,42 +70,12 @@ var currNumOfCharts = 0;
                 }
             },50*i)
         }
-
-        const sliders1 = document.getElementsByClassName("slider1");
-        for (let i = 0; i < sliders1.length; i++) {
-            const element = sliders1[i].getElementsByClassName("slider")[0];
-            setTimeout(() => {
-                if(element.getAttribute("resource")!=undefined){
-                    fetchDataAsJson(":"+element.getAttribute("port")+element.getAttribute("resource"))
-                    .then(response => {
-                        slider1Set(element, response[element.getAttribute("component")]);
-                        console.warn("SETTING SLIDER TO",response[element.getAttribute("component")],"FROM ",":"+element.getAttribute("port")+element.getAttribute("resource"),element);
-
-                    })
-                    .catch(err => {
-                        slider1Set(element, element.getAttribute("min")+((element.getAttribute("max")-element.getAttribute("min"))/2));
-                        console.debug(
-                            "unable to fetch resource: ",
-                            ":"+element.getAttribute("port")+element.getAttribute("resource"), 
-                            "\n", 
-                            err.message , 
-                            element
-                        );
-                        //console.error(element,"\n",error.message);
-                    })
-                }else{
-                    if(element.getAttribute("default")!=undefined){
-                        slider1Set(element,element.getAttribute("default"));
-                    }
-                }
-            },50*i)
-        }
-
-
     });
 
 </script>
 <script src="JS/helperFunctions.js"></script>
+<script src="JS/handlers.js"></script>
+
 
 <!DOCTYPE html>
 <html lang="en">
