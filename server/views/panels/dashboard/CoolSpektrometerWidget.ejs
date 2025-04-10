@@ -104,37 +104,31 @@
                 console.log("UPDATING SpectrometerHandler")
 
                 
-
-                var response;
-                try {
-                    var responseRaw = await sendData(":8089/sensor/spectrophotometer/measure_all","{}");
-                    if(responseRaw.status == 200){
-                        response = await responseRaw.json();
-                    }else{
-                        throw Error("Server returned response code: "+responseRaw.status)
-                    }
-                } catch (error) {
-                    console.error("SpectrometerHandler: cannot fetch new spectrometer data: \n",error)
-                    for (let i = 0; i < this.relative_dataFields.length; i++) {
+                for (let i = 0; i < this.relative_dataFields.length; i++) {
+                    var response;
+                    try {
+                        var responseRaw = await sendData(":8089/sensor/spectrophotometer/measure/"+i,"");
+                        if(responseRaw.status == 200){
+                            response=await responseRaw.json();
+                        }else{
+                            throw Error("Server returned response code: "+responseRaw.status)
+                        }
+                    } catch (error) {
+                        console.error("SpectrometerHandler: cannot fetch new spectrometer data: \n",error)
                         this.relative_dataFields[i].innerHTML = "Null";                   
                         this.relative_dataFields[i].classList.add("error");
-                    }
-                    for (let i = 0; i < this.absolute_dataFields.length; i++) {
                         this.absolute_dataFields[i].innerHTML = "Null";                   
                         this.absolute_dataFields[i].classList.add("error");
+                        continue;
                     }
-                    return
-                }
 
-                for (let i = 0; i < response.measurements.length; i++) {
-                    const element = response.measurements[i];
-                    this.relative_dataFields[element.channel].innerHTML = Number(element.relative_value*100).toFixed(1) + " %";
+                    this.relative_dataFields[response.channel].innerHTML = Number(response.relative_value*100).toFixed(1) + " %";
                     this.relative_dataFields[i].classList.remove("error");
-                    if(element.absolute_value != undefined){
-                        this.absolute_dataFields[element.channel].innerHTML = element.absolute_value + " lm";    
+                    if(response.absolute_value != undefined){
+                        this.absolute_dataFields[response.channel].innerHTML = response.absolute_value + " lm";    
                         this.absolute_dataFields[i].classList.remove("error");
                     }else{
-                        this.absolute_dataFields[element.channel].innerHTML = "---"
+                        this.absolute_dataFields[response.channel].innerHTML = "---"
                     }
                 }
 
