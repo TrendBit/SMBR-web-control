@@ -8,8 +8,9 @@ var apiUpdateWorkerUpdate;
     onloadQueue.push( () => updateSite(document));
     
     apiUpdateWorkerUpdate = async (element) => {
+        console.debug("apiUpdateWorker: updating ", element);
         element.disabled = true;
-        await updateSite(element.parentNode.parentNode.parentNode);
+        await updateSite(element);
         element.disabled = false;
     };
 var updateIndex = 0;
@@ -19,13 +20,11 @@ async function updateSite(root){
     }
     const apiFetchers = root.getElementsByClassName('api-fetcher');
     
-    if(currContext.id == 0){
-        for (let i = 0; i < apiFetchers.length; i++) {
-            const element = apiFetchers[i];
-            if(element.getAttribute("update-cost")!=undefined){
-                if(updateIndex%element.getAttribute("update-cost") != 0){
-                    continue;
-                }
+    for (let i = 0; i < apiFetchers.length; i++) {
+        const element = apiFetchers[i];
+        if(element.getAttribute("update-cost")!=undefined){
+            if(updateIndex%element.getAttribute("update-cost") != 0){
+                continue;
             }
             if(element.classList.contains("handler")!=""){
                 try {
@@ -75,8 +74,6 @@ async function updateSite(root){
                     );
                 })
                 
-                       
-            }
         }
     }
     
