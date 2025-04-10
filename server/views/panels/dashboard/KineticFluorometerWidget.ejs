@@ -364,8 +364,6 @@
 
             loadData(data){
                 this.currentData = data;
-                this.enableChart();
-                this.chart.obj.resetZoom();
                 this.info.current.element.innerHTML = "";
                 for(var field in data){
                     if(field != "samples"){
@@ -383,9 +381,12 @@
                 const absolute_values = samples.map(sample => sample.absolute_value);
 
                 this.chart.obj.data.labels = timestamps;
-                this.chart.obj.options.plugins.zoom.limits.x.max = timestamps[timestamps.length-1];
+                this.chart.obj.options.plugins.zoom.limits.x.max = data.length_ms*1000;
                 this.chart.obj.options.plugins.zoom.limits.x.min = timestamps[0];
                 
+                
+                
+
                 this.chart.obj.data.datasets[0].data = absolute_values.map(function (value, index) {
                     return {x:timestamps[index], y:value}
                 });
@@ -397,6 +398,10 @@
                 });
                 console.warn("done: ",this.chart.obj.data);
 
+                this.chart.obj.resetZoom();
+                this.chart.obj.options.scales.x.max=data.length_ms*1000;
+                this.chart.obj.options.scales.x.min=timestamps[0];
+                this.enableChart();
 
                 /*
                 //this part merges the timestamps of current and previous capture
@@ -498,6 +503,8 @@
                 }
                 var data;
                 try {
+                    var ready = await fetchDataAsJson(":8089/sensor/fluorometer/ojip/completed");
+                    if(!ready.capture_complete) return;
                     data = await fetchDataAsJson(":" + this.chart.element.getAttribute("port") + this.chart.element.getAttribute("resource"));
                 } catch (error) {
                     this.disableChart();
