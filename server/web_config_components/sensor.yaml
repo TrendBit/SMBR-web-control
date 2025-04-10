@@ -44,6 +44,9 @@ DashboardPanel:
             resource: "/control/heater/target_temperature"
             component: "temperature"
 
+        inputReset:
+          port: 8089
+          resource: "/control/heater/turn_off"
 
         sub_rows:
           - name: "Top"

@@ -30,6 +30,7 @@
                 <th>name</th>
                 <th>current</th>
                 <th>target</th>
+                <th>reset</th>
             </tr>
         </thead>
         <tbody id="Temperature-Widget-Table">
@@ -43,9 +44,6 @@
 
                     <td class="table-name">
                         <%= element.name %>
-                        <% if(element.sub_rows) { %> 
-                            <span class="collapse button1">v</span> 
-                        <% } %>
                     </td>
 
                     <td class="table-dataField api-fetcher"
@@ -63,8 +61,8 @@
                             <div class="button2container">
                                 <input 
                                     type='text' 
-                                    onblur="enforceMin(this)" 
-                                    onkeyup="enforceMax(this)" 
+                                    onblur="enforceMin(this);" 
+                                    onkeyup="enforceMax(this);" 
                                     class="button2 left api-fetcher" 
                                     min="<%= element.input.min %>" 
                                     max="<%= element.input.max %>" 
@@ -81,7 +79,7 @@
                                 
                                 <input 
                                     type="button" 
-                                    onclick="button2Handler(this,placeholderReset=true)" 
+                                    onclick="button2Handler(this,placeholderReset=true);" 
                                     class="button2 right" 
                                     value=">"
                                     port="<% if(element.input.port){%><%=element.input.port%><%}else{%><%="8089"%><%} %>"
@@ -92,6 +90,17 @@
                                     component-type="<%= element.input.componentType%>"
                                 >
                             </div>
+                        <% } %>
+                    </td>
+                    <td class="table-resettarget">
+                        <% if(element.inputReset) {%> 
+                            <button 
+                                class="button1"
+                                port="<% if(element.inputReset.port){%><%=element.inputReset.port%><%}else{%><%="8089"%><%} %>"
+                                resource="<%= element.inputReset.resource %>" 
+                                onclick="button1Handler(this)"
+                            >reset
+                            </button>
                         <% } %>
                     </td>
                 </tr>
@@ -181,6 +190,8 @@
     </div>
     
     <script>
+
+
         async function TemperatureWidgetChart_Reload(radioButton){
             const chart = document.getElementById("Temperature-Widget-Chart");
             const chartIndex = chart.getAttribute("chartIndex");

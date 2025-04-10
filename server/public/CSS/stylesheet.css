@@ -373,6 +373,12 @@ body {
         }
       }
 
+      td.table-resettarget{
+        >button{
+          padding: 0px 5px;
+        }
+      }
+
       span.collapse {
         float: right;
         cursor: pointer;
@@ -658,6 +664,18 @@ padding: 5px;
     margin: 0;
     min-width: min-content;
     /*! color: var(--bg-color-5); */
+  }
+  .slider-button{
+    border:none;
+    border-radius: 0px;
+    height:50px;
+    width: min-content;
+    padding: 5px;
+    border-left: var(--bg-color-4) solid 1px;
+    >*{
+      writing-mode: vertical-lr;
+      rotate: -180deg;
+    }
   }
 
   >* {
