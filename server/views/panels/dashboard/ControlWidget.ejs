@@ -23,7 +23,7 @@
     </div>
     <div id="Control-Widget-sliders">
     <%i = 0; DashboardPanel.ControlWidget.sliders.forEach(element => { %>
-        <div class="slider1 widget">
+        <div class="slider1 widget handler api-fetcher" handler-id="Slider1Handler">
             <div class="slider-labels">
                 <h3 class="slider-name"><%= element.name %></h3>
                 <p class="slider-value" decimal-places="<%= element.decimalPlaces %>">unknown</p>
@@ -44,9 +44,20 @@
                     port="<%= element.port %>" 
                     component="<%= element.component %>" 
                     resource="<%= element.resource %>" 
-                    oninput="slider1Handler(this,{'<%= element.component %>':Number(this.value)});"
+                    oninput="getHandlerObj(this,'Slider1Handler').userInput({'<%= element.component %>':Number(this.value)});"
+                    onmouseup="getHandlerObj(this,'Slider1Handler').userInput({'<%= element.component %>':Number(this.value)},true);"
+                    ontouchend="getHandlerObj(this,'Slider1Handler').userInput({'<%= element.component %>':Number(this.value)},true);"
                 >
             </div>
+            <% if(element.button){%>
+                <button class="slider-button button1"
+                port="<%= element.button.port %>" 
+                component="<%= element.button.component %>" 
+                resource="<%= element.button.resource %>" 
+                onclick="getHandlerObj(this,'Slider1Handler').buttonGet();">
+                <p><%= element.button.label %></p>
+                </button>
+            <% }%>
         </div>
     <% }); %> 
     </div>
