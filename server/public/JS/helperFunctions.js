@@ -321,7 +321,7 @@ async function button2Handler(element,placeholderReset=false){
         value = Number(value);
         console.debug("button2Handler sending number")
     }else{
-        console.debug("button2Handler ¨not sending number",element.getAttribute("component-type"),element)
+        console.debug("button2Handler not sending number",element.getAttribute("component-type"),element)
     }
 
     data[element.getAttribute("component")] = value
@@ -342,6 +342,7 @@ async function button2Handler(element,placeholderReset=false){
         dataElement.value = "NetErr"
         return
     }
+}
 
 
 }
