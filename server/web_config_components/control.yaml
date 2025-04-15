@@ -93,5 +93,3 @@ DashboardPanel:
         port: 8089
         component: "intensity"
         resource: "/control/heater/intensity"
-  KineticFluorometerWidget:
-    header: 
