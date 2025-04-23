@@ -6,7 +6,8 @@ const { networkInterfaces } = require('os');
 var loadedModules = [
     {
         module_type: "debug",
-        uid: "0x00000000000000000"
+        uid: "0x00000000000000000",
+        instance: "Virtual"
     }
 ];
 var assembledConfig = {};
@@ -131,6 +132,8 @@ async function reloadModules(){
     
             if(change){
                 console.warn("changes in configuration detected");
+                
+
                 buildWebConfig();
             }
         }
@@ -143,7 +146,7 @@ async function reloadModules(){
         fs.writeFileSync("errorDump.log",JSON.stringify(error));
     }
     
-    
+        
 }
 
 
@@ -201,9 +204,33 @@ first, it creates a json object that contains the configs for module list, based
 then it adds all of the config components and replaces the inner attribues with their respective module identifier
 */
 function buildWebConfig(){
+    loadedModules.sort( (a,b) => {
+        var enumaratedType={
+            "undefined"      : 0,
+            "all"            : 1,
+            "any"            : 2,
+            "test"    : 3,
+            "core"    : 4,
+            "control" : 5,
+            "sensor"  : 6
+        }
+
+        var aVal=enumaratedType[a.module_type]
+        if(aVal==undefined){
+            aVal=-1;
+        }
+        var bVal=enumaratedType[b.module_type]
+        if(bVal==undefined){
+            bVal=-1;
+        }
+
+        return aVal-bVal;
+    });
     console.log("\nbuilding a new web config file...\n"+
         "loaded modules: \n"
         +yaml.dump(loadedModules));
+
+
 
     var moduleConfig = {
         "DevicePanel":{
