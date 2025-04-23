@@ -1,6 +1,11 @@
 # Changelog SMBR Web Control
 This version number is trying to stick to the __MAJOR__.__MINOR__ identifiers but there are some exceptions (marked with a prefix # in the MINOR part).
 
+# 0.1.9
+- modules cannot be loaded multiple times
+- modules allways get listed in the same order
+- lowered number of reconnect tries while not connected to API to 10
+
 # 0.1.8
 - sliders now update in realtime (can be buggy)
 - added refresh buttons to most widgets
