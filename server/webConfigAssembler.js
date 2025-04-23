@@ -107,11 +107,11 @@ module.exports = {
 var unsuccessfullReloads = 0;
 async function reloadModules(){
     if(!localIP){
-        if(unsuccessfullReloads++ >= 20){
+        if(unsuccessfullReloads++ >= 10){
             unsuccessfullReloads = 0;
             initialize();
         }else{
-            console.warn("unsuccessfullReloads: ",unsuccessfullReloads,"/20");
+            console.warn("unsuccessfullReloads: ",unsuccessfullReloads,"/10");
         }
         return 
     }
