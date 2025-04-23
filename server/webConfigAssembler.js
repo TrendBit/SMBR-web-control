@@ -240,7 +240,7 @@ function buildWebConfig(){
     };
 
     assembledConfig = {};
-
+    var loadedModuleTypes={};
     loadedModules.forEach(element => {
         moduleConfig.DevicePanel.modules.push({
             name: element.module_type,
@@ -273,43 +273,44 @@ function buildWebConfig(){
                 }
             ]
         });
-
-
-        
-        switch (element.module_type) {
-            //prepared for future modules with different prerequisites
-            case "debug":
-            case "sensor":
-            case "core":
-            case "control":
-                var configComponent = "";
-                var loaded = false;
-                try {
-                    console.log("loading \"web_config_components/"+element.module_type+".yaml\"");
-                    const configComponentUnfinished = fs.readFileSync("web_config_components/"+element.module_type+".yaml", 'utf8')
-                                                        .replace("{{module}}",element.uid);
-                    
-                    configComponent = yaml.load(configComponentUnfinished);
-                    loaded = true;
-                } catch (error) {
-                    if(assembledConfig.Errors == undefined){
-                        assembledConfig.Errors = [];
+        if(loadedModuleTypes[element.module_type] == undefined){
+            loadedModuleTypes[element.module_type]="loaded";
+            switch (element.module_type) {
+                //prepared for future modules with different prerequisites
+                case "debug":
+                case "sensor":
+                case "core":
+                case "control":
+                    var configComponent = "";
+                    var loaded = false;
+                    try {
+                        console.log("loading \"web_config_components/"+element.module_type+".yaml\"");
+                        const configComponentUnfinished = fs.readFileSync("web_config_components/"+element.module_type+".yaml", 'utf8');
+    
+                        configComponent = yaml.load(configComponentUnfinished);
+                        loaded = true;
+                    } catch (error) {
+                        if(assembledConfig.Errors == undefined){
+                            assembledConfig.Errors = [];
+                        }
+                        assembledConfig.Errors.push({
+                            description:"unable to load \"web_config_components/"+element.module_type+".yaml\""
+                        });
+                        
+                        console.error("unable to load \"web_config_components/"+element.module_type+".yaml\", skipping...")
                     }
-                    assembledConfig.Errors.push({
-                        description:"unable to load \"web_config_components/"+element.module_type+".yaml\""
-                    });
-                    
-                    console.error("unable to load \"web_config_components/"+element.module_type+".yaml\", skipping...")
-                }
-                if(loaded){
-                    deepMerge(configComponent, assembledConfig);
-                }
-                                   
-                break;
-            
-            default:
-                console.error("unknown module, cannot find \"web_config_components/"+element.module_type+".yaml\"")
-                break;
+                    if(loaded){
+                        deepMerge(configComponent, assembledConfig);
+                    }
+                                       
+                    break;
+                
+                default:
+                    console.error("unknown module, cannot find \"web_config_components/"+element.module_type+".yaml\"")
+                    break;
+            }
+        }else{
+            console.log("skipping \"web_config_components/"+element.module_type+".yaml\"");
         }
     });
 
