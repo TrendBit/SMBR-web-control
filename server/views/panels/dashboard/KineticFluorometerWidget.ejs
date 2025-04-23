@@ -14,6 +14,9 @@
                     ></p>
                 </div>
                 <% }); %>
+                <button class="button1 calibrateButton" onclick="getHandlerObj(this,'FluoroMeterHandler').calibrate(this)">
+                    <p>calibrate</p>
+                </button>
                 <button class="button1 exportButton" onclick="getHandlerObj(this,'FluoroMeterHandler').exportGraphAsImage()" disabled="true">
                     <img src="<%= getIcon("dot") %>" alt="export graph" title="export graph">
                 </button>
@@ -525,6 +528,17 @@
                 if(element!=undefined){
                     element.disabled = false;
                 }
+            }
+
+            async calibrate(element){
+                if(element!=undefined){
+                    element.disabled = true;
+                    setTimeout(() => {
+                        element.disabled = false;
+                    },500);
+                }
+                await sendData(":8089/sensor/fluorometer/calibrate","{}");
+                element.disabled = false;
             }
 
             async startNewTest(){
