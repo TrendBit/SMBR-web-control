@@ -210,8 +210,6 @@ app.get('/services-status',async (req,res) => {
     
     const services = [
         "telegraf.service",
-        "reactor-can-watch.service",
-        "reactor-script-api.service",
         "reactor-api-server.service",
         "reactor-core-module.service",
         "avahi-daemon.service",
@@ -501,6 +499,7 @@ app.get('/test-get', (req, res) => {
 
 app.post('/test-post',(req, res) => {
     console.log(req);
+    res.status(200).send("{}");
 });
 
 

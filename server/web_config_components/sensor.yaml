@@ -44,6 +44,9 @@ DashboardPanel:
             resource: "/control/heater/target_temperature"
             component: "temperature"
 
+        inputReset:
+          port: 8089
+          resource: "/control/heater/turn_off"
 
         sub_rows:
           - name: "Top"
@@ -59,6 +62,74 @@ DashboardPanel:
             component: "temperature"
             charted: false
             decimalPlaces: 2
+      - name: "Heater plate"
+        icon: "dot"
+        port: 8089
+        resource: "/control/heater/plate_temperature"
+        component: "temperature"
+        decimalPlaces: 2
+        charted: false
+      - name: "Fluorometer"
+        icon: "dot"
+        port: 8089
+        charted: false
 
+        sub_rows:
+          - name: "Detector"
+            port: 8089
+            resource: "/sensor/fluorometer/detector/temperature"
+            component: "temperature"
+            charted: false
+            decimalPlaces: 2
+          - name: "Emitor"
+            port: 8089
+            resource: "/sensor/fluorometer/emitor/temperature"
+            component: "temperature"
+            charted: false
+            decimalPlaces: 2
+
+      - name: "Spectrofotometer"
+        port: 8089
+        icon: "dot"
+        resource: "/sensor/spectrophotometer/emitor_temperature"
+        component: "temperature"
+        charted: false
+        decimalPlaces: 2
+
+      - name: "Led panel"
+        port: 8089
+        icon: "dot"
+        resource: "/control/led_panel/temperature"
+        component: "temperature"
+        charted: false
+        decimalPlaces: 2
+  
     chart:
       history: 30
+  CoolSpektrometerWidget:
+    rows:
+      - name: "UV"
+        frequency: "430 nm"
+        color: "#6F00FF"
+      - name: "Blue"
+        frequency: "480 nm"
+        color: "#007FFF"
+      - name: "Green"
+        frequency: "560 nm"
+        color: "#00FF00"
+      - name: "Orange"
+        frequency: "630 nm"
+        color: "#FF7F00"
+      - name: "Red"
+        frequency: "678 nm"
+        color: "#FF0000"
+      - name: "IR"
+        frequency: "870 nm"
+        color: "#800000"
+  KineticFluorometerWidget:
+    chart:
+      resource: "/sensor/fluorometer/ojip/read_last"
+      port: "8089"
+    newTest:
+      resource: "/sensor/fluorometer/ojip/capture"
+      port: "8089"

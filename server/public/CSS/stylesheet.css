@@ -82,6 +82,19 @@ input[type=number] {
 }
 
 /*global class rules*/
+.loadingBarBackground{
+  background: linear-gradient(90deg, var(--acc-color-2) 50%, transparent 50%);
+  background-size: 300% 100%;
+  background-position: 80% 50%;
+}
+@keyframes loadingBarBackground {
+  0% {
+  	background-position: 75% 50%;
+  }
+  100% {
+  	background-position: 25% 50%;
+  }
+}
 
 *.bold{
   font-weight: bold !important;
@@ -360,6 +373,12 @@ body {
         }
       }
 
+      td.table-resettarget{
+        >button{
+          padding: 0px 5px;
+        }
+      }
+
       span.collapse {
         float: right;
         cursor: pointer;
@@ -374,7 +393,8 @@ body {
 }
 
 .api-fetcher.error,
-.module-api-fetcher.error {
+.module-api-fetcher.error,
+.api-data.error{
   color: red;
   font-weight: bold;
   transition: color 0.5s ease-in-out, font-weight 0.5s ease-in-out;
@@ -513,10 +533,15 @@ body {
 
     >h1 {
 
-      width: auto;
-      margin: auto 0;
-      padding: 5px;
-    }
+width: auto;
+
+margin: auto 0;
+
+white-space: preserve nowrap;
+
+padding: 5px;
+
+}
 
     >div.top {
       opacity: 0;
@@ -640,6 +665,18 @@ body {
     min-width: min-content;
     /*! color: var(--bg-color-5); */
   }
+  .slider-button{
+    border:none;
+    border-radius: 0px;
+    height:50px;
+    width: min-content;
+    padding: 5px;
+    border-left: var(--bg-color-4) solid 1px;
+    >*{
+      writing-mode: vertical-lr;
+      rotate: -180deg;
+    }
+  }
 
   >* {
     width: 100%;
@@ -663,7 +700,11 @@ body {
   
   
   
-  
+  canvas.inactive-chart{
+    pointer-events: none;
+    filter: grayscale(1);
+    opacity: 0.5;
+  }
   
   
 
@@ -914,14 +955,14 @@ body {
         }
       }
 
-      #KineticFluorometer-controlPanel {
+      .KineticFluorometer-controlPanel {
         display: flex;
         justify-content: space-between;
         gap: 7px;
         border-style: none;
         border-top-style: solid;
         
-        #KineticFluorometer-testInfo {
+        .KineticFluorometer-testInfo {
           padding: 0;
           width: 50%;
           height: 100%;
@@ -987,7 +1028,7 @@ body {
         }
         
 
-        #KineticFluorometer-Widget-NewTest {
+        .KineticFluorometer-Widget-NewTest {
           padding: 0;
           width: 50%;
           height: 100%;
@@ -1027,6 +1068,7 @@ body {
             border-left-color: transparent;
             border-right-color: transparent;
             border-radius: 0;
+            position: relative;
           }
           box-sizing: border-box;
         }

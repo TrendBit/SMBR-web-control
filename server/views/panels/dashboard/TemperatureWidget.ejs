@@ -13,7 +13,7 @@
                     ></p>
                 </div>
             <% }); %>
-            <button class="reset_button button1 hoverSpin" onclick="apiUpdateWorkerUpdate(this)">
+            <button class="reset_button button1 hoverSpin" onclick="apiUpdateWorkerUpdate(this.parentNode.parentNode.parentNode)">
                 <img src="<%= getIcon("refresh") %>" alt="refresh" title="refresh">
             </button>
         </div>
@@ -30,6 +30,7 @@
                 <th>name</th>
                 <th>current</th>
                 <th>target</th>
+                <th>reset</th>
             </tr>
         </thead>
         <tbody id="Temperature-Widget-Table">
@@ -43,9 +44,6 @@
 
                     <td class="table-name">
                         <%= element.name %>
-                        <% if(element.sub_rows) { %> 
-                            <span class="collapse button1">v</span> 
-                        <% } %>
                     </td>
 
                     <td class="table-dataField api-fetcher"
@@ -63,8 +61,8 @@
                             <div class="button2container">
                                 <input 
                                     type='text' 
-                                    onblur="enforceMin(this)" 
-                                    onkeyup="enforceMax(this)" 
+                                    onblur="enforceMin(this);" 
+                                    onkeyup="enforceMax(this);" 
                                     class="button2 left api-fetcher" 
                                     min="<%= element.input.min %>" 
                                     max="<%= element.input.max %>" 
@@ -81,7 +79,7 @@
                                 
                                 <input 
                                     type="button" 
-                                    onclick="button2Handler(this,placeholderReset=true)" 
+                                    onclick="button2Handler(this,placeholderReset=true);" 
                                     class="button2 right" 
                                     value=">"
                                     port="<% if(element.input.port){%><%=element.input.port%><%}else{%><%="8089"%><%} %>"
@@ -92,6 +90,17 @@
                                     component-type="<%= element.input.componentType%>"
                                 >
                             </div>
+                        <% } %>
+                    </td>
+                    <td class="table-resettarget">
+                        <% if(element.inputReset) {%> 
+                            <button 
+                                class="button1"
+                                port="<% if(element.inputReset.port){%><%=element.inputReset.port%><%}else{%><%="8089"%><%} %>"
+                                resource="<%= element.inputReset.resource %>" 
+                                onclick="button1Handler(this)"
+                            >reset
+                            </button>
                         <% } %>
                     </td>
                 </tr>
@@ -112,9 +121,9 @@
                             unit="<% if(sub_element.unit){%><%=sub_element.unit%><%}else{%><%="°C"%><%} %>" 
                             resource="<%= sub_element.resource %>" 
                             component="<%= sub_element.component %>"
-                            charted="<% if(element.charted){%><%=element.charted%><%}else{%><%="false"%><%} %>" 
-                            parent="<%=element.name%>"
-                            decimal-places="<%= element.decimalPlaces %>"
+                            charted="<% if(sub_element.charted){%><%=sub_element.charted%><%}else{%><%="false"%><%} %>" 
+                            parent="<%=sub_element.name%>"
+                            decimal-places="<%= sub_element.decimalPlaces %>"
                         >
                         </td>
                         
@@ -181,14 +190,15 @@
     </div>
     
     <script>
+
+
         async function TemperatureWidgetChart_Reload(radioButton){
             const chart = document.getElementById("Temperature-Widget-Chart");
             const chartIndex = chart.getAttribute("chartIndex");
-            const url = "http://" + window.location.hostname;
             const currRadio = radioButton.value;
             TemperatureWidgetChart_CurrentRadioButton = currRadio;
             
-            const newData = await fetchDataAsJson(url+":80/temperature-graph",{"logging-level":currRadio})
+            const newData = await fetchDataAsJson(":80/temperature-graph",{"logging-level":currRadio})
 
             const chartObj = chartArray[chartIndex];
             
@@ -239,11 +249,10 @@
         setInterval(async () => { //updater
             const chart = document.getElementById("Temperature-Widget-Chart");
             const chartIndex = chart.getAttribute("chartIndex");
-            const url = "http://" + window.location.hostname;
             const currRadio = TemperatureWidgetChart_CurrentRadioButton;
             const chartObj = chartArray[chartIndex];
             //console.warn("getting lastReload:",TemperatureWidgetChart_LastReload,"logging level:",currRadio)
-            const newData = await fetchDataAsJson(url+":80/temperature-graph-recent",{
+            const newData = await fetchDataAsJson(":80/temperature-graph-recent",{
                 "logging-level":currRadio,
                 "last-reload":TemperatureWidgetChart_LastReload+10
             });

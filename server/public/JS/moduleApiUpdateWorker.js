@@ -16,14 +16,13 @@ var currSetStatus = "";
 
 async function updateSite(skipConextCheck, refresh){
     const apiFetchers = document.getElementsByClassName('module-api-fetcher');
-    const url = "http://" + window.location.hostname;
 
     var newModules = {};
     try {
         if(refresh){
-            newModules = await fetchDataAsJson(url+"/module-list-refresh");
+            newModules = await fetchDataAsJson("/module-list-refresh");
         }else{
-            newModules = await fetchDataAsJson(url+"/module-list");
+            newModules = await fetchDataAsJson("/module-list");
         }
         
     } catch (error) {
@@ -74,7 +73,7 @@ async function updateSite(skipConextCheck, refresh){
             if (element.getAttribute("resource")!="") {
                 const port = (element.getAttribute("port"))?element.getAttribute("port"):"8089";
 
-                fetchDataAsJson(url+":"+port+element.getAttribute("resource"))
+                fetchDataAsJson(":"+port+element.getAttribute("resource"))
                 .then(response => {
                     var component = "";
                     if(element.getAttribute("component") != ""){
@@ -100,7 +99,13 @@ async function updateSite(skipConextCheck, refresh){
                 .catch(err => {
                     element.innerHTML = "Null";
                     element.classList.add("error");
-                    console.error(element, err.message);
+                    //console.error(element, err.message);
+                    console.debug("unable to fetch resource: ",
+                        ":"+element.getAttribute("port")+element.getAttribute("resource"),
+                        "\n",
+                        err.message,
+                        element
+                    );
                 })
                 
             }

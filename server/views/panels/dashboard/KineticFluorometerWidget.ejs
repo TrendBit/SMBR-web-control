@@ -1,8 +1,9 @@
-<div id="KineticFluorometer-Widget" class="widget">
+<div id="KineticFluorometer-Widget" class="widget handler api-fetcher" update-cost="15" handler-id="FluoroMeterHandler">
     <div class="header">
         <h1>Kinetic fluorometer</h1>
         <div class="right">
             <% if(DashboardPanel.KineticFluorometerWidget.header) DashboardPanel.KineticFluorometerWidget.header.rows.forEach(element => { %>
+                
                 <div>
                     <p><%= element.name %></p>
                     <p class="table-dataField api-fetcher"
@@ -13,10 +14,16 @@
                     ></p>
                 </div>
                 <% }); %>
-
-                <button class="reset_button button1 hoverSpin" onclick="fetchNewFluoroCurve(this)">
+                <button class="button1 exportButton" onclick="getHandlerObj(this,'FluoroMeterHandler').exportGraphAsImage()" disabled="true">
+                    <img src="<%= getIcon("dot") %>" alt="export graph" title="export graph">
+                </button>
+                <button class="button1 exportButton" onclick="getHandlerObj(this,'FluoroMeterHandler').exportDataToFile()" disabled="true">
+                    <img src="<%= getIcon("upload") %>" alt="export data" title="export data">
+                </button>
+                <button class="reset_button button1 hoverSpin" onclick="getHandlerObj(this,'FluoroMeterHandler').fetchData(this,true)">
                     <img src="<%= getIcon("refresh") %>" alt="refresh" title="refresh">
                 </button>
+                
         </div>
         <div class="top">
             <p>ERROR</p>
@@ -24,12 +31,18 @@
     </div>
     <div class="apiChart">
         <div>
-            <canvas id="KineticFluorometer-Widget-Chart" chartIndex="<%= currNumOfCharts++ %>"></canvas>
+            <canvas 
+            id="KineticFluorometer-Widget-Chart" 
+            class="KineticFluorometer-Widget-Chart inactive-chart" 
+            chartIndex="<%= currNumOfCharts++ %>"
+            resource="<%= DashboardPanel.KineticFluorometerWidget.chart.resource %>"
+            port="<%= DashboardPanel.KineticFluorometerWidget.chart.port %>"
+            ></canvas>
         </div>
         <p>use [shift] and scroll wheel to zoom </p>
     </div>
-    <div class="widget horizontal" id="KineticFluorometer-controlPanel">
-        <div id="KineticFluorometer-testInfo">
+    <div class="widget horizontal KineticFluorometer-controlPanel" >
+        <div class="KineticFluorometer-testInfo">
             <div class="widget tabs-container">
               <script>
                 function KineticFluorometer_changeTab(element){
@@ -47,11 +60,11 @@
                 }
               </script>
                 <div class="head">
-                  <button onclick="KineticFluorometer_changeTab(this)" tabindex="0" class="button1 active"><h2  >current</h2></button> 
-                  <button onclick="KineticFluorometer_changeTab(this)" tabindex="1"  class="button1" ><h2>previous</h2></button>
+                  <button onclick="//KineticFluorometer_changeTab(this)" tabindex="0" class="button1 active"><h2  >current</h2></button> 
+                  <!--<button onclick="KineticFluorometer_changeTab(this)" tabindex="1"  class="button1" ><h2>previous</h2></button>-->
                 </div>
                 <div class="bodies">
-                  <table>
+                  <table class="KineticFluorometer-testInfo-current">
                       <tbody>
                           <tr>
                               <td class="table-name">samples         </td>
@@ -75,7 +88,7 @@
                           </tr>
                       </tbody>
                   </table>
-                  <table style="display: none;">
+                  <table style="display: none;" class="KineticFluorometer-testInfo-previous">
                     <tbody>
                         <tr>
                             <td class="table-name">samples         </td>
@@ -102,19 +115,27 @@
                 </div>
             </div>
         </div>
-        <div class="widget" id="KineticFluorometer-Widget-NewTest">
+        <div class="widget KineticFluorometer-Widget-NewTest">
             <h2>New test</h2>
             <div>
                 <h3>Length</h3>
                 <div class="slider2">
                     <input class="slider" 
                     type="range" 
-                    min="1" 
-                    max="10" 
-                    step="1"
+                    min=0.1 
+                    max="4" 
+                    step="0.1"
+                    default="1" 
                     oninput="slider2Handler(this)">
                     <div class="button2container slider2-inputLabel">
-                        <input class="button2 left" type="number" min=1 max="10" placeholder="1-10" onblur="enforceMin(this)" onkeyup="enforceMax(this); slider2TextInputHandler(this)"> 
+                        <input class="button2 left KineticFluorometer-Widget-NewTest-length"  
+                                type="text" 
+                                min=0.1 
+                                max="4" 
+                                placeholder="0.1-4" 
+                                value="1"
+                                onblur="enforceMin(this)" 
+                                onkeyup="enforceMax(this); slider2TextInputHandler(this)"> 
                         <p     class="button2 right disabled" >s</p>
                     </div>
                 </div>
@@ -124,247 +145,442 @@
                 <div class="slider2">
                     <input class="slider" 
                     type="range" 
-                    min="10" 
-                    max="100" 
+                    min="20" 
+                    max="100"
+                    default="100" 
                     step="1"
                     oninput="slider2Handler(this)">
                     <div class="button2container slider2-inputLabel">
-                        <input class="button2 left" type="number" min=10 max="100" placeholder="10-100" onblur="enforceMin(this)" onkeyup="enforceMax(this); slider2TextInputHandler(this)"> 
+                        <input class="button2 left KineticFluorometer-Widget-NewTest-intensity"  
+                                type="text" 
+                                min=20 
+                                max="100" 
+                                placeholder="20-100" 
+                                value="100"
+                                onblur="enforceMin(this)" 
+                                onkeyup="enforceMax(this); slider2TextInputHandler(this)"> 
                         <p     class="button2 right disabled" >%</p>
                     </div>
                 </div>
             </div>
             <div> 
                 <h3>Gain</h3>
-                <div class="horflex">
+                <div class="horflex KineticFluorometer-NewTest-gain" >
                     <div class="radio1"> 
-                        <input id="KineticFluorometer-gain-1"  name="KineticFluorometer-gain" type="radio"> 
+                        <input  name="KineticFluorometer-NewTest-gain" type="radio" value="x1"> 
                         <label for="KineticFluorometer-gain-1" >1 </label>   
                     </div>
                     <div class="radio1"> 
-                        <input checked="checked" id="KineticFluorometer-gain-10" name="KineticFluorometer-gain" type="radio"> 
+                        <input checked="checked" name="KineticFluorometer-NewTest-gain" type="radio" value="x10"> 
                         <label for="KineticFluorometer-gain-10">10</label>  
                     </div>
                     <div class="radio1"> 
-                        <input id="KineticFluorometer-gain-50" name="KineticFluorometer-gain" type="radio"> 
+                        <input name="KineticFluorometer-NewTest-gain" type="radio" value="x50"> 
                         <label for="KineticFluorometer-gain-50">50</label>  
                     </div>                    
                 </div>
             </div>
     
-            <button class="button1"><p>Start a new test</p></button>
+            <button 
+            class="button1 loadingBarBackground KineticFluorometer-NewTest-startBtn" 
+            onclick="getHandlerObj(this,'FluoroMeterHandler').startNewTest()" 
+            resource="<%= DashboardPanel.KineticFluorometerWidget.newTest.resource %>"
+            port="<%= DashboardPanel.KineticFluorometerWidget.newTest.port %>"
+            >
+                <p>begin capture</p>
+            </button>
         </div>
     </div>
     
     <script>
-        async function fetchNewFluoroCurve(element){
-            if(element){
-                element.disabled = true;
-                setTimeout(() => {
-                    element.disabled = false;
-                },4000);
+
+        handlers["FluoroMeterHandler"] = class FluoroMeterHandler {
+            constructor(element) {
+                console.log("CREATING FluoroMeterHandler")
+                this.element = element;
+                this.chart = {
+                    obj:null,
+                    element:element.getElementsByClassName("KineticFluorometer-Widget-Chart")[0]
+                }
+
+                this.info = {
+                    element:element.getElementsByClassName("KineticFluorometer-testInfo")[0],
+                    current:{
+                        element:element.getElementsByClassName("KineticFluorometer-testInfo-current")[0].children[0]
+                    },
+                    previous:{
+                        element:element.getElementsByClassName("KineticFluorometer-testInfo-previous")[0].children[0]
+                    }
+                }
+
+                this.newTest= {
+                    length:element.getElementsByClassName("KineticFluorometer-Widget-NewTest-length")[0],
+                    intensity:element.getElementsByClassName("KineticFluorometer-Widget-NewTest-intensity")[0],
+                    gain:element.getElementsByClassName("KineticFluorometer-NewTest-gain")[0],
+                    startButton:element.getElementsByClassName("KineticFluorometer-NewTest-startBtn")[0]
+                }
+
+                this.currentDataID = 0;
+                this.currentData = {};
+                this.exportButtons = element.getElementsByClassName("exportButton");
+
+                this.initChart();
+                console.log(this);
+
             }
 
-            const chartElement = document.getElementById("KineticFluorometer-Widget-Chart")
-            const chartIndex = chartElement.getAttribute("chartIndex");
-            const chart = chartArray[chartIndex];
-            const url = "http://" + window.location.hostname;
-
-            const data = await fetchDataAsJson(url+":80/fluoro-curve");
-
-            console.warn("loading curve data: ",data);
-            
-            currTS = data.current.timestamps;
-            prevTS = data.previous.timestamps;
-            mergTS = [];
-            currHigh = currTS[0] > prevTS[0];
-            currI = 0;
-            prevI = 0;
-            last = -1;
-            
-
-            //merges two sorted arrays
-            for (let i = 0; i < currTS.length+prevTS.length; i++) {//max possible iterations is in an alternating pattern
-                if(currI==currTS.length){
-                    for (let i = prevI; i < prevTS.length; i++) {
-                        if(last != prevTS[i]){
-                            mergTS.push(prevTS[i]);
-                            last = prevTS[i];
-                        }
-                    }
-                    break;
-                }
-                if(prevI==prevTS.length){
-                    for (let i = currI; i < currTS.length; i++) {
-                        if(last != currTS[i]){
-                            mergTS.push(currTS[i]);
-                            last = currTS[i];
-                        }
-                    }
-                    break;
-                }
+            initChart(){
+                const chart = this.chart.element;
+                const chartIndex = chart.getAttribute("chartIndex");
                 
-                if(currHigh){
-                    if(currTS[currI] < prevTS[prevI]){
-                        mergTS.push(prevTS[prevI++]);
-                        
-                        currHigh = 0;
-                        continue;
-                    }
-                    if(currTS[currI] == prevTS[prevI]){
-                        prevI++;
-                    }
-                    mergTS.push(currTS[currI++]);
-                    continue;                  
-                }else{
-                    if(currTS[currI] > prevTS[prevI]){
-                        mergTS.push(currTS[currI++]);
-                        currHigh = 1;
-                        continue;
-                    }
-                    if(currTS[currI] == prevTS[prevI]){
-                        currI++;
-                    }
-                    mergTS.push(prevTS[prevI++]);
-                    continue;  
-                }         
-            }
-
-            console.warn("SORTED ARRAY",mergTS);
-
-
-
-            chart.data.labels = mergTS;
-            chart.options.plugins.zoom.limits.x.max = mergTS[mergTS.length-1];
-            chart.options.plugins.zoom.limits.x.min = mergTS[0];
-            
-            chart.data.datasets[0].data = data.current.detector.map(function (value, index) {
-                return {x:data.current.timestamps[index], y:value}
-            });
-            chart.data.datasets[1].data = data.previous.detector.map(function (value, index) {
-                return {x:data.previous.timestamps[index], y:value}
-            });
-            console.warn("done: ",chart.data);
-
-            chart.update();
-
-
-            if(element){
-                element.disabled = false;
-            }
-        }
-
-        onloadQueue.push(() => {
-            const chart = document.getElementById("KineticFluorometer-Widget-Chart")
-            const chartIndex = chart.getAttribute("chartIndex");
-            
-            console.log("Iitializing a new chart\nindex: ",chartIndex);
-            const data = {
-                labels: [],
-                datasets: [
-                {
-                    label: "current",
-                    data: [],
-                    fill: false,
-                    cubicInterpolationMode: 'monotone',
-                    tension: 0.5,
-                },
-                {
-                    label: "previous",
-                    data: [],
-                    fill: false,
-                    cubicInterpolationMode: 'monotone',
-                    tension: 0,
-                }
-                ]
-            };
-
-            console.log("data: ",data)
-            chartArray[chartIndex] = new Chart(chart, {
-                type: 'line',
-                data: data,
-                options: {
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    animations: false,
-                    elements: {
-                        point:{
-                            radius: 1
-                        }
+                console.log("Iitializing a new chart\nindex: ",chartIndex);
+                const data = {
+                    labels: [],
+                    datasets: [
+                    {
+                        label: "absolute",
+                        data: [],
+                        fill: false,
+                        cubicInterpolationMode: 'monotone',
+                        tension: 0.5,
                     },
-                    interaction:{
-                        mode: "nearest",
-                        axis: "xy",
-                        intersect: false
+                    {
+                        label: "relative",
+                        data: [],
+                        fill: false,
+                        cubicInterpolationMode: 'monotone',
+                        tension: 0.5,
                     },
-                    plugins:{
-                        legend:{
-                            display: true,
-                            position: "bottom"
-                        },
-                        zoom: {
-                            zoom: {
-                                mode: 'x',
-                                wheel: {
-                                    enabled: true,
-                                    modifierKey: "shift",
-                                },
-                                pinch: {
-                                    enabled: true,
-                                },
-                            },
-                            limits: {
-                                x: {min: 0, max: 100}
+                    {
+                        label: "raw",
+                        data: [],
+                        fill: false,
+                        cubicInterpolationMode: 'monotone',
+                        tension: 0,
+                        hidden: true,
+                    }
+                    ]
+                };
+
+                console.log("data: ",data)
+                chartArray[chartIndex] = new Chart(chart, {
+                    type: 'line',
+                    data: data,
+                    options: {
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        animations: false,
+                        elements: {
+                            point:{
+                                radius: 1
                             }
                         },
-                        tooltip: {
-                            callbacks: {
-                                title: (item) => {
-                                    return item[0].label + ' µs';
+                        interaction:{
+                            mode: "nearest",
+                            axis: "xy",
+                            intersect: false
+                        },
+                        plugins:{
+                            legend:{
+                                display: true,
+                                position: "bottom"
+                            },
+                            zoom: {
+                                zoom: {
+                                    mode: 'x',
+                                    wheel: {
+                                        enabled: true,
+                                        modifierKey: "shift",
+                                    },
+                                    pinch: {
+                                        enabled: true,
+                                    },
+                                },
+                                limits: {
+                                    x: {min: 0, max: 100}
                                 }
                             },
-                        },
-                    },
-                    
-                    scales: {
-                        x: {
-                            display: true,
-                            grid:{
-                                color: "rgb(50,50,50)"
-                            },
-                            type: 'logarithmic',
-                            ticks: {
-                                fontSize: 40,
-                                callback: function (value) {
-                                    value = Math.round(value);
-                                    var out = value + 'µs';
-                                    if (value>=1000){
-                                        out = (value/1000) + 'ms';
+                            tooltip: {
+                                callbacks: {
+                                    title: (item) => {
+                                        return item[0].label + ' µs';
                                     }
-                                    if (value>=1000000){
-                                        out = (value/1000000) + 's';
-                                    }
-                                    return out;
                                 },
-                                
+                            },
+                        },
+                        
+                        scales: {
+                            x: {
+                                display: true,
+                                grid:{
+                                    color: "rgb(50,50,50)"
+                                },
+                                type: 'logarithmic',
+                                ticks: {
+                                    fontSize: 40,
+                                    callback: function (value) {
+                                        value = Math.round(value);
+                                        var out = value + 'µs';
+                                        if (value>=1000){
+                                            out = (value/1000) + 'ms';
+                                        }
+                                        if (value>=1000000){
+                                            out = (value/1000000) + 's';
+                                        }
+                                        return out;
+                                    },
+                                    
+                                }
+                            },
+                            y: {
+                                display: true,
+                                grid:{
+                                    color: "rgb(50,50,50)"
+                                },
+                                suggestedMin: 0,
+                                suggestedMax: 1
                             }
                         },
-                        y: {
-                            display: true,
-                            grid:{
-                                color: "rgb(50,50,50)"
-                            },
-                            suggestedMin: 0,
-                            suggestedMax: 1
+                        grid: {
+                            color: "red"
                         }
                     },
-                    grid: {
-                        color: "red"
+                });
+                this.chart.obj = chartArray[chartIndex];
+            }
+
+            exportDataToFile(){
+                var filename = 'KineticFluorometerData_';
+                filename+=new Date().toLocaleDateString().replaceAll(" ","").replaceAll(".","-") + "_" + new Date().toLocaleTimeString().replaceAll(":","-");
+                downloadStringAsFile(JSON.stringify(this.currentData, null, 2),filename);
+            }
+
+            exportGraphAsImage(){
+                var filename = 'KineticFluorometerChart_';
+                filename+=new Date().toLocaleDateString().replaceAll(" ","").replaceAll(".","-") + "_" + new Date().toLocaleTimeString().replaceAll(":","-");
+                downloadCanvas(this.chart.element,filename)
+            }
+
+
+            loadData(data){
+                this.currentData = data;
+                this.info.current.element.innerHTML = "";
+                for(var field in data){
+                    if(field != "samples"){
+                        this.info.current.element.innerHTML += "<tr><td class=\"table-name\">"+field+"</td><td class=\"table-dataField\">"+data[field]+"</td></tr>"
                     }
-                },
-            });
-            fetchNewFluoroCurve(null);
-        });
+                }
+                const samples = data.samples;
+                if(samples == undefined){
+                    this.disableChart();
+                    return;
+                }
+                const timestamps = samples.map(sample => sample.time_ms*1000);
+                const raw_values = samples.map(sample => sample.raw_value);
+                const relative_values = samples.map(sample => sample.relative_value);
+                const absolute_values = samples.map(sample => sample.absolute_value);
+
+                this.chart.obj.data.labels = timestamps;
+                this.chart.obj.options.plugins.zoom.limits.x.max = data.length_ms*1000;
+                this.chart.obj.options.plugins.zoom.limits.x.min = timestamps[0];
+                
+                
+                
+
+                this.chart.obj.data.datasets[0].data = absolute_values.map(function (value, index) {
+                    return {x:timestamps[index], y:value}
+                });
+                this.chart.obj.data.datasets[1].data = relative_values.map(function (value, index) {
+                    return {x:timestamps[index], y:value}
+                });
+                this.chart.obj.data.datasets[2].data = raw_values.map(function (value, index) {
+                    return {x:timestamps[index], y:value}
+                });
+                console.warn("done: ",this.chart.obj.data);
+
+                this.chart.obj.resetZoom();
+                this.chart.obj.options.scales.x.max=data.length_ms*1000;
+                this.chart.obj.options.scales.x.min=timestamps[0];
+                this.enableChart();
+
+                /*
+                //this part merges the timestamps of current and previous capture
+                var currTS = data.current.timestamps;
+                var prevTS = data.previous.timestamps;
+                var mergTS = [];
+                var currHigh = currTS[0] > prevTS[0];
+                var currI = 0;
+                var prevI = 0;
+                var last = -1;
+                
+
+                //merges two sorted arrays
+                for (let i = 0; i < currTS.length+prevTS.length; i++) {//max possible iterations is in an alternating pattern
+                    if(currI==currTS.length){
+                        for (let i = prevI; i < prevTS.length; i++) {
+                            if(last != prevTS[i]){
+                                mergTS.push(prevTS[i]);
+                                last = prevTS[i];
+                            }
+                        }
+                        break;
+                    }
+                    if(prevI==prevTS.length){
+                        for (let i = currI; i < currTS.length; i++) {
+                            if(last != currTS[i]){
+                                mergTS.push(currTS[i]);
+                                last = currTS[i];
+                            }
+                        }
+                        break;
+                    }
+                    
+                    if(currHigh){
+                        if(currTS[currI] < prevTS[prevI]){
+                            mergTS.push(prevTS[prevI++]);
+                            
+                            currHigh = 0;
+                            continue;
+                        }
+                        if(currTS[currI] == prevTS[prevI]){
+                            prevI++;
+                        }
+                        mergTS.push(currTS[currI++]);
+                        continue;                  
+                    }else{
+                        if(currTS[currI] > prevTS[prevI]){
+                            mergTS.push(currTS[currI++]);
+                            currHigh = 1;
+                            continue;
+                        }
+                        if(currTS[currI] == prevTS[prevI]){
+                            currI++;
+                        }
+                        mergTS.push(prevTS[prevI++]);
+                        continue;  
+                    }         
+                }
+
+
+                this.chart.obj.data.labels = mergTS;
+                this.chart.obj.options.plugins.zoom.limits.x.max = mergTS[mergTS.length-1];
+                this.chart.obj.options.plugins.zoom.limits.x.min = mergTS[0];
+                
+                this.chart.obj.data.datasets[0].data = data.current.detector.map(function (value, index) {
+                    return {x:data.current.timestamps[index], y:value}
+                });
+                this.chart.obj.data.datasets[1].data = data.previous.detector.map(function (value, index) {
+                    return {x:data.previous.timestamps[index], y:value}
+                });
+                console.warn("done: ",this.chart.obj.data);
+                */
+
+                
+
+                this.chart.obj.update();
+            }
+
+            disableChart(){
+                this.chart.element.classList.add("inactive-chart");
+                for (let i = 0; i < this.exportButtons.length; i++) {
+                    this.exportButtons[i].disabled = true;
+                }
+            }
+
+            enableChart(){
+                this.chart.element.classList.remove("inactive-chart");
+                for (let i = 0; i < this.exportButtons.length; i++) {
+                    this.exportButtons[i].disabled = false;
+                }
+            }
+
+            async fetchData(element, forced = false){
+                if(element!=undefined){
+                    element.disabled = true;
+                    setTimeout(() => {
+                        element.disabled = false;
+                    },4000);
+                }
+                var data;
+                try {
+                    var ready = await fetchDataAsJson(":8089/sensor/fluorometer/ojip/completed");
+                    if(!ready.capture_complete) return;
+                    data = await fetchDataAsJson(":" + this.chart.element.getAttribute("port") + this.chart.element.getAttribute("resource"));
+                } catch (error) {
+                    this.disableChart();
+                    if(error.fetchErrorCode){
+                        console.error("server responded with code: ",error.response.status);
+                        if(error.response.status == 500){
+                            this.loadData(await error.response.json());
+                        }
+                    }else{
+                        console.error("FluoroMeterHandler: Cannot fetch new data error: \n",error);
+                    }
+                    return;
+                }
+                if(data.measurement_id != this.currentDataID || forced){
+                    this.currentDataID = data.measurement_id;
+                    this.loadData(data);
+                }
+                if(element!=undefined){
+                    element.disabled = false;
+                }
+            }
+
+            async startNewTest(){
+                const length = Number(this.newTest.length.value);
+                const intensity = Number(this.newTest.intensity.value);
+                var gain = "";
+                for (let i = 0; i < this.newTest.gain.children.length; i++) {
+                    const element = this.newTest.gain.children[i].children[0];
+                    if(element.checked == true){
+                        gain = element.value;
+                    }
+                }
+                if(length=="" || intensity == "" || gain =="" ){
+                    return
+                }
+
+                const data = {
+                    //"detector_gain": gain,
+                    "emitor_intensity": intensity/100,
+                    //"timebase": "logarithmic",
+                    //"length_ms": length*1000,
+                    //"sample_count": 1000
+                }
+                const queryData = "?gain="+gain+"&timing=Logarithmic&length_ms="+Number(length*1000).toFixed(0)+"&sample_count=1000"
+                const timeout = length*3;
+                
+                this.newTest.startButton.disabled = true;
+                this.newTest.startButton.style.animation= "loadingBarBackground "+timeout+"s linear"
+                
+                setTimeout(() => {
+                    this.newTest.startButton.disabled = false;
+                    this.newTest.startButton.style.animation= "";                    
+                },timeout*1000)
+
+                var response;
+                try {
+                    response = await sendData(":" + this.newTest.startButton.getAttribute("port") + this.newTest.startButton.getAttribute("resource")+queryData,JSON.stringify(data));
+                }catch(err){
+                    console.error("FluoroMeterHandler: cannot start a new capture: ",err);
+                    this.newTest.startButton.disabled = false;
+                    this.newTest.startButton.style.animation= "";  
+                    return
+                }
+                if(response.status != 200){
+                    this.newTest.startButton.disabled = false;
+                    this.newTest.startButton.style.animation= "";  
+                }else{
+                    const responseData = await response.json();
+                    this.loadData(responseData);
+                }
+            }
+
+            update(){
+                this.fetchData(undefined, false);
+            }
+        }
 
 
     </script>

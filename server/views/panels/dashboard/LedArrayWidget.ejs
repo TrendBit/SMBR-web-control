@@ -12,8 +12,12 @@
                         component="<%= element.component %>"
                     ></p>
                 </div>
+                
             <% }); %>
             <button class="button1" id="LedArray-Widget-setAll0Button" onclick="LedArray_Widget_disableButton(this);">disable</button>
+            <button class="reset_button button1 hoverSpin" onclick="apiUpdateWorkerUpdate(this.parentElement.parentElement.parentElement)">
+                <img src="<%= getIcon("refresh") %>" alt="refresh" title="refresh">
+            </button>
         </div>
         <div class="top">
             <p>ERROR</p>
@@ -21,7 +25,7 @@
     </div>
     <div class="control-panel" id="LedArray-Widget-control-panel">
         <%i = 0; DashboardPanel.LedArrayWidget.sliders.forEach(element => { %>
-            <div class="slider1 widget">
+            <div class="slider1 widget handler api-fetcher" handler-id="Slider1Handler">
                 <div class="slider-labels">
                     <h3 class="slider-name"><%= element.name %></h3>
                     <p class="slider-value" value-modifier="100" >unknown</p>
@@ -38,8 +42,19 @@
                         offPos="<%= (element.offPos!=undefined)?element.offPos:0 %>"
                         component="intensity"
                         resource="/control/led_panel/intensity/<%= element.channel %>"
-                        oninput="slider1Handler(this,{'intensity':Number(this.value)});"
+                        oninput="getHandlerObj(this,'Slider1Handler').userInput({'intensity':Number(this.value)});"
+                        onmouseup="getHandlerObj(this,'Slider1Handler').userInput({'intensity':Number(this.value)},true);" 
+                        ontouchend="getHandlerObj(this,'Slider1Handler').userInput({'intensity':Number(this.value)},true);"
                     >
+                    <% if(element.button){%>
+                        <button class="slider-button button1"
+                        port="<%= element.button.port %>" 
+                        component="<%= element.button.component %>" 
+                        resource="<%= element.button.resource %>" 
+                        onclick="getHandlerObj(this,'Slider1Handler').buttonGet();">
+                        <p><%= element.button.label %></p>
+                        </button>
+                    <% }%>
                 </div>
             </div>
            
@@ -48,25 +63,11 @@
     <script>
         function LedArray_Widget_disableButton(element){
             element.disabled = true;
-            const url = "http://" + window.location.hostname;
-            
-            sendData(url+":8089/control/led_panel/intensity","{\"intensity\": [0,0,0,0]}")
-
-            const sliderContainers = document.getElementById("LedArray-Widget-control-panel").getElementsByClassName("slider1");
-            for (let i = 0; i < sliderContainers.length; i++) {
-                const slider = sliderContainers[i].getElementsByClassName("slider")[0];
-                const valueLabel  = sliderContainers[i].getElementsByClassName("slider-value")[0]; 
-
-                slider.value = slider.getAttribute("min");
-                valueLabel.innerHTML = (slider.value) + slider.getAttribute("unit");
-
-                chromeFix_Slider(slider);
-            }
-
-
             setTimeout(() => { 
                 element.disabled = false;
             }, 2000);
+            sendData(":8089/control/led_panel/intensity","{\"intensity\": [0,0,0,0]}")
+            apiUpdateWorkerUpdate(element.parentElement.parentElement.parentElement);
         }
     </script>
 </div>

@@ -25,14 +25,6 @@
 #   
 DashboardPanel:
   LedArrayWidget:
-    header: 
-        rows:
-          - name: "temperature"
-            type: "dataField"
-            port: 8089
-            resource: "/control/led_panel/temperature"
-            unit: "°C"
-            component: "temperature"
     sliders:
       - name: "Channel 1"
         min: 0
@@ -54,89 +46,7 @@ DashboardPanel:
         max: 1
         step: 0.01
         channel: 3
-  CoolSpektrometerWidget:
-    header: 
-    rows:
-      - name: "UV"
-        frequency: "430 nm"
-        color: "#6F00FF"
-        absolute:
-          port: 80
-          resource: "/test-get"
-          component: "value"
-          charted: true
-        relative:
-          port: 80
-          resource: "/test-get"
-          component: "value"
-          charted: true
-      - name: "Blue"
-        frequency: "480 nm"
-        color: "#007FFF"
-        absolute:
-          port: 80
-          resource: "/test-get"
-          component: "value"
-          charted: true
-        relative:
-          port: 80
-          resource: "/test-get"
-          component: "value"
-          charted: true
-      - name: "Green"
-        frequency: "560 nm"
-        color: "#00FF00"
-        absolute:
-          port: 80
-          resource: "/test-get"
-          component: "value"
-          charted: true
-        relative:
-          port: 80
-          resource: "/test-get"
-          component: "value"
-          charted: true
-      - name: "Orange"
-        frequency: "630 nm"
-        color: "#FF7F00"
-        absolute:
-          port: 80
-          resource: "/test-get"
-          component: "value"
-          charted: true
-        relative:
-          port: 80
-          resource: "/test-get"
-          component: "value"
-          charted: true
-      - name: "Red"
-        frequency: "678 nm"
-        color: "#FF0000"
-        absolute:
-          port: 80
-          resource: "/test-get"
-          component: "value"
-          charted: true
-        relative:
-          port: 80
-          resource: "/test-get"
-          component: "value"
-          charted: true
-      - name: "IR"
-        frequency: "870 nm"
-        color: "#800000"
-        absolute:
-          port: 80
-          resource: "/test-get"
-          component: "value"
-          charted: true
-        relative:
-          port: 80
-          resource: "/test-get"
-          component: "value"
-          charted: true
   ControlWidget:
-    header: 
     sliders:
       - name: "Aerator"
         min: 0
@@ -174,5 +84,3 @@ DashboardPanel:
         port: 8089
         component: "intensity"
         resource: "/control/heater/intensity"
-  KineticFluorometerWidget:
-    header: 

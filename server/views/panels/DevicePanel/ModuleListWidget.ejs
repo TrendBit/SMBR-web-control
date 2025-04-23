@@ -1,7 +1,7 @@
 <div class="widget" id="DevicePanel-moduleList">
     <div class="header">
         <h1>Module list</h1>
-        <button class="reset_button button1 hoverSpin" onclick="moduleApiUpdateWorkerUpdate(this)">
+        <button class="reset_button button1 hoverSpin" onclick="moduleApiUpdateWorkerUpdate(this.parentNode.parentNode.parentNode)">
             <img src="<%= getIcon("refresh") %>" alt="refresh" title="refresh">
         </button>
         <div class="top">
@@ -31,8 +31,7 @@
                     const confirmationPayload = {
                         "uid" : "" + targetModuleID
                     }
-                    const url = "http://" + window.location.hostname;
-                    response = await sendData(url+":8089/"+targetModuleNAME+"/restart","{\n  \"uid\": \""+targetModuleID+"\"\n}");
+                    response = await sendData(":8089/"+targetModuleNAME+"/restart","{\n  \"uid\": \""+targetModuleID+"\"\n}");
                     if(response.status != 200){
                         setMainPopup("error","couldn't restart module "+targetModuleNAME+" ["+targetModuleID+"] got error code: "+response.status);
                     }
@@ -50,7 +49,7 @@
                     <td class="table-dataField"><%= element.instance %></td>
     
                     <%element.data.forEach(dataField => { %>
-                        <td class="module-api-fetcher table-dataField"
+                        <td class="api-fetcher table-dataField"
                             unit="<% if(dataField.unit){%><%=dataField.unit%><%}else{%><%="°C"%><%} %>" 
                             resource="<%= dataField.resource %>" 
                             component="<%= dataField.component %>"
