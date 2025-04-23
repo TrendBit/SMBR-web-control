@@ -241,10 +241,7 @@ DashboardPanel:
         port: 8089
         component: "intesity"
         resource: "/control/heater/intesity"
-        button:
-          label: "disable"
-          port: 8089
-          resource: "/control/heater/intesity"
+
 
   KineticFluorometerWidget:
     header: 

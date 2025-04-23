@@ -25,14 +25,6 @@
 #   
 DashboardPanel:
   LedArrayWidget:
-    header: 
-        rows:
-          - name: "temperature"
-            type: "dataField"
-            port: 8089
-            resource: "/control/led_panel/temperature"
-            unit: "°C"
-            component: "temperature"
     sliders:
       - name: "Channel 1"
         min: 0
@@ -55,7 +47,6 @@ DashboardPanel:
         step: 0.01
         channel: 3
   ControlWidget:
-    header: 
     sliders:
       - name: "Aerator"
         min: 0

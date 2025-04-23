@@ -69,17 +69,44 @@ DashboardPanel:
         component: "temperature"
         decimalPlaces: 2
         charted: false
+      - name: "Fluorometer"
+        icon: "dot"
+        port: 8089
+        charted: false
+
+        sub_rows:
+          - name: "Detector"
+            port: 8089
+            resource: "/sensor/fluorometer/detector/temperature"
+            component: "temperature"
+            charted: false
+            decimalPlaces: 2
+          - name: "Emitor"
+            port: 8089
+            resource: "/sensor/fluorometer/emitor/temperature"
+            component: "temperature"
+            charted: false
+            decimalPlaces: 2
+
+      - name: "Spectrofotometer"
+        port: 8089
+        icon: "dot"
+        resource: "/sensor/spectrophotometer/emitor_temperature"
+        component: "temperature"
+        charted: false
+        decimalPlaces: 2
+
+      - name: "Led panel"
+        port: 8089
+        icon: "dot"
+        resource: "/control/led_panel/temperature"
+        component: "temperature"
+        charted: false
+        decimalPlaces: 2
+  
     chart:
       history: 30
   CoolSpektrometerWidget:
-    header: 
-      rows:
-          - name: "temperature"
-            type: "dataField"
-            port: 8089
-            resource: "/sensor/spectrophotometer/emitor_temperature"
-            unit: "°C"
-            component: "temperature"
     rows:
       - name: "UV"
         frequency: "430 nm"
@@ -100,14 +127,6 @@ DashboardPanel:
         frequency: "870 nm"
         color: "#800000"
   KineticFluorometerWidget:
-    header: 
-      rows:
-        - name: "temperature"
-          type: "dataField"
-          port: 8089
-          resource: "/sensor/fluorometer/detector/temperature"
-          unit: "°C"
-          component: "temperature"
     chart:
       resource: "/sensor/fluorometer/ojip/read_last"
       port: "8089"
