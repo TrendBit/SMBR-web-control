@@ -121,9 +121,9 @@
                             unit="<% if(sub_element.unit){%><%=sub_element.unit%><%}else{%><%="°C"%><%} %>" 
                             resource="<%= sub_element.resource %>" 
                             component="<%= sub_element.component %>"
-                            charted="<% if(element.charted){%><%=element.charted%><%}else{%><%="false"%><%} %>" 
-                            parent="<%=element.name%>"
-                            decimal-places="<%= element.decimalPlaces %>"
+                            charted="<% if(sub_element.charted){%><%=sub_element.charted%><%}else{%><%="false"%><%} %>" 
+                            parent="<%=sub_element.name%>"
+                            decimal-places="<%= sub_element.decimalPlaces %>"
                         >
                         </td>
                         
