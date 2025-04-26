@@ -236,6 +236,7 @@ var currNumOfCharts = 0;
             for (let i = 0; i < colorFilters.length; i++) {
                 const element = colorFilters[i];
                 element.style.backgroundColor = element.getAttribute("colorFilter");
+                element.style.mask = "url("+element.getAttribute("maskImage")+") no-repeat center / contain";
             }
         })
 

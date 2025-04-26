@@ -402,6 +402,7 @@ body {
 
 *:has(div.colorFilter) {
   position: relative;
+  isolation: isolate;
 }
 
 .colorFilter {
@@ -410,7 +411,7 @@ body {
   height: 100%;
   top: 0px;
   left: 0px;
-  mix-blend-mode: darken;
+  mix-blend-mode: multiply;
 }
 
 

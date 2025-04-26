@@ -39,7 +39,7 @@
                 <tr class="table-master">
                     <td class="table-color">
                         <img src="<%= getIcon(element.icon) %>" alt="<%= element.icon %>">
-                        <div class="colorFilter" colorFilter="<%= getColor(++i) %>"></div>
+                        <div class="colorFilter" maskImage="<%= getIcon(element.icon) %>" colorFilter="<%= getColor(++i) %>"></div>
                     </td>
 
                     <td class="table-name">
@@ -108,8 +108,9 @@
                 <% if(element.sub_rows){numOfSubRows=element.sub_rows.length; for( let u = 0; u < numOfSubRows; u++ ) { let sub_element = element.sub_rows[u];%>
                     <tr class="table-sub">
                         <td class="table-color">
-                            <img src="<% if((u+1)<numOfSubRows){%><%=getIcon("subElement")%><%}else{%><%=getIcon("subElement-last")%><%} %>" alt="sub_element">
-                            <div class="colorFilter" colorFilter="<%= getSubColor(i,u+1) %>"></div>
+                            <% const imageURL = ((u+1)<numOfSubRows)?getIcon("subElement"):getIcon("subElement-last")%>
+                            <img src="<%=imageURL%>" alt="sub_element">
+                            <div class="colorFilter" maskImage="<%=imageURL%>" colorFilter="<%= getSubColor(i,u+1) %>"></div>
                         </td>
 
                         <td class="table-name">
