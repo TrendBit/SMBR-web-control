@@ -7,155 +7,128 @@ Number.prototype.countDecimals = function () {
     return this.toString().split(".")[1].length || 0; 
 }
 
-class temperatureData {
+class temperatureLogs {
     constructor(capacity) {
         this.capacity = capacity; 
         this.arr = new Array(capacity);
-        this.head = -1; 
+        this.head = 0; 
+        this.emptyFields = capacity;
 
         for(var i=0; i<this.capacity; i++){
-            this.arr[i] = {'data':0, 'timestamp': new Date(0)};  
+            this.arr[i] = {'data':{}, 'id': -1};  
         } 
     }
 
-    push(obj, timestamp) {
-        this.head=(this.head+1)%this.capacity;
-        this.arr[this.head] = {'data':obj, 'timestamp': (timestamp)?timestamp:new Date()};
-    }
-
-    //retuns nth element from top
-    getHistory(reverseIndex) {
-        var index = (this.head-reverseIndex)%this.capacity;
-        if (index<0){
-            index = index + this.capacity;
+    push(obj, id) {
+        this.head=this.head;
+        this.arr[this.head] = {'data':obj, 'id': id};
+        this.head = (this.head+1)%this.capacity;
+        if(this.emptyFields>0){
+            this.emptyFields--;
         }
-        return this.arr[(index)%this.capacity];
     }
 
-    toArray() {
-        const outArray = new Array(this.capacity);
+    getAvg() {
+        // {
+        //  BottleTop: {value: 5, count: 4},
+        //}
+        var sums = {};
         for (let i = 0; i < this.arr.length; i++) {
-            outArray[i] = this.getHistory(this.arr.length-i-1);
-        }
-        return outArray;
-    }
+            const element = this.arr[i];
 
-    getAvg(time, scale){
-        var acc = {};
-        var cnts = {};
-        var decimals = {};
-        const firstData = this.getHistory(0).data;
-        for(var field in firstData){
-            acc[field] = 0;
-            cnts[field] = 0;   
-            decimals[field] = 20; 
-        }
-        
-        for(var i in this.arr){
-            var elTime = 0;
-            switch (scale) {
-                case 0:
-                    elTime = this.arr[i].timestamp.getSeconds();
-                    break;
-                case 1:
-                    elTime = this.arr[i].timestamp.getMinutes();
-                    break;
-                case 2:
-                    elTime = this.arr[i].timestamp.getHours();
-                    break;
-                default:
-            }
-            if(elTime == time){
-                for(var field in this.arr[i].data){
-                    if(!isNaN(this.arr[i].data[field])){
-                        if(decimals[field]==20){
-                            decimals[field] = Number(this.arr[i].data[field]).countDecimals();
-                        }
-                        acc[field] += Number(this.arr[i].data[field]);
-                        cnts[field]++;
+            for(var field in element.data){
+                var originalSum = sums[field];
+                if(element.data[field]==undefined || isNaN(element.data[field])){
+                    continue;
+                }
+                if(originalSum!=undefined){
+                    sums[field].value = Number(element.data[field])+Number(originalSum.value);
+                    sums[field].count++;
+                }else{
+                    sums[field]= {
+                        value: Number(element.data[field]),
+                        count: 1
                     }
                 }
             }
         }
-        
-        for(var field in acc){
-            acc[field] = Number(acc[field] / cnts[field]).toFixed(decimals[field]);
+        var result = {};
+        for(var field in sums){
+            result[field] = sums[field].value/sums[field].count
         }
-        
-        return acc;
+        return result;
     }
 
-    getPrepared(){
-        var arrCopy = structuredClone(this.toArray());
-        for(var i in arrCopy){
-            arrCopy[i].timestamp = arrCopy[i].timestamp.getTime();
+    toArray(containEmptyFields = false) {
+        const emptyFieldsCount = (!containEmptyFields)?this.emptyFields:0;
+        const outArray = new Array(this.capacity-emptyFieldsCount);
+        for (let i = emptyFieldsCount; i < this.arr.length; i++) {
+            outArray[i-emptyFieldsCount] = this.arr[(i+this.head)%this.arr.length];
         }
-        return arrCopy;
+        return outArray;
+    }
+
+    getHistory(fromID){
+        const allLogs = this.toArray();
+        if(allLogs.length==0){
+            return [];
+        }
+        const lastLogID = allLogs[allLogs.length-1].id;
+        var returnElCount = 0;
+        for (let i = allLogs.length-1; i >=0; i--) {
+            if(allLogs[i].id<=fromID){
+                break;
+            }else{
+                returnElCount++;
+            }
+        }
+        if(returnElCount>0){
+            return allLogs.slice(-returnElCount);
+        }
+        return [];
     }
 }
 
 module.exports = {
     getTemperatureGraph: function(level){
+        const returnObj = {granuality:0,serverTime:(new Date()).getTime(),data:[]};
         switch (level) {
             case "minute":
-                return minute.getPrepared();
+                returnObj.granuality = (60*1000)/(logsPerMinute);
+                returnObj.data = minuteLogs.toArray(true);
                 break;
             case "hour":
-                return hour.getPrepared();
+                returnObj.granuality = (60*60*1000)/(logsPerHour);
+                returnObj.data = hourLogs.toArray(true);
                 break;
             case "day":
-                return day.getPrepared();
+                returnObj.granuality = (24*60*60*1000)/(logsPerDay);
+                returnObj.data = dayLogs.toArray(true);
                 break;
             default:
-                return [];
                 break;
         }
+        return returnObj;
     },
-    getTemperatureGraphRecent: function(level,lastReload){
-
-        var numOfLogs = 0;
+    getTemperatureGraphRecent: function(level,lastID){
+        const returnObj = {granuality:0,serverTime:(new Date()).getTime(),data:[]};
         switch (level) {
             case "minute":
-                numOfLogs = minute.capacity;            
+                returnObj.granuality = (60*1000)/logsPerMinute;
+                returnObj.data = minuteLogs.getHistory(lastID);
                 break;
             case "hour":
-                numOfLogs = hour.capacity;
+                returnObj.granuality = (60*60*1000)/(logsPerHour);
+                returnObj.data = hourLogs.getHistory(lastID);
                 break;
             case "day":
-                numOfLogs = day.capacity;
+                returnObj.granuality = (24*60*60*1000)/(logsPerDay);
+                returnObj.data = dayLogs.getHistory(lastID);
                 break;
-        
             default:
-        }
-
-        var result = [];
-
-        for (let i = 0; i < numOfLogs; i++) {
-            var element;
-            switch (level) {
-                case "minute":
-                    element = minute.getHistory(i);       
-                    break;
-                case "hour":
-                    element = hour.getHistory(i);
-                    break;
-                case "day":
-                    element = day.getHistory(i);
-                    break;
-            
-                default:
-            }
-            element = structuredClone(element);
-            element.timestamp = element.timestamp.getTime();
-
-            if(element.timestamp > lastReload){
-                result.push(element);
-            }else{
                 break;
-            }
         }
-
-        return result;
+        return returnObj;
     }
 }
 
@@ -167,9 +140,12 @@ function deepEqual(x, y) {
     ) : (x === y);
   }
 
-var loadedConfig = webConfigAssembler.getConfig("[internal readings logger]");
+
+
+var loadedConfig = {DashboardPanel:{TemperatureWidget:{rows:[]}}};
 var currentModuleTemps = {};
-function temperatureGraphFetch(){
+async function temperatureGraphFetch(){
+    if(loadedConfig == undefined) return;
     if(loadedConfig.DashboardPanel == undefined) return;
     if(loadedConfig.DashboardPanel.TemperatureWidget == undefined) return;
 
@@ -179,30 +155,31 @@ function temperatureGraphFetch(){
         currentModuleTemps = {};
     }
 
-    fetchDataForRows(loadedConfig.DashboardPanel.TemperatureWidget.rows);
+    await fetchDataForRows(loadedConfig.DashboardPanel.TemperatureWidget.rows);
 
 
     //defined to allow recursion for sub"ELements
-    function fetchDataForRows(rows,last=""){
+    async function fetchDataForRows(rows,last=""){
         if(rows){
-            rows.forEach(element => {
-                if(element.charted == true){                    
-                    fetchDataAsJson("http://127.0.0.1:"+element.port+element.resource)
-                    .then(response =>{
+            for(var field in rows){
+                const element = rows[field];
+
+                if(element.charted == true){          
+                    try {
+                        var response = await fetchDataAsJson("http://127.0.0.1:"+element.port+element.resource)
                         numberOfDecimalPLaces=(element.decimalPlaces)?element.decimalPlaces:0;
                         currentModuleTemps[last + element.name] = Number(response[element.component]).toFixed(numberOfDecimalPLaces);
-                    })
-                    .catch(err => {
+                    } catch (err) {
                         currentModuleTemps[last + element.name] = null;
                         console.error("ERROR while trying to fetch current temperature for: "+element.name + "\n"+err.message);
-                    });
+                    }          
                     
                     if(element.sub_rows && last === ""){ //stops recursion
-                        fetchDataForRows(element.sub_rows,element.name+".");
+                        await fetchDataForRows(element.sub_rows,element.name+".");
                     }
                     
                 }
-            });
+            }
         }
     }
     
@@ -211,44 +188,37 @@ function temperatureGraphFetch(){
 }
 
 
+const logsPerMinute = 60;
+const logsPerHour   = 60;
+const logsPerDay    = 96;
+
+var minuteLogs     = new temperatureLogs(logsPerMinute);
+var hourLogs       = new temperatureLogs(logsPerHour  );
+var dayLogs        = new temperatureLogs(logsPerDay   );
+var currID         = 0;
+const readingDelay = 60000/logsPerMinute;
 
 
-const readingDelay = 1.5;
-const currDate  = new Date();
-var minute     = new temperatureData(60);
-var lastMinute  = currDate.getMinutes();
-var hour       = new temperatureData(60);
-var lastHour    = currDate.getHours();
-var day        = new temperatureData(24);
-function temperatureGraphReload(){
-    temperatureGraphFetch();
+const logsBetweenHourPush = Math.floor(logsPerMinute*(60/logsPerHour));
+const logsBetweenDayPush = Math.floor(logsPerMinute*(1440/logsPerDay));
+async function temperatureGraphReload(){
+    await temperatureGraphFetch();
 
-    minute.push(structuredClone(currentModuleTemps));
-    //console.log(lastMinute, (new Date()).getMinutes());
-
-
-    if((new Date()).getMinutes() != lastMinute){
-        hour.push(minute.getAvg(lastMinute,1));
-        lastMinute = (new Date()).getMinutes();
-        //console.log(minute.toArray());
-        //console.log(hour.toArray());
-        
-        //fs.writeFileSync("out_minute.txt",  JSON.stringify(minute.toArray() , null, 2));
-        //fs.writeFileSync("out_hour.txt",    JSON.stringify(hour.toArray()   , null, 2));
-        //fs.writeFileSync("out_day.txt",     JSON.stringify(day.toArray()    , null, 2));
+    minuteLogs.push(structuredClone(currentModuleTemps),currID);
+    if(currID%logsBetweenHourPush == 0){
+        hourLogs.push(minuteLogs.getAvg(),currID);
+    }
+    if(currID%logsBetweenDayPush == 0){
+        dayLogs.push(hourLogs.getAvg(),currID);
     }
 
-
-    if((new Date()).getHours() != lastHour){
-        day.push(hour.getAvg(lastHour,2));
-        lastHour = (new Date()).getHours();
-    }
+    currID++;
 }
 
 
 temperatureGraphFetch();
 setTimeout(()=>{
-    setInterval(() => temperatureGraphReload(),1000*readingDelay);
+    setInterval(() => temperatureGraphReload(),readingDelay);
 },1000);
 
 async function fetchDataAsJson(url) {

@@ -927,6 +927,9 @@ padding: 5px;
       .apiChart{
         min-height: 200px;
       }
+      .container{
+        height: min-content;
+      }
       #Temperature-Widget-Chart-ContextLen{
         padding-top: 0px;
         padding-bottom: 2px;

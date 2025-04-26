@@ -170,262 +170,272 @@
             <% }); %>
         </tbody>
     </table>
-    <div class="horflex" id="Temperature-Widget-Chart-ContextLen">
-        <div class="radio1 minimal"> 
-            <input checked="checked" id="Temperature-Widget-Chart-ContextLen-1"  name="Temperature-Widget-Chart-ContextLen" type="radio" value="minute" onclick="TemperatureWidgetChart_Reload(this)"> 
-            <label for="Temperature-Widget-Chart-ContextLen-1" >minute</label>   
-        </div>     
-        <div class="radio1 minimal"> 
-            <input id="Temperature-Widget-Chart-ContextLen-2"  name="Temperature-Widget-Chart-ContextLen" type="radio" value="hour" onclick="TemperatureWidgetChart_Reload(this)"> 
-            <label for="Temperature-Widget-Chart-ContextLen-2" >hour</label>   
-        </div>     
-        <div class="radio1 minimal"> 
-            <input id="Temperature-Widget-Chart-ContextLen-3"  name="Temperature-Widget-Chart-ContextLen" type="radio" value="day" onclick="TemperatureWidgetChart_Reload(this)"> 
-            <label for="Temperature-Widget-Chart-ContextLen-3" >day</label>   
-        </div>     
-    </div>
-    <div class="apiChart">
-        <div>
-            <canvas id="Temperature-Widget-Chart" chartIndex="<%= currNumOfCharts++ %>" history="<%= DashboardPanel.TemperatureWidget.chart.history %>"></canvas>
+    <div class="container handler api-fetcher" update-cost="15" handler-id="TemperatureWidgetChartHandler">
+        <div class="horflex Temperature-Widget-Chart-ContextLen" id="Temperature-Widget-Chart-ContextLen" >
+            <div class="radio1 minimal"> 
+                <input checked="checked" id="Temperature-Widget-Chart-ContextLen-1"  name="Temperature-Widget-Chart-ContextLen" type="radio" value="minute" onclick="getHandlerObj(this,'TemperatureWidgetChartHandler').reload(true)"> 
+                <label for="Temperature-Widget-Chart-ContextLen-1" >minute</label>   
+            </div>     
+            <div class="radio1 minimal"> 
+                <input id="Temperature-Widget-Chart-ContextLen-2"  name="Temperature-Widget-Chart-ContextLen" type="radio" value="hour" onclick="getHandlerObj(this,'TemperatureWidgetChartHandler').reload(true)"> 
+                <label for="Temperature-Widget-Chart-ContextLen-2" >hour</label>   
+            </div>     
+            <div class="radio1 minimal"> 
+                <input id="Temperature-Widget-Chart-ContextLen-3"  name="Temperature-Widget-Chart-ContextLen" type="radio" value="day" onclick="getHandlerObj(this,'TemperatureWidgetChartHandler').reload(true)"> 
+                <label for="Temperature-Widget-Chart-ContextLen-3" >day</label>   
+            </div>     
+        </div>
+        <div class="apiChart" >
+            <div>
+                <canvas class="Temperature-Widget-Chart" chartIndex="<%= currNumOfCharts++ %>" history="<%= DashboardPanel.TemperatureWidget.chart.history %>"></canvas>
+            </div>
         </div>
     </div>
     
+    
     <script>
+        handlers["TemperatureWidgetChartHandler"] = class TemperatureWidgetChartHandler {
+            constructor(element) {
+                console.log("CREATING TemperatureWidgetChartHandler")
+                this.chart ={
+                    element: element.getElementsByClassName("Temperature-Widget-Chart")[0],
+                    index: null,
+                    object: null
+                } 
+                this.chart.index = this.chart.element.getAttribute("chartIndex");
 
+                this.initGraph(this.chart.element, this.chart.index);
+                this.chart.object = chartArray[this.chart.index];
+                this.granuality = 0;
+                this.lastID = -1;
+                this.radioButtons = element.getElementsByClassName("Temperature-Widget-Chart-ContextLen")[0];
+                this.selectedScale = this.radioButtons.querySelector('input:checked').value;
 
-        async function TemperatureWidgetChart_Reload(radioButton){
-            const chart = document.getElementById("Temperature-Widget-Chart");
-            const chartIndex = chart.getAttribute("chartIndex");
-            const currRadio = radioButton.value;
-            TemperatureWidgetChart_CurrentRadioButton = currRadio;
-            
-            const newData = await fetchDataAsJson(":80/temperature-graph",{"logging-level":currRadio})
+                console.log("TemperatureWidgetChartHandler", this);
 
-            const chartObj = chartArray[chartIndex];
-            
-            var dataOffset = 0;
-            var newLabels = new Array(newData.length);
-            for (let i = 0; i < newData.length; i++) {
-                if(newData[i].timestamp!=0){
-                    const currTimestamp = new Date(newData[i].timestamp);
-
-                    if(currRadio == "day"){
-                        newLabels[i] = formatTime("dd.mo hh h",currTimestamp);
-                    }
-                    if(currRadio == "hour"){
-                        newLabels[i] = formatTime("HH:MM",currTimestamp);
-                    }
-                    if(currRadio == "minute"){
-                        newLabels[i] = formatTime("HH:MM:SS",currTimestamp);
-                    }
-                }else{
-                    newLabels[i] = " ";
-                }
+                setInterval(()=>{
+                    this.softReload();
+                },1000);
             }
-            chartObj.data.labels = newLabels;
-            
-            for (let d = 0; d < chartObj.data.datasets.length; d++) {
-                const dataset = chartObj.data.datasets[d];
 
+            async reload(reloadScale = false){
+                if(reloadScale){
+                    this.selectedScale = this.radioButtons.querySelector('input:checked').value;
+                }
                 
-                dataset.data = new Array(newData.length);
-                for (let i = 0; i < newData.length; i++) {
+                const response = await fetchDataAsJson(":80/temperature-graph",{"logging-level":this.selectedScale})
+                const newData = response.data;
+                const serverTime = Number(response.serverTime);
+                this.granuality = Number(response.granuality);
 
-                    if(newData.data === 0){
-                        dataset.data[i] = null;
+                const chartObj = this.chart.object;
+                
+                var newLabels = new Array(newData.length);
+                var historyOffset = (newData.length-1)*this.granuality;
+                for (let i = 0; i < newData.length; i++) {
+                    if(newData[i].id!=-1){
+                        const currTimestamp = new Date(serverTime - historyOffset);
+                        
+                        if(this.selectedScale == "day"){
+                            newLabels[i] = formatTime("dd.mo hh h",currTimestamp);
+                        }
+                        if(this.selectedScale == "hour"){
+                            newLabels[i] = formatTime("HH:MM",currTimestamp);
+                        }
+                        if(this.selectedScale == "minute"){
+                            newLabels[i] = formatTime("HH:MM:SS",currTimestamp);
+                        }
                     }else{
-                        dataset.data[i] = newData[i].data[dataset.label];
+                        newLabels[i] = " ";
                     }
+                    this.lastID = newData[i].id;
+                    historyOffset-=this.granuality;
+                }
+                chartObj.data.labels = newLabels;
+                
+                for (let d = 0; d < chartObj.data.datasets.length; d++) {
+                    const dataset = chartObj.data.datasets[d];
+
                     
-                }
-            }
+                    dataset.data = new Array(newData.length);
+                    for (let i = 0; i < newData.length; i++) {
 
-            TemperatureWidgetChart_LastReload = newData[newData.length-1].timestamp;
-
-            chartArray[chartIndex].update();
-        }
-
-        var TemperatureWidgetChart_LastReload = 0;
-        var TemperatureWidgetChart_CurrentRadioButton = "";
-        setInterval(async () => { //updater
-            const chart = document.getElementById("Temperature-Widget-Chart");
-            const chartIndex = chart.getAttribute("chartIndex");
-            const currRadio = TemperatureWidgetChart_CurrentRadioButton;
-            const chartObj = chartArray[chartIndex];
-            //console.warn("getting lastReload:",TemperatureWidgetChart_LastReload,"logging level:",currRadio)
-            const newData = await fetchDataAsJson(":80/temperature-graph-recent",{
-                "logging-level":currRadio,
-                "last-reload":TemperatureWidgetChart_LastReload+10
-            });
-            if(newData.length!=0){
-                TemperatureWidgetChart_LastReload = newData[0].timestamp;
-
-                for (let i = 0; i < chartObj.data.labels.length-newData.length; i++) {
-                    chartObj.data.labels[i] = chartObj.data.labels[i+newData.length];
-
-                    for (let d = 0; d < chartObj.data.datasets.length; d++) {
-                        const dataset = chartObj.data.datasets[d];
-
-                        dataset.data[i] = dataset.data[i+newData.length];
+                        if(newData.data === 0){
+                            dataset.data[i] = null;
+                        }else{
+                            dataset.data[i] = newData[i].data[dataset.label];
+                        }
+                        
                     }
                 }
-                
-                for (let i = 0; i < newData.length; i++) {
-                    const index = chartObj.data.labels.length-i-1;
-
-
-                    const currTimestamp = new Date(newData[i].timestamp);
-                    var newTimeStamp = "";
-
-
-
-
-                    if(currRadio == "day"){
-                        newTimeStamp = formatTime("dd.mo hh h",currTimestamp);
-                    }
-                    if(currRadio == "hour"){
-                        newTimeStamp = formatTime("HH:MM",currTimestamp);
-                    }
-                    if(currRadio == "minute"){
-                        newTimeStamp = formatTime("HH:MM:SS",currTimestamp);
-                    }
-
-
-                    chartObj.data.labels[index] = newTimeStamp;
-
-
-
-                    for (let d = 0; d < chartObj.data.datasets.length; d++) {
-                        const dataset = chartObj.data.datasets[d];
-
-                        dataset.data[index] = newData[i].data[dataset.label];
-                    }
-                }
-
-
-
-
-
-                chartArray[chartIndex].update();
-
-            }
-        
-        },1000);
-        onloadQueue.push(() => {
-            const chart = document.getElementById("Temperature-Widget-Chart");
-            const chartIndex = chart.getAttribute("chartIndex");
-            const possibleApiFetchers = document.getElementById("Temperature-Widget-Table").getElementsByClassName("api-fetcher");
-            var colorFilters = [];
-            var apiFetchers = [];
-            for(let i = 0; i< possibleApiFetchers.length; i++){
-                if(possibleApiFetchers[i].getAttribute("charted") == "true"){
-                    apiFetchers.push(possibleApiFetchers[i]);
-                    colorFilters.push(possibleApiFetchers[i].parentElement.getElementsByClassName("colorFilter")[0]);
-                }
-            }
             
-            const radioButtons = document.getElementsByName("Temperature-Widget-Chart-ContextLen");
-            for (let i = 0; i < radioButtons.length; i++) {
-                const radio = radioButtons[i];
-                if(radio.checked){
-                    TemperatureWidgetChart_Reload(radio);
-                    break;
-                }
-                
+
+                chartObj.update();
             }
 
-            console.log("Iitializing a new chart\nindex: ",chartIndex,"\nhistory:",chart.getAttribute("history"),"\napiFetchers:",apiFetchers, "\ncolorFilters:",colorFilters);
-            chartArray[chartIndex] = ( new Chart(
-                chart,
-                {
-                    type: 'line',
-                    data: {
-                        labels: getCountdownArray(chart.getAttribute("history")),
-                        datasets: getEmptyDatasets(apiFetchers.length),
-                    },
-                    options: {
-                        maintainAspectRatio: false,
-                        responsive: true,
-                        animations: false,
-                        elements: {
-                            point:{
-                                radius: 1
-                            }
-                        },
-                        interaction:{
-                            mode: "nearest",
-                            axis: "xy",
-                            intersect: false
-                        },
-                        plugins:{
-                            legend:{
-                                display: false
-                            }
-                        },
-                        scales: {
-                            x: {
-                                display: true,
-                                ticks: {
-                                    display: true
-                                },
-                                grid:{
-                                    color: "rgb(50,50,50)"
-                                }
-                            },
-                            y: {
-                                display: true,
-                                suggestedMax: 40,
-                                suggestedMin: 10,
-                                grid:{
-                                    color: "rgb(50,50,50)"
-                                }
-                            }
-                        },
-                        grid: {
-                            color: "red"
+            async softReload(){
+                const currRadio = this.selectedScale;
+                const chartObj = this.chart.object;
+
+                const response = await fetchDataAsJson(":80/temperature-graph-recent",{
+                    "logging-level":currRadio,
+                    "last-reload":this.lastID
+                });
+                const newData = response.data;
+                const serverTime = Number(response.serverTime);
+                if(newData.length!=0){
+                    this.lastID = newData[newData.length-1].id;
+
+                    for (let i = 0; i < chartObj.data.labels.length-newData.length; i++) {
+                        chartObj.data.labels[i] = chartObj.data.labels[i+newData.length];
+
+                        for (let d = 0; d < chartObj.data.datasets.length; d++) {
+                            const dataset = chartObj.data.datasets[d];
+
+                            dataset.data[i] = dataset.data[i+newData.length];
                         }
                     }
+                    var historyOffset = (newData.length-1)*this.granuality;
+                    for (let i = 0; i < newData.length; i++) {
+                        const index = chartObj.data.labels.length-i-1;
+
+                        const currTimestamp = new Date(serverTime - historyOffset);
+                        var newTimeStamp = "";
+
+                        if(currRadio == "day"){
+                            newTimeStamp = formatTime("dd.mo hh h",currTimestamp);
+                        }
+                        if(currRadio == "hour"){
+                            newTimeStamp = formatTime("HH:MM",currTimestamp);
+                        }
+                        if(currRadio == "minute"){
+                            newTimeStamp = formatTime("HH:MM:SS",currTimestamp);
+                        }
+
+
+                        chartObj.data.labels[index] = newTimeStamp;
+
+
+
+                        for (let d = 0; d < chartObj.data.datasets.length; d++) {
+                            const dataset = chartObj.data.datasets[d];
+
+                            dataset.data[index] = newData[i].data[dataset.label];
+                        }
+                    }
+                    chartObj.update();
                 }
-            ) );
-            chartArray[chartIndex].apiFetchers= apiFetchers;    
-            chartArray[chartIndex].count = 0; 
+            }
+
+            async update(){
+                this.reload(true);
+            }
+
+            initGraph(chart, chartIndex){
+                const possibleApiFetchers = document.getElementById("Temperature-Widget-Table").getElementsByClassName("api-fetcher");
+                var colorFilters = [];
+                var apiFetchers = [];
+                for(let i = 0; i< possibleApiFetchers.length; i++){
+                    if(possibleApiFetchers[i].getAttribute("charted") == "true"){
+                        apiFetchers.push(possibleApiFetchers[i]);
+                        colorFilters.push(possibleApiFetchers[i].parentElement.getElementsByClassName("colorFilter")[0]);
+                    }
+                }
+
+                console.log("Iitializing a new chart\nindex: ",chartIndex,"\nhistory:",chart.getAttribute("history"),"\napiFetchers:",apiFetchers, "\ncolorFilters:",colorFilters);
+                chartArray[chartIndex] = new Chart(chart,
+                    {
+                        type: 'line',
+                        data: {
+                            labels: getCountdownArray(chart.getAttribute("history")),
+                            datasets: getEmptyDatasets(apiFetchers.length),
+                        },
+                        options: {
+                            maintainAspectRatio: false,
+                            responsive: true,
+                            animations: false,
+                            elements: {
+                                point:{
+                                    radius: 1
+                                }
+                            },
+                            interaction:{
+                                mode: "nearest",
+                                axis: "xy",
+                                intersect: false
+                            },
+                            plugins:{
+                                legend:{
+                                    display: false
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    display: true,
+                                    ticks: {
+                                        display: true
+                                    },
+                                    grid:{
+                                        color: "rgb(50,50,50)"
+                                    }
+                                },
+                                y: {
+                                    display: true,
+                                    suggestedMax: 40,
+                                    suggestedMin: 10,
+                                    grid:{
+                                        color: "rgb(50,50,50)"
+                                    }
+                                }
+                            },
+                            grid: {
+                                color: "red"
+                            }
+                        }
+                    }
+                );
+                chartArray[chartIndex].apiFetchers= apiFetchers;    
+                chartArray[chartIndex].count = 0; 
 
             
 
-            var i = 0;
-            chartArray[chartIndex].apiFetchers.forEach(element => {
-                const targetColorFilter = colorFilters[i];
-                
-                const dataSet = chartArray[chartIndex].data.datasets[i++];
-                const targetColor = targetColorFilter.getAttribute("colorFilter");
+                var i = 0;
+                chartArray[chartIndex].apiFetchers.forEach(element => {
+                    const targetColorFilter = colorFilters[i];
+                    
+                    const dataSet = chartArray[chartIndex].data.datasets[i++];
+                    const targetColor = targetColorFilter.getAttribute("colorFilter");
 
-                element.dataSet = dataSet;
-                element.chart = chart;
+                    element.dataSet = dataSet;
+                    element.chart = chart;
 
-                dataSet.borderColor     = targetColor;
-                dataSet.backgroundColor = darkenHexColor(targetColor,30);
-                
-                var label = element.parentElement.getElementsByClassName("table-name")[0].innerHTML.trim();
-                if(element.getAttribute("parent")){
-                    label = element.getAttribute("parent") + "." + label;
-                }
-
-                const splitLabel = label.split(' ');
-                dataSet.label = "";
-                for (let i = 0; i < splitLabel.length; i++) {
-                    const element = splitLabel[i];
-                    if(element[0] == '<'){
-                        break;
+                    dataSet.borderColor     = targetColor;
+                    dataSet.backgroundColor = darkenHexColor(targetColor,30);
+                    
+                    var label = element.parentElement.getElementsByClassName("table-name")[0].innerHTML.trim();
+                    if(element.getAttribute("parent")){
+                        label = element.getAttribute("parent") + "." + label;
                     }
-                    dataSet.label += element;
-                }     
-                dataSet.label = dataSet.label.trim();         
-                
-                console.log("new dataset borderColor:",dataSet.borderColor,
-                            ", backgroundColor:",dataSet.backgroundColor,
-                            ", label:",dataSet.label);
-            });    
-        });
+
+                    const splitLabel = label.split(' ');
+                    dataSet.label = "";
+                    for (let i = 0; i < splitLabel.length; i++) {
+                        const element = splitLabel[i];
+                        if(element[0] == '<'){
+                            break;
+                        }
+                        dataSet.label += element;
+                    }     
+                    dataSet.label = dataSet.label.trim();         
+                    
+                    console.log("new dataset borderColor:",dataSet.borderColor,
+                                ", backgroundColor:",dataSet.backgroundColor,
+                                ", label:",dataSet.label);
+                }); 
+            }
+
+            
+        }
              
 
     </script>
