@@ -3,6 +3,8 @@ var currNumOfCharts = 0;
 %>
 <script>
 
+    var currentDateTime = new Date();
+
     function callback(func){
         func();
     }
@@ -525,7 +527,7 @@ var currNumOfCharts = 0;
         
         //clock updater
         setInterval(() => {
-            const currentDateTime = new Date();
+            currentDateTime = new Date();
             const newDate = currentDateTime.getDate() + "." + (currentDateTime.getMonth()+1) + " " + currentDateTime.getFullYear();
             const newTime = addZeroIfNeeded(currentDateTime.getHours()) + ":" + addZeroIfNeeded(currentDateTime.getMinutes());
             document.getElementById("hotbar-date").innerHTML = newDate;
