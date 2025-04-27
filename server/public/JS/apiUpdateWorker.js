@@ -39,16 +39,21 @@ async function updateSite(root){
             fetchDataAsJson(":"+element.getAttribute("port")+element.getAttribute("resource"))
             .then(response => {
                 innerVal = ""
-                if(isNaN(response[element.getAttribute("component")])){
-                    innerVal = response[element.getAttribute("component")];
+                const responseValue=response[element.getAttribute("component")];
+                if(isNaN(responseValue)){
+                    innerVal = responseValue;
                 }else{
-                    var numberOfDecimalPLaces = element.getAttribute("decimal-places");
-                    if(numberOfDecimalPLaces==undefined){
-                        numberOfDecimalPLaces = 0;
+                    if(responseValue == null){
+                        innerVal = "Null";
+                    }else{
+                        var numberOfDecimalPLaces = element.getAttribute("decimal-places");
+                        if(numberOfDecimalPLaces==undefined){
+                            numberOfDecimalPLaces = 0;
+                        }
+                        var numberLabel = Number(responseValue);
+                        
+                        innerVal = numberLabel.toFixed(numberOfDecimalPLaces) + " " + element.getAttribute("unit");
                     }
-                    var numberLabel = Number(response[element.getAttribute("component")]);
-                    
-                    innerVal = numberLabel.toFixed(numberOfDecimalPLaces) + " " + element.getAttribute("unit")
                 }
                 
                 
