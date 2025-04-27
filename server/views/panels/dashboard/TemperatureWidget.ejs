@@ -126,9 +126,12 @@
 
                 console.log("TemperatureWidgetChartHandler", this);
 
-                setInterval(()=>{
+                if(updateSwitch){
+                    setInterval(()=>{
                     this.softReload();
                 },1000);
+                }   
+                
             }
 
             async reload(reloadScale = false){
