@@ -210,6 +210,9 @@ function mapRangeToRange(number, inMin,inMax, outMin,outMax){
     return ((number - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
 }
 function enforceMax(el){
+    if(el.value == "-"){
+        return
+    }
     if (el.value != "") {
         if(isNaN(el.value)){
             el.value = el.value.slice(0,-1)
@@ -221,6 +224,9 @@ function enforceMax(el){
     }
 }
 function enforceMin(el){
+    if(el.value == "-"){
+        return
+    }
     if (el.value != "") {
         if(isNaN(el.value)){
             el.value = el.value.slice(0,-1)
@@ -232,6 +238,9 @@ function enforceMin(el){
     }
 }
 function enforceMinMax(el) {
+    if(el.value == "-"){
+        return
+    }
     if (el.value != "") {
         if(isNaN(el.value)){
             el.value = el.value.slice(0,-1)
