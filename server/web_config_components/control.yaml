@@ -84,3 +84,21 @@ DashboardPanel:
         port: 8089
         component: "intensity"
         resource: "/control/heater/intensity"
+      - name: "Heater target temperature"
+        type: "setter"
+        unit: "°C"
+        decimalPlaces: 2
+        min: 0
+        max: 90
+        getter:
+          port: 8089
+          component: "temperature"
+          resource: "/control/heater/target_temperature"
+        setter:
+          port: 8089
+          component: "temperature"
+          resource: "/control/heater/target_temperature"
+        reset:
+          port: 8089
+          component: ""
+          resource: "/control/heater/turn_off"

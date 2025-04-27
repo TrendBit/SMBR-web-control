@@ -227,7 +227,24 @@ DashboardPanel:
         port: 8089
         component: "intesity"
         resource: "/control/heater/intesity"
-
+      - name: "Heater target temperature"
+        type: "setter"
+        unit: "°C"
+        decimalPlaces: 2
+        min: 0
+        max: 90
+        getter:
+          port: 80
+          component: "value"
+          resource: "/test-get"
+        setter:
+          port: 80
+          component: "test"
+          resource: "/test-post"
+        reset:
+          port: 80
+          component: "test"
+          resource: "/test-get"
 
   KineticFluorometerWidget:
     header: 

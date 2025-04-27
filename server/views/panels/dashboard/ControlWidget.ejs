@@ -22,7 +22,7 @@
         </div>
     </div>
     <div id="Control-Widget-sliders">
-    <%i = 0; DashboardPanel.ControlWidget.sliders.forEach(element => { %>
+    <%i = 0; DashboardPanel.ControlWidget.sliders.forEach(element => { if(element.type != "setter"){%>
         <div class="slider1 widget handler api-fetcher" handler-id="Slider1Handler">
             <div class="slider-labels">
                 <h3 class="slider-name"><%= element.name %></h3>
@@ -59,6 +59,54 @@
                 </button>
             <% }%>
         </div>
-    <% }); %> 
+    <% }else{ %>
+        <div class="widget setter1">
+            <div class="setter1-top">
+                <h3 class="setter1-name"><%= element.name %></h3>
+                <div class="setter1-currValue ">
+                    <p>current target: </p>
+                    <p  class="api-fetcher setter1-getter"
+                        port="<%= element.getter.port %>" 
+                        component="<%= element.getter.component %>" 
+                        resource="<%= element.getter.resource %>"
+                        unit="<%= element.unit  %>"
+                    ></p>
+                </div>
+                
+            </div>
+            <div class="setter1-bottom">
+                <button class="button1 left setter1-reset"  
+                            type="text" 
+                            value="1"
+                            onblur="enforceMin(this)" 
+                            onkeyup="enforceMax(this)"
+                            port="<%= element.reset.port %>" 
+                            component="<%= element.reset.component %>" 
+                            resource="<%= element.reset.resource %>" 
+                            onclick="button1Handler(this);apiUpdateWorkerUpdate(this.parentElement)"
+                ><p>turn off</p></button>
+                <div class="button2container setter1-input">
+                    <input class="button2 left"  
+                            type="text" 
+                            min="<%= element.min  %>"
+                            max="<%= element.max  %>"
+                            placeholder="<%= element.min  %>-<%= element.max  %> <%=element.unit%>"
+                            onblur="enforceMin(this)" 
+                            onkeyup="enforceMax(this)"
+                            
+                    >
+                    <button class="button2 right" 
+                            onclick="button2Handler(this,true,undefined);apiUpdateWorkerUpdate(this.parentElement.parentElement)"
+                            port="<%= element.setter.port %>" 
+                            component="<%= element.setter.component %>" 
+                            resource="<%= element.setter.resource %>" 
+                            component-type="number"
+                    >set</button>
+                </div>
+                
+            </div>
+            
+        </div>
+    <% }}); %> 
     </div>
 </div>
