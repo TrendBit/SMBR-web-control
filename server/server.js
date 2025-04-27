@@ -209,7 +209,7 @@ app.get('/services-status',async (req,res) => {
     const exec = util.promisify(require('child_process').exec);
     
     const services = [
-        "telegraf.service",
+        "reactor-database-export.service",
         "reactor-api-server.service",
         "reactor-core-module.service",
         "avahi-daemon.service",
