@@ -29,7 +29,7 @@ const PORT = 80;
 const indexUtilities = require('./indexUtilities.js');
 const { default: def } = require('ajv/dist/vocabularies/applicator/additionalItems.js');
 const { randomInt } = require('crypto');
-const { uptime } = require('process');
+const { uptime, config } = require('process');
 const configFilesPath = path.join("..","..","SMBR-config-files");
 
 
@@ -48,9 +48,9 @@ app.use("/node_modules/@codemirror",express.static(path.join(__dirname,'node_mod
 
 //sets the favicon resource
 app.use(favicon(path.join(__dirname, 'public','UI','logo','favicon.png')));
+app.use(express.json());
 
 
-app.use(express.text());
 //starts the server on port PORT
 app.listen(PORT);
 
@@ -204,10 +204,10 @@ app.get('/temperature-graph-recent', (req,res) => {
     
 });
 
-app.get('/services-status',async (req,res) => {
+app.get('/services-status', async (req, res) => {
     const util = require('util');
     const exec = util.promisify(require('child_process').exec);
-    
+
     const services = [
         "reactor-database-export.service",
         "reactor-api-server.service",
@@ -217,58 +217,58 @@ app.get('/services-status',async (req,res) => {
     ];
     var serviceStats = {};
     const currentMillis = (new Date()).getTime();
-    
-    for(var index in services){
+
+    for (var index in services) {
         const service = services[index];
-        if(process.platform=="linux"){ 
+        if (process.platform == "linux") {
             var stdObj;
             try {
-                const command = "systemctl status "+service+" | grep Active | awk -F \";\" '{print $2}' | sed 's/ ago//'";
+                const command = "systemctl status " + service + " | grep Active | awk -F \";\" '{print $2}' | sed 's/ ago//'";
                 stdObj = await exec(command);
             } catch (error) {
-                console.error("Error while trying to check service uptime ("+service+"):",error.message);
+                console.error("Error while trying to check service uptime (" + service + "):", error.message);
                 return;
-            }           
-            
+            }
+
             var uptime = stdObj.stdout + "";
-            if(uptime.includes(service)){
+            if (uptime.includes(service)) {
                 uptime = 0;
             }
-            
+
             serviceStats[service] = {
                 uptime: uptime,
                 state: "to be done"
             }
-            
+
             try {
-                stdObj = await exec("systemctl show "+service+" --property='ActiveState' | awk -F= '{print $2}'")
+                stdObj = await exec("systemctl show " + service + " --property='ActiveState' | awk -F= '{print $2}'")
             } catch (error) {
-                console.error("Error while trying to check service state ("+service+"):",error.message);
+                console.error("Error while trying to check service state (" + service + "):", error.message);
                 return;
-            }  
-            
-            serviceStats[service].state = stdObj.stdout;
-        }else{//just for debugging purposses
-            serviceStats[service] = {
-                uptime: randomInt(60)+"min " +randomInt(60)+"s",
             }
-            
+
+            serviceStats[service].state = stdObj.stdout;
+        } else {//just for debugging purposses
+            serviceStats[service] = {
+                uptime: randomInt(60) + "min " + randomInt(60) + "s",
+            }
+
             switch (randomInt(3)) {
                 case 0:
                     serviceStats[service].state = "active"
                     break;
-                    case 1:
-                        serviceStats[service].state = "inactive"
-                        break;
-                        default:
-                            serviceStats[service].state = "activating"
-                            break;
-                        }
-                    }
-                    
-                }    
-                res.status(200).send(JSON.stringify(serviceStats));
-            });
+                case 1:
+                    serviceStats[service].state = "inactive"
+                    break;
+                default:
+                    serviceStats[service].state = "activating"
+                    break;
+            }
+        }
+
+    }
+    res.status(200).send(JSON.stringify(serviceStats));
+});
             
             
             
@@ -288,200 +288,68 @@ app.get('/fluoro-curve',(req, res) => {
 });
 
 
-
-
-app.delete('/delete-file', async (req, res) => {
-    const fileDir = req.headers['target-directory'];
-    const fileName = req.headers['target-file'];
-    
-
-    if (fileName!=undefined && fileDir!=undefined) {
-        if(allowedDirectories[fileDir]!=undefined){
-            var files = undefined;
-            try {
-                files = fs.readdirSync(allowedDirectories[fileDir].path);
-            } catch (error) {
-                res.status(404).send("directory not found");
-                return;
-            }
-            if(files.includes(fileName)){
-                try {
-                    fs.unlinkSync(path.join(allowedDirectories[fileDir].path,fileName));
-                } catch (error) {
-                    res.status(404).send("insufficient permisions");
-                    return;
-                }
-    
-                res.status(200).send("file deleted successfully");
-                return;
-            }else{
-                res.status(404).send("file not found");
-                return;
-            }
-        }
-        else{
-            res.status(403).send("you don't have permisions to view this directory");
-            return;
-        }
-    }
-    else {
-        res.status(400).send("missing headers");
-        return
-        //console.log("unsuccessfull (400)\n----------------");
-    }
-
-})
-
-app.get('/file-list', async (req, res) => {
-    const fileDir = req.headers['target-directory'];
-
-    if(allowedDirectories[fileDir]!=undefined){
-        var files = undefined;
-        try {
-            files = fs.readdirSync(allowedDirectories[fileDir].path);
-        } catch (error) {
-            res.status(404).send("directory not found");
-            return;
-        }
-        res.status(200).send(JSON.stringify(files));
+app.get('/config-files', async (req, res) => {
+    var files = undefined;
+    try {
+        files = fs.readdirSync(configFilesPath);
+    } catch (error) {
+        res.status(500).send("directory not found");
         return;
     }
-    else{
-        res.status(403).send("you don't have permisions to view this directory");
-        return;
-    }
+    res.status(200).send(JSON.stringify(files));
+    return;
 });
+app.get('/config-files/:userPath', async (req, res) => {
+    const fileName = req.params.userPath;
 
-app.get('/read-file', async (req, res) => {
-    const fileDir = req.headers['target-directory'];
-    const file    = req.headers['target-file'];
-
-    if(allowedDirectories[fileDir]!=undefined){
-        var files = undefined;
-        try {
-            files = fs.readdirSync(allowedDirectories[fileDir].path);
-        } catch (error) {
-            res.status(404).send("directory not found");
-            return;
-        }
-        if(files.includes(file)){
-            var fileData = "";
-            try {
-                fileData = fs.readFileSync(path.join(allowedDirectories[fileDir].path,file),'utf8');
-            } catch (error) {
-                res.status(404).send("file cannot be opened");
-                return;
-            }
-
-            res.status(200).send(fileData);
-            return;
-        }else{
-            res.status(404).send("file not found");
-            return;
-        }
-    }
-    else{
-        res.status(403).send("you don't have permisions to view this directory");
+    var fileData = "";
+    try {
+        fileData = fs.readFileSync(path.join(configFilesPath,fileName),'utf8');
+    } catch (error) {
+        res.status(500).send("file cannot be opened");
         return;
     }
+    returnObj = {
+        name: fileName,
+        content: fileData
+    };
+    res.status(200).send(JSON.stringify(returnObj));
+    return;
 });
+app.put('/config-files/:userPath', async (req, res) => {
+    const fileName = req.params.userPath;
+    const maxBodySize = 500000;
 
-app.post('/send-file', (req, res) => {
-    const fileDir = req.headers['target-directory'];
-    const fileName = req.headers['target-file'];
-    const maxBodySize = 50000;
-    
-    const textEncoder = new TextEncoder();
-    if(textEncoder.encode(req.body).length > maxBodySize){
-        res.status(413).send("body too large (max size: "+maxBodySize+" bytes)");
+    if(req.body.name!=fileName){
+        res.status(400).send("invalid request body");
+        return;
+    }
+    fileData = "";
+    if(req.body.content == undefined){
+        res.status(400).send("invalid request body");
+        return; 
+    }else{
+        fileData = req.body.content;
+    }
+    try {
+        fs.writeFileSync(path.join(configFilesPath,fileName), fileData);
+    } catch (error) {
+        res.status(500).send("unable to write to file: "+error.message);
         return
     }
-    //console.log("send-file api activated\n----------------\nfileDir: "+fileDir+"\nfileName: "+fileName);
-    if(fileName!=undefined && fileDir!=undefined){
-        if(allowedDirectories[fileDir]!=undefined){
-            var fileData = "";
-            if(req.body != undefined){
-                fileData = req.body;
-            }
-
-
-            var validation = {result: 1};
-            var inputParsed = "";
-            try{
-                inputParsed = yaml.load(fileData);
-            }
-            catch{
-                res.status(422).send("[{\"criticalError\": \"file is not parsable to yaml\"}]");
-                return
-            }
-            var validationTarget = "";
-            if(fileDir == "experiments"){
-                validationTarget = "experiments_schema.yaml";
-            }
-            else{
-                const fileNameSplit= fileName.split(".");
-                const fileExtension =  fileNameSplit.pop();
-                validationTarget = fileNameSplit.join(".") + "_schema." + fileExtension; "test.yaml > test_schema.yaml";
-            }
-            
-            if(fs.existsSync(path.join(configFilesPath, "schemas", validationTarget))){
-                
-                validation = validateFile(
-                    inputParsed, 
-                    parseFileToJson(path.join(configFilesPath, "schemas", validationTarget))
-                )
-                if(validation.result){
-                    fs.writeFileSync("./"+fileDir + "/" +fileName, fileData);
-                    res.status(200).send("file transfer successfull");
-                    return
-                }else{
-                    res.status(422).send(JSON.stringify(validation.errors));
-                    return
-                }        
-            }
-            else{
-                console.log("no validation file for ", validationTarget);
-                fs.writeFileSync("./"+fileDir + "/" +fileName, fileData);
-                res.status(200).send("file transfer successfull");
-                return
-            }
-
-                
-        }
-        else{
-            res.status(403).send("you don't have permisions to write to this directory");
-            return
-        }
+    res.status(200).send("file transfer successfull");
+});
+app.delete('/config-files/:userPath', async (req, res) => {
+    const fileName = req.params.userPath;
+    try {
+        fs.unlinkSync(path.join(configFilesPath,fileName));
+    } catch (error) {
+        res.status(500).send("failed to delete file: "+error.message);
+        return;
     }
-    else{
-        res.status(400).send("missing headers");
-        return
-    }
-    
-})
-app.post('/create-file', (req, res) => {
-    const fileDir = req.headers['target-directory'];
-    const fileName = req.headers['target-file'];
-    const maxBodySize = 50000;
-
-    //console.log("send-file api activated\n----------------\nfileDir: "+fileDir+"\nfileName: "+fileName);
-    if(fileName){
-        if(allowedDirectories[fileDir]!=undefined){
-            fs.writeFileSync(path.join(allowedDirectories[fileDir].path,fileName), "");
-            res.status(200).send("file creation successfull");               
-        }
-        else{
-            res.status(403).send("you don't have permisions to write to this directory");
-            return
-        }
-    }
-    else{
-        res.status(400).send("missing headers");
-        return
-    }
-    
-})
-
+    res.status(200).send("file deleted successfully");
+    return;
+});
 
 /*
     returns
