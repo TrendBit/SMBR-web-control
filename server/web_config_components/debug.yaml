@@ -71,20 +71,6 @@ DashboardPanel:
         component: "value"
         charted: true
         
-        input:
-          min: 0
-          max: 90
-          resource: "/test-set"
-          component: "value"
-          componentType: "number"
-          reciever:
-            port: 80
-            resource: "/test-get"
-            component: "value"
-        inputReset:
-            port: 80
-            resource: "/test-get"
-            component: "value"
         sub_rows:
           - name: "Top"
             port: 80

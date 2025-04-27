@@ -33,20 +33,6 @@ DashboardPanel:
         component: "temperature"
         decimalPlaces: 2
         charted: true
-        
-        input:
-          min: 0
-          max: 90
-          resource: "/control/heater/target_temperature"
-          component: "temperature"
-          componentType: "number"
-          reciever:
-            resource: "/control/heater/target_temperature"
-            component: "temperature"
-
-        inputReset:
-          port: 8089
-          resource: "/control/heater/turn_off"
 
         sub_rows:
           - name: "Top"

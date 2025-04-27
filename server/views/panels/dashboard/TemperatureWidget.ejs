@@ -29,8 +29,6 @@
                 <th>color</th>
                 <th>name</th>
                 <th>current</th>
-                <th>target</th>
-                <th>reset</th>
             </tr>
         </thead>
         <tbody id="Temperature-Widget-Table">
@@ -55,54 +53,6 @@
                         decimal-places="<%= element.decimalPlaces %>"
                     >
                     </td>
-                    
-                    <td class="table-target">
-                        <% if(element.input) {%> 
-                            <div class="button2container">
-                                <input 
-                                    type='text' 
-                                    onblur="enforceMin(this);" 
-                                    onkeyup="enforceMax(this);" 
-                                    class="button2 left api-fetcher" 
-                                    min="<%= element.input.min %>" 
-                                    max="<%= element.input.max %>" 
-                                    placeholder="null"
-                                    <% if(element.input.reciever){ const reciever = element.input.reciever%>
-                                        port="<% if(reciever.port){%><%=reciever.port%><%}else{%><%="8089"%><%} %>"
-                                        unit="<% if(reciever.unit){%><%=reciever.unit%><%}else{%><%=""%><%} %>" 
-                                        resource="<%= reciever.resource %>" 
-                                        component="<%= reciever.component %>"
-                                        decimal-places="<%= reciever.decimalPlaces %>"
-                                        to-placeholder="true"
-                                    <% } %>
-                                    > 
-                                
-                                <input 
-                                    type="button" 
-                                    onclick="button2Handler(this,placeholderReset=true);" 
-                                    class="button2 right" 
-                                    value=">"
-                                    port="<% if(element.input.port){%><%=element.input.port%><%}else{%><%="8089"%><%} %>"
-                                    unit="<% if(element.input.unit){%><%=element.input.unit%><%}else{%><%=""%><%} %>" 
-                                    resource="<%= element.input.resource %>" 
-                                    component="<%= element.input.component %>"
-                                    decimal-places="<%= element.input.decimalPlaces %>"
-                                    component-type="<%= element.input.componentType%>"
-                                >
-                            </div>
-                        <% } %>
-                    </td>
-                    <td class="table-resettarget">
-                        <% if(element.inputReset) {%> 
-                            <button 
-                                class="button1"
-                                port="<% if(element.inputReset.port){%><%=element.inputReset.port%><%}else{%><%="8089"%><%} %>"
-                                resource="<%= element.inputReset.resource %>" 
-                                onclick="button1Handler(this)"
-                            >reset
-                            </button>
-                        <% } %>
-                    </td>
                 </tr>
 
                 <% if(element.sub_rows){numOfSubRows=element.sub_rows.length; for( let u = 0; u < numOfSubRows; u++ ) { let sub_element = element.sub_rows[u];%>
@@ -126,43 +76,6 @@
                             parent="<%=sub_element.name%>"
                             decimal-places="<%= sub_element.decimalPlaces %>"
                         >
-                        </td>
-                        
-                        <td class="table-target">
-                            <% if(sub_element.input) {%> 
-                                <div class="button2container">
-                                    <input 
-                                        type='text' 
-                                        onblur="enforceMin(this)" 
-                                        onkeyup="enforceMax(this)" 
-                                        class="button2 left api-fetcher" 
-                                        min="<%= sub_element.input.min %>" 
-                                        max="<%= sub_element.input.max %>" 
-                                        placeholder="null"
-                                        <% if(sub_element.input.reciever){ const reciever = sub_element.input.reciever%>
-                                            port="<% if(reciever.port){%><%=reciever.port%><%}else{%><%="8089"%><%} %>"
-                                            unit="<% if(reciever.unit){%><%=reciever.unit%><%}else{%><%=""%><%} %>" 
-                                            resource="<%= reciever.resource %>" 
-                                            component="<%= reciever.component %>"
-                                            decimal-places="<%= reciever.decimalPlaces %>"
-                                            to-placeholder="true"
-                                        <% } %>
-                                        > 
-                                    
-                                    <input 
-                                        type="button" 
-                                        onclick="button2Handler(this,placeholderReset=true)" 
-                                        class="button2 right" 
-                                        value=">"
-                                        port="<% if(sub_element.input.port){%><%=sub_element.input.port%><%}else{%><%="8089"%><%} %>"
-                                        unit="<% if(sub_element.input.unit){%><%=sub_element.input.unit%><%}else{%><%=""%><%} %>" 
-                                        resource="<%= sub_elesub_element.inputment.resource %>" 
-                                        component="<%= sub_element.input.component %>"
-                                        decimal-places="<%= sub_element.input.decimalPlaces %>"
-                                        component-type="<%= sub_element.input.componentType%>"
-                                    >
-                                </div>
-                            <% } %>
                         </td>
                     </tr>
                 <% }} %>
