@@ -517,7 +517,7 @@ body {
   div.header {
     margin: 0;
     padding: 5;
-    border-bottom: var(--acc-color-1) 2px solid;
+    border-bottom: var(--acc-color-2) 2px solid;
     background-color: var(--bg-color-3);
     display: flex;
     flex-direction: row;
