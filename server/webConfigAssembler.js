@@ -2,7 +2,6 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const axios = require('axios');
 const { networkInterfaces } = require('os');
-
 var loadedModules = [
     {
         module_type: "debug",
@@ -75,7 +74,7 @@ module.exports = {
             lastConfigRefresh = currTime;
             buildWebConfig();
         }
-        try {
+        /*try {
             const result = yaml.load(fs.readFileSync("webConfig.yaml"));    
             return result;
         } catch (error) {
@@ -85,7 +84,8 @@ module.exports = {
                     description: "unable to build web config, check your configuration and try again"
                 }
             ]};
-        }
+        }*/
+        return assembledConfig;
     },
     getLoadedModules: function() {
         return loadedModules;
@@ -316,7 +316,7 @@ function buildWebConfig(){
 
     deepMerge(moduleConfig, assembledConfig);
 
-    fs.writeFileSync("webConfig.yaml",yaml.dump(assembledConfig));
+    //fs.writeFileSync("webConfig.yaml",yaml.dump(assembledConfig));
 }
 
 function censor(censor) {
