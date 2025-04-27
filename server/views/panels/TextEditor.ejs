@@ -1,39 +1,43 @@
-
-<div class="file-browser">
-    <div class="search-bar">
-        <input type="text">
-        <img src="UI/icons/search_icon.svg" alt="searchIcon" class="icon">
-    </div>
-    <% if(type == "experiments"){%>
-    <div class="add-button ">
-        <div class="button1">
-            <div class="button2container">
-                <input type="text" class="button2 left add-button-fileName" placeholder="file name">
-                <button class="button2 right" onclick="createNewFileOnServer(this, '<%= type %>')">create</button>
+<div class="container handler fileEditor api-fetcher" handler-id="FileEditorHandler" source-url="<%= resourceURL %>">
+    <div class="fileEditor-browser">
+        <div class="search-bar">
+            <input type="text">
+            <img src="UI/icons/search_icon.svg" alt="searchIcon" class="icon">
+        </div>
+        <% if(allowCreateFiles == true){%>
+        <div class="add-button ">
+            <div class="button1">
+                <div class="button2container">
+                    <input type="text" class="button2 left add-button-fileName" placeholder="file name">
+                    <button class="button2 right"
+                        onclick="getHandlerObj(this,'FileEditorHandler').createNewFile()">create</button>
+                </div>
+                <img src="UI/icons/add_icon.svg" alt="addIcon" onclick="toggleClass_Parent(this, 'activated')">
             </div>
-            <img src="UI/icons/add_icon.svg" alt="addIcon" onclick="toggleClass_Parent(this, 'activated')">
         </div>
+        <% } %>
+        <ul class="fileEditor-list">
+        </ul>
     </div>
-    <% } %>
-    <ul class="file-list" >
-        <script>onloadQueue.push(() => reloadFileList('<%= type %>'));</script>
-    </ul>
-
-</div>
-<div class="file-editor">
-    <div class="fe-header">
-        <div class="fe-left-buttons">
-            <% if(type=="experiments"){ %>
-                <button class="headerButton" onclick="deleteFileOnServer('<%= type %>')"><img src="<%= getIcon("trashbin") %>" alt="delete" title="delete"></button>
-                <button class="headerButton" onclick="renameFileOnServer('<%= type %>')"><img src="<%= getIcon("rename") %>" alt="rename" title="rename"></button>
-            <% }%>
+    <div class="fileEditor-editor">
+        <div class="header">
+            <div class="left-buttons">
+                <button class="headerButton delete-button"
+                    onclick="getHandlerObj(this,'FileEditorHandler').deleteCurrentFile()">
+                    <img src="<%= getIcon("trashbin") %>" alt="delete" title="delete">
+                </button>
+            </div>
+            <h2 class="fileName">Select file</h2>
+            <h3 class="fileExtension"></h3>
+            <div class="right-buttons">
+                <button class="headerButton save-button" onclick="getHandlerObj(this,'FileEditorHandler').sendCurrentFileToServer()">
+                    <img src="<%= getIcon("save") %>" alt="upload" title="upload"></button>
+                <button class="headerButton assign-button"
+                    onclick="getHandlerObj(this,'FileEditorHandler').assignFileToScheduler()"> <img src="<%= getIcon("upload")
+                        %>" alt="upload" title="upload"></button>
+            </div>
+            <div class="popup" onclick="getHandlerObj(this,'FileEditorHandler').setHeaderPopup('ok','')"></div>
         </div>
-        <h2 class="fe-fileName">Select file</h2>
-        <h3 class="fe-fileExtension"></h3>
-        <div class="fe-right-buttons">
-            <button class="headerButton" onclick="saveFileOntoServer('<%= type %>')"> <img src="<%= getIcon("upload") %>" alt="upload" title="upload"></button>
-        </div>
-        <div class="fe-popup"></div>
-    </div>  
-    <textarea id="<%= type %>-codeditor" name="<%= type %>-codeditor"></textarea>
+        <textarea class="codeeditor"></textarea>
+    </div>
 </div>

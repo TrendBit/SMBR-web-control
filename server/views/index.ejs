@@ -90,6 +90,7 @@ var currNumOfCharts = 0;
     <link rel="stylesheet" href="CSS/fonts/Fira_Code.css">
     <link rel="stylesheet" href="CSS/fonts/Roboto.css">
     <link rel="stylesheet" href="CSS/stylesheet.css">
+    <link rel="stylesheet" href="CSS/fileEditor.css">
 </head>
 <body onload="executeOnloadQueue()">
     
@@ -178,11 +179,11 @@ var currNumOfCharts = 0;
                 </div>  
             <% } %>
 
-            <div id="experiments-Panel" class="content-panel container hidden">
-                <%- include('panels/TextEditor', {type: "experiments"}) %>
+            <div id="experiments-Panel" class="content-panel container hidden content-panel-fullscreen">
+                <%- include('panels/TextEditor', {allowCreateFiles: true, resourceURL: ":8089/scripts"}) %>
             </div>
-            <div id="configs-Panel" class="content-panel container hidden">
-                <%- include('panels/TextEditor', {type: "configs"})%>
+            <div id="configs-Panel" class="content-panel container hidden content-panel-fullscreen">
+                <%- include('panels/TextEditor', {allowCreateFiles: true, resourceURL: "/config-files"})%>
             </div>
 
             <% if(locals.DevicePanel){ %>

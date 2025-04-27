@@ -1,0 +1,348 @@
+.fileEditor {
+    display: flex;
+
+    .fileEditor-browser {
+        background: var(--bg-color-2);
+        color: var(--text-color-light);
+        padding: 3px;
+        display: flex;
+        flex-direction: column;
+        width: 300px;
+        min-width: 300px;
+
+        .search-bar {
+            border-bottom: var(--acc-color-1) 2px solid;
+            display: flex;
+            padding: 5px;
+            gap: 5px;
+
+
+            input {
+                background: var(--bg-color-1);
+                border: var(--bg-color-3) 1px solid;
+                color: var(--bg-color-5);
+                width: 100%;
+            }
+
+            input:focus {
+                color: var(--text-color-light);
+            }
+        }
+
+        .add-button {
+            width: 100%;
+            display: flex;
+
+            * {
+                transition: all 0.2s ease-in-out;
+            }
+
+            >div {
+                display: flex;
+                width: 100%;
+                margin: 0 5px 0 5px;
+                border-top: none;
+                border-radius: 0px 0px 2px 2px;
+                padding: 2px;
+
+
+                .button2container {
+                    width: 0px;
+                    overflow: hidden;
+                }
+
+                justify-content: center;
+                align-items: center;
+            }
+
+            >div:hover {
+                background-color: unset;
+            }
+
+            >div:has(img:hover) {
+                background-color: var(--bg-color-3);
+            }
+
+
+            >div.activated {
+                .button2container {
+                    width: 100%;
+                    overflow: hidden;
+                }
+
+                img {
+                    transform: rotate(45deg);
+                    margin: 7px;
+                }
+            }
+        }
+
+        .fileEditor-list {
+            list-style: none;
+            padding: 5px;
+            margin: 0px;
+            height: 100%;
+            overflow: hidden;
+
+            li:nth-of-type(1) {
+                border-top: var(--bg-color-4) 1px solid;
+            }
+
+            li {
+                font-size: small;
+                padding: 8px 10px 8px 10px;
+                border-bottom: var(--bg-color-4) 1px solid;
+                transition: background-color 0.2s ease-in, border-color 0.2s ease-in;
+            }
+
+            li:hover {
+                background-color: var(--acc-color-2);
+                cursor: pointer;
+
+            }
+
+            li.active {
+                border-right: var(--acc-color-4) 2px solid;
+                border-left: var(--acc-color-4) 2px solid;
+                padding: 8px;
+            }
+
+            /*! margin: ; */
+
+        }
+
+
+    }
+
+    .fileEditor-editor {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        background-color: var(--bg-color-3);
+
+
+        >.header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 3px;
+            align-items: center;
+            position: relative;
+            z-index: 50;
+            background-color: var(--bg-color-4);
+            border-bottom: var(--bg-color-5) 3px solid;
+            transition: border-color 0.5s ease-in-out;
+            height: 37px;
+            padding: 3px;
+
+
+
+
+
+
+
+
+            >* {
+                width: max-content;
+                height: 100%;
+                display: flex;
+                flex-direction: row;
+                gap: 5px;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+
+
+            .fileName {
+                font-size: 200%;
+                white-space: nowrap;
+                text-align: left;
+                width: 100%;
+            }
+
+            .fileExtension {
+                height: min-content;
+                margin-right: auto;
+                margin-top: 2px;
+                padding: 2px;
+            }
+
+            .fileExtension.yaml {
+                color: darkgoldenrod;
+            }
+
+            .fileExtension.toml {
+                color: var(--acc-color-4);
+            }
+
+            .popup {
+                position: absolute;
+                right: 0px;
+                top: calc(100%);
+                border: var(--bg-color-5) 3px solid;
+                cursor: pointer;
+                background: rgba(var(--bg-color-4-rgb), 0.5);
+                padding: 10px;
+                width: fit-content;
+                height: fit-content;
+                transition: all 0.5s ease-in-out;
+
+
+
+                >* {
+                    display: block;
+                    width: 100%;
+                }
+
+                .errorTable {
+                    border-collapse: collapse;
+
+                    *:not(span) {
+                        border: var(--bg-color-4) 1px solid;
+                    }
+
+                    span.comment {
+                        color: var(--bg-color-5);
+                    }
+
+                    td {
+                        padding: 0 3px;
+                    }
+
+                    border: var(--bg-color-3) 2px solid;
+                    background-color: rgba(var(--bg-color-1-rgb), 0.3);
+                }
+
+            }
+
+        }
+
+        .header {
+            .popup:empty {
+                height: 0px;
+                overflow: hidden;
+                padding: 0px;
+                bottom: 0px;
+                opacity: 0;
+            }
+        }
+
+        .header.ok {
+            border-bottom-color: var(--acc-color-2);
+
+            .popup {
+                height: 0px;
+                overflow: hidden;
+                padding: 0px;
+                bottom: 0px;
+                opacity: 0;
+                border-color: var(--acc-color-2);
+                background-color: rgba(var(--acc-color-2-rgb), 0.5);
+            }
+        }
+        
+        .header.info{
+            border-bottom-color: var(--acc-color-2);
+            .popup {
+                border-color: var(--acc-color-2);
+                background-color: rgba(var(--acc-color-2-rgb), 0.5);
+            }
+        }
+
+        .header.warning {
+            border-bottom-color: var(--warn-color-3);
+
+            .popup {
+                border-color: var(--warn-color-3);
+                background-color: rgba(228, 194, 44, 0.5);
+            }
+        }
+
+        .header.error {
+            border-bottom-color: var(--err-color-3);
+
+            .popup {
+                border-color: var(--err-color-3);
+                background-color: rgb(117 17 0);
+                flex-direction: column;
+            }
+        }
+
+        /*syntax highlight rules*/
+        .CodeMirror * {
+            font-family: "Fira Code", monospace;
+
+            .cm-atom {
+                color: var(--acc-color-4);
+            }
+
+            .cm-meta {
+                color: aliceblue
+            }
+
+            .cm-number {
+                color: yellow
+            }
+
+            .cm-string {
+                color: beige
+            }
+
+            .cm-s-default {
+                color: blueviolet;
+            }
+
+            .cm-comment {
+                color: gray;
+            }
+
+            .cm-variable-2 {
+                color: darkgoldenrod;
+            }
+
+            .cm-keyword {
+                color: darkorange;
+            }
+
+            .cm-def {
+                color: orange;
+            }
+        }
+
+        .CodeMirror {
+            height: 100%;
+            width: 100%;
+            background: none;
+
+            .CodeMirror-scroll {
+                background-color: var(--bg-color-2);
+                color: var(--text-color-light);
+            }
+
+            .CodeMirror-gutters {
+                background-color: var(--bg-color-3);
+                border-right: var(--bg-color-5) 1px solid;
+                min-width: 35px;
+                text-align: right;
+            }
+
+            .CodeMirror-cursor {
+                border-left: 1px solid #fff;
+            }
+
+            .codemirror-code {
+                >*.called {
+                    background-color: var(--acc-color-1)
+                }
+            }
+        }
+
+        overflow: hidden;
+    }
+}
+
+.runtimeInfo {
+    
+}
