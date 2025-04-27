@@ -313,7 +313,7 @@ function slider2TextInputHandler(element,data){
 
 
 //should be called on the sender of a button2 (the other one will be used as input data)
-async function button2Handler(element,placeholderReset=false){
+async function button2Handler(element,valueReset=false,placeholderReset=false,customMethod=undefined){
     const currSide = element.classList.contains("left")
     const dataElement = element.parentElement.getElementsByClassName((currSide)?"right":"left")[0]
     var data = {}
@@ -336,12 +336,14 @@ async function button2Handler(element,placeholderReset=false){
     data[element.getAttribute("component")] = value
 
     if(placeholderReset){
-        dataElement.value = ""
         dataElement.placeholder = "..."
+    }
+    if(valueReset){
+        dataElement.value = ""
     }
     
     console.debug("button2Handler: sending ",data,"to ",":"+element.getAttribute("port")+element.getAttribute("resource"),element)
-    res = await sendData(":"+element.getAttribute("port")+element.getAttribute("resource"),JSON.stringify(data));
+    res = await sendData(":"+element.getAttribute("port")+element.getAttribute("resource"),JSON.stringify(data),undefined,customMethod);
     console.debug("button2Handler:",res.status)
     if(res == 0){
         dataElement.value = "Err"
