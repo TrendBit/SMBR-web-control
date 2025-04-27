@@ -1160,7 +1160,8 @@ body {
           display: flex;
           flex-direction: row;
 
-          >*.slider-labels {
+          box-sizing: border-box;
+                  >*.slider-labels {
             width: min-content;
             min-width: 120px;
           }
@@ -1192,7 +1193,7 @@ body {
           }
 
           align-items: center;
-        }
+}
       }
 
     }
