@@ -15,6 +15,9 @@ var loadedModules = [];
 var currSetStatus = "";
 
 async function updateSite(skipConextCheck, refresh){
+    if(!updateSwitch){
+        return;
+    }
     const apiFetchers = document.getElementsByClassName('module-api-fetcher');
 
     var newModules = {};

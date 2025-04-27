@@ -15,6 +15,9 @@ var apiUpdateWorkerUpdate;
     };
 var updateIndex = 0;
 async function updateSite(root){
+    if(!updateSwitch){
+        return;
+    }
     //if(root == document && currContext.el != null){
     //    root = currContext.el
     //}
