@@ -65,7 +65,7 @@ DashboardPanel:
     header: 
     rows:
       - name: "Bottle"
-        icon: "bottle"
+        icon: "water_full"
         port: 80
         resource: "/test-get"
         component: "value"
@@ -85,14 +85,14 @@ DashboardPanel:
             charted: true
 
       - name: "LED array"
-        icon: "leds"
+        icon: "wb_twilight"
         port: 80
         resource: "/test-get"
         component: "value"
         charted: true
 
       - name: "Boards"
-        icon: "board"
+        icon: "memory"
         component: "value"
         charted: false
 
@@ -122,7 +122,7 @@ DashboardPanel:
             charted: false
 
       - name: "Ambient"
-        icon: "temperature_ambient"
+        icon: "thermostat"
         port: 80
         resource: "/test-get"
         component: "value"

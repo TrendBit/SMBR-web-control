@@ -126,7 +126,7 @@ app.locals.getColor = function(index) {
 
 
 app.locals.getSubColor = function(index, degree) {
-    return darkenHexColor(app.locals.getColor(index),degree*20);
+    return darkenHexColor(app.locals.getColor(index),degree*15);
 }
 
 function hexToRgb(hex) {

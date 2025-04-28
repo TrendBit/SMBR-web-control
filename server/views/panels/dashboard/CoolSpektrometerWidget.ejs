@@ -17,7 +17,7 @@
 
                 
                 <button class="reset_button button1 hoverSpin" onclick="apiUpdateWorkerUpdate(this.parentElement.parentElement.parentElement);getHandlerObj(this,'SpectrometerHandler').update();">
-                    <img src="<%= getIcon("refresh") %>" alt="refresh" title="refresh">
+                    <p class="material-icons filled" title="refresh all values">autorenew</p>
                 </button>
         </div>
         <div class="top">
@@ -39,8 +39,8 @@
             <% DashboardPanel.CoolSpektrometerWidget.rows.forEach(element => { %>
                 <tr class="table-master">
                     <td class="table-color">
-                        <img src="<%= getIcon("dot") %>" alt="dot">
-                        <div class="colorFilter" maskImage="<%= getIcon("dot") %>" colorFilter="<% if(element.color){%><%= element.color%><%}else{%><%= getColor(i++)%><%}%>"></div>
+                        <% const channelColor = (element.color)?element.color:getColor(i++);%>
+                        <p class="material-icons filled" style=<%='color:'+channelColor%>>circle</p>
                     </td>
                     
 

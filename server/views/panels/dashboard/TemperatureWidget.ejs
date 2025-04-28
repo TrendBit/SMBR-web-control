@@ -14,7 +14,7 @@
                 </div>
             <% }); %>
             <button class="reset_button button1 hoverSpin" onclick="apiUpdateWorkerUpdate(this.parentNode.parentNode.parentNode)">
-                <img src="<%= getIcon("refresh") %>" alt="refresh" title="refresh">
+                <p class="material-icons filled" title="refresh all values">autorenew</p>
             </button>
         </div>
         <div class="top">
@@ -36,8 +36,9 @@
             <% DashboardPanel.TemperatureWidget.rows.forEach(element => { %>
                 <tr class="table-master">
                     <td class="table-color">
-                        <img src="<%= getIcon(element.icon) %>" alt="<%= element.icon %>">
-                        <div class="colorFilter" maskImage="<%= getIcon(element.icon) %>" colorFilter="<%= getColor(++i) %>"></div>
+                        <p class="material-icons filled" style=<%='color:'+getColor(++i)+';'%>>
+                            <%= element.icon %>
+                        </p>
                     </td>
 
                     <td class="table-name">
@@ -58,9 +59,8 @@
                 <% if(element.sub_rows){numOfSubRows=element.sub_rows.length; for( let u = 0; u < numOfSubRows; u++ ) { let sub_element = element.sub_rows[u];%>
                     <tr class="table-sub">
                         <td class="table-color">
-                            <% const imageURL = ((u+1)<numOfSubRows)?getIcon("subElement"):getIcon("subElement-last")%>
-                            <img src="<%=imageURL%>" alt="sub_element">
-                            <div class="colorFilter" maskImage="<%=imageURL%>" colorFilter="<%= getSubColor(i,u+1) %>"></div>
+                            <%const currIcon = ((u+1)<numOfSubRows)?'┣':'┗';%>
+                            <p class="material-icons filled" style=<%='color:'+getSubColor(i,u+1)+';'%>><%= currIcon%></p>
                         </td>
 
                         <td class="table-name">
@@ -249,16 +249,16 @@
 
             initGraph(chart, chartIndex){
                 const possibleApiFetchers = document.getElementById("Temperature-Widget-Table").getElementsByClassName("api-fetcher");
-                var colorFilters = [];
                 var apiFetchers = [];
+                var coloredIcons = [];
                 for(let i = 0; i< possibleApiFetchers.length; i++){
                     if(possibleApiFetchers[i].getAttribute("charted") == "true"){
                         apiFetchers.push(possibleApiFetchers[i]);
-                        colorFilters.push(possibleApiFetchers[i].parentElement.getElementsByClassName("colorFilter")[0]);
+                        coloredIcons.push(possibleApiFetchers[i].parentElement.getElementsByClassName("table-color")[0].children[0]);
                     }
                 }
 
-                console.log("Iitializing a new chart\nindex: ",chartIndex,"\nhistory:",chart.getAttribute("history"),"\napiFetchers:",apiFetchers, "\ncolorFilters:",colorFilters);
+                console.log("Iitializing a new chart\nindex: ",chartIndex,"\nhistory:",chart.getAttribute("history"),"\napiFetchers:",apiFetchers,"\ncoloredIcons",coloredIcons);
                 chartArray[chartIndex] = new Chart(chart,
                     {
                         type: 'line',
@@ -317,10 +317,8 @@
 
                 var i = 0;
                 chartArray[chartIndex].apiFetchers.forEach(element => {
-                    const targetColorFilter = colorFilters[i];
-                    
+                    const targetColor = coloredIcons[i].style.color;
                     const dataSet = chartArray[chartIndex].data.datasets[i++];
-                    const targetColor = targetColorFilter.getAttribute("colorFilter");
 
                     element.dataSet = dataSet;
                     element.chart = chart;

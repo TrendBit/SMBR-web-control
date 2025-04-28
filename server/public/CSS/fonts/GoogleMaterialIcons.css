@@ -1,0 +1,25 @@
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  src: url('/CSS/fonts/GoogleMaterialIcons.woff2') format('woff2');
+}
+
+
+.material-icons {
+font-family: 'Material Icons';
+font-variation-settings:
+  'FILL' 0, 
+  'GRAD' 0, 
+  'opsz' 24,
+  'wght' 400;
+font-style: normal;
+  scale:1.6;
+}
+.material-icons.filled {
+font-variation-settings:
+  'FILL' 1,
+  'GRAD' 0, 
+  'opsz' 24,
+  'wght' 250;
+  
+}

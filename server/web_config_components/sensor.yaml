@@ -27,7 +27,7 @@ DashboardPanel:
   TemperatureWidget:
     rows:
       - name: "Bottle"
-        icon: "bottle"
+        icon: "water_full"
         port: 8089
         resource: "/sensor/bottle/temperature"
         component: "temperature"
@@ -49,14 +49,14 @@ DashboardPanel:
             charted: false
             decimalPlaces: 2
       - name: "Heater plate"
-        icon: "dot"
+        icon: "mode_heat"
         port: 8089
         resource: "/control/heater/plate_temperature"
         component: "temperature"
         decimalPlaces: 2
         charted: false
       - name: "Fluorometer"
-        icon: "dot"
+        icon: "water_lux"
         port: 8089
         charted: false
 
@@ -76,7 +76,7 @@ DashboardPanel:
 
       - name: "Spectrofotometer"
         port: 8089
-        icon: "dot"
+        icon: "wb_incandescent"
         resource: "/sensor/spectrophotometer/emitor_temperature"
         component: "temperature"
         charted: false
@@ -84,7 +84,7 @@ DashboardPanel:
 
       - name: "Led panel"
         port: 8089
-        icon: "dot"
+        icon: "wb_twilight"
         resource: "/control/led_panel/temperature"
         component: "temperature"
         charted: false

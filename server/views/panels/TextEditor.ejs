@@ -24,18 +24,18 @@
             <div class="left-buttons">
                 <button class="headerButton delete-button"
                     onclick="getHandlerObj(this,'FileEditorHandler').deleteCurrentFile()">
-                    <img src="<%= getIcon("trashbin") %>" alt="delete" title="delete">
+                    <i class="material-icons" title="delete file">delete</i>
                 </button>
             </div>
             <h2 class="fileName">Select file</h2>
             <h3 class="fileExtension"></h3>
             <div class="right-buttons">
                 <button class="headerButton save-button" onclick="getHandlerObj(this,'FileEditorHandler').sendCurrentFileToServer()">
-                    <img src="<%= getIcon("save") %>" alt="upload" title="upload">
+                    <i class="material-icons" title="upload file to server">upload</i>
                 </button>
                 <% if(includeRuntimeInfo == true) {%>
                 <button class="headerButton assign-button" onclick="getHandlerObj(this,'FileEditorHandler').assignCurrentFileToScheduler()">
-                    <img src="<%= getIcon("upload") %>" alt="upload" title="upload">
+                    <i class="material-icons" title="upload file to server and assign to scheduler">share_windows</i>
                 </button>
                 <% } %>
             </div>
@@ -56,17 +56,19 @@
                 <div class="left-buttons">
                     <button class="headerButton connect-button"
                         onclick="getHandlerObj(this,'RuntimeInfoHandler').connectToFileEditor()">
-                        <img src="<%= getIcon("dot") %>" alt="connect" title="connect to editor">
+                        <i class="material-icons" title="link runtimeInfo to scheduler">link</i>
                     </button>
                 </div>
                 <h2 class="fileName">Runtime info</h2>
                 <h3 class="fileExtension"></h3>
                 <div class="right-buttons">
                     <button class="headerButton start-button" onclick="getHandlerObj(this,'RuntimeInfoHandler').start()">
-                        <img src="<%= getIcon("dot") %>" alt="start" title="start">
+                        <i class="material-icons filled" title="run script">play_arrow</i>
+
                     </button>
                     <button class="headerButton stop-button" onclick="getHandlerObj(this,'RuntimeInfoHandler').stop()"> 
-                        <img src="<%= getIcon("dot")%>" alt="stop" title="stop">
+                        <i class="material-icons filled" title="pause script">pause</i>
+
                     </button>
                 </div>
                 <div class="popup" onclick="getHandlerObj(this,'RuntimeInfoHandler').setHeaderPopup('ok','')"></div>

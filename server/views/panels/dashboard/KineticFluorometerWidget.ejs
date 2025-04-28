@@ -18,13 +18,13 @@
                     <p>calibrate</p>
                 </button>
                 <button class="button1 exportButton" onclick="getHandlerObj(this,'FluoroMeterHandler').exportGraphAsImage()" disabled="true">
-                    <img src="<%= getIcon("dot") %>" alt="export graph" title="export graph">
+                    <p class="material-icons filled" title="export graph as image">image_arrow_up</p>
                 </button>
                 <button class="button1 exportButton" onclick="getHandlerObj(this,'FluoroMeterHandler').exportDataToFile()" disabled="true">
-                    <img src="<%= getIcon("upload") %>" alt="export data" title="export data">
+                    <p class="material-icons filled" title="export data to file">upload_file</p>
                 </button>
                 <button class="reset_button button1 hoverSpin" onclick="getHandlerObj(this,'FluoroMeterHandler').fetchData(this,true)">
-                    <img src="<%= getIcon("refresh") %>" alt="refresh" title="refresh">
+                    <p class="material-icons filled" title="refresh all values">autorenew</p>
                 </button>
                 
         </div>

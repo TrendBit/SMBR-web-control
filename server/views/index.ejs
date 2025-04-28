@@ -88,6 +88,7 @@ var currNumOfCharts = 0;
     <title>SMPBR</title>
     
     <link rel="stylesheet" href="CSS/fonts/Fira_Code.css">
+    <link rel="stylesheet" href="CSS/fonts/GoogleMaterialIcons.css">
     <link rel="stylesheet" href="CSS/fonts/Roboto.css">
     <link rel="stylesheet" href="CSS/stylesheet.css">
     <link rel="stylesheet" href="CSS/fileEditor.css">
@@ -145,15 +146,27 @@ var currNumOfCharts = 0;
                 <% contextCnt = 0; %>
 
                 <% if(locals.DashboardPanel){ %>
-                <li class="active" onclick="changeContext('<%= contextCnt++ %>')"><img src="<%= getIcon("dashboard") %>"><span>Dashboard</span></li>
+                <li class="active" onclick="changeContext('<%= contextCnt++ %>')">
+                    <i class="material-icons filled">home</i>
+                    <span>Dashboard</span>
+                </li>
                 <% } %>
 
-                <li onclick="changeContext('<%= contextCnt++ %>')"><img src="<%= getIcon("experiments") %>" ><span>Experiments</span></li>
+                <li onclick="changeContext('<%= contextCnt++ %>')">
+                    <i class="material-icons filled">science</i>
+                    <span>Scripts</span>
+                </li>
 
-                <li onclick="changeContext('<%= contextCnt++ %>')"><img src="<%= getIcon("config") %>" ><span>Config</span></li>
+                <li onclick="changeContext('<%= contextCnt++ %>')">
+                    <i class="material-icons filled">build</i>
+                    <span>Config</span>
+                </li>
 
                 <% if(locals.DevicePanel){ %>
-                    <li onclick="changeContext('<%= contextCnt++ %>')"><img src="<%= getIcon("device") %>"><span>Device</span></li>
+                    <li onclick="changeContext('<%= contextCnt++ %>')">
+                        <i class="material-icons filled">terminal</i>
+                        <span>Device</span>
+                    </li>
                 <% } %>
             </ul>
         </div>

@@ -43,5 +43,7 @@ npm start --prefix ~/path/to/the/server/directory &
 __the server does not support HTTPS protocol__
 ___
 
-the web control system uses a number of packages, fonts and libraries that require their license to be shipped with the finished product
+The web control system uses a number of packages, fonts and libraries that require their license to be shipped with the finished product
 all of their licenses are inside the licenses folder
+
+Some icons are from https://github.com/google/material-design-icons/tree/master in the original, unchanged state.
