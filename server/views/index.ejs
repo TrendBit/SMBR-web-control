@@ -180,10 +180,10 @@ var currNumOfCharts = 0;
             <% } %>
 
             <div id="experiments-Panel" class="content-panel container hidden content-panel-fullscreen">
-                <%- include('panels/TextEditor', {allowCreateFiles: true, resourceURL: ":8089/scripts"}) %>
+                <%- include('panels/TextEditor', {allowCreateFiles: true, resourceURL: ":8089/recipes", includeRuntimeInfo: true}) %>
             </div>
             <div id="configs-Panel" class="content-panel container hidden content-panel-fullscreen">
-                <%- include('panels/TextEditor', {allowCreateFiles: true, resourceURL: "/config-files"})%>
+                <%- include('panels/TextEditor', {allowCreateFiles: true, resourceURL: "/config-files", includeRuntimeInfo: true})%>
             </div>
 
             <% if(locals.DevicePanel){ %>
