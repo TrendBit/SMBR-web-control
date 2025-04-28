@@ -148,21 +148,22 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
 
         
         
-        const header = element.getElementsByClassName("header")[0];
+        const fileEditor = element.getElementsByClassName("fileEditor-editor")[0];
+        const header = fileEditor.getElementsByClassName("header")[0];
         this.fileEditor  = {
-            element:       element.getElementsByClassName("fileEditor-editor")[0], 
+            element:       fileEditor, 
             calledLines:   [],
             header:        header, 
-            headerPopup:   element.getElementsByClassName("popup")[0], 
-            deleteButton:  element.getElementsByClassName("delete-button")[0],
-            saveButton:    element.getElementsByClassName("save-button")[0],
-            assignButton:  element.getElementsByClassName("assign-button")[0],
+            headerPopup:   fileEditor.getElementsByClassName("popup")[0], 
+            deleteButton:  fileEditor.getElementsByClassName("delete-button")[0],
+            saveButton:    fileEditor.getElementsByClassName("save-button")[0],
+            assignButton:  fileEditor.getElementsByClassName("assign-button")[0],
             fileName:      header.getElementsByClassName("fileName")[0], 
             fileExtension: header.getElementsByClassName("fileExtension")[0],
             code:          null, 
             codeElement:   null
         }
-        this.fileEditor.code=CodeMirror.fromTextArea(element.getElementsByClassName('codeeditor')[0], {
+        this.fileEditor.code=CodeMirror.fromTextArea(fileEditor.getElementsByClassName('codeeditor')[0], {
             lineNumbers: true,
             mode: 'text/x-yaml',
             indentUnit: 2,
@@ -224,6 +225,17 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
     addToFileList(name){
         this.fileBrowser.files.push(name)
         return "<li onclick=\"getHandlerObj(this,'FileEditorHandler').loadFileIntoEditor('"+name+"')\">"+name+"</li>";
+    }
+    selectFile(fileName){
+        const fileSelectElements = this.fileBrowser.fileListEl.children
+        for (let i = 0; i < fileSelectElements.length; i++) {
+            const element = fileSelectElements[i];
+            
+            element.classList.remove("active")
+            if(element.innerHTML == fileName){
+                element.classList.add("active")
+            }
+        }
     }
     clearFileList(){
         this.fileBrowser.files = [];

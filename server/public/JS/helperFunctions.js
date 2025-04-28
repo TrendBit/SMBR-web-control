@@ -23,6 +23,14 @@ function toggleClass_nthParent(element, className, hopCount){
     toggleClass(element, className);
 }
 
+function toggleClass_nthParent_byClass(element, className, hopCount, targetClassName){
+    for (let i = 0; i < hopCount; i++) {
+        element = element.parentElement;
+    }
+    target = element.getElementsByClassName(targetClassName)[0];
+    toggleClass(target, className);
+}
+
 
 
 function activateClass(element, className){

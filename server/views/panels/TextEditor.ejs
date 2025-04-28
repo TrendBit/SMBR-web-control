@@ -40,4 +40,90 @@
         </div>
         <textarea class="codeeditor"></textarea>
     </div>
+
+
+
+    <% if(includeRuntimeInfo == true) {%>
+    <button class="fileEditor-resizebar button1" onclick="toggleClass_nthParent_byClass(this,'hidden',1,'fileEditor-runtime-container')"></button>
+    <div class="fileEditor-runtime-container hidden">
+        <div class="fileEditor-runtime widget">
+            <div class="header">
+                <div class="left-buttons">
+                    <button class="headerButton connect-button"
+                        onclick="getHandlerObj(this,'FileEditorHandler').deleteCurrentFile()">
+                        <img src="<%= getIcon("dot") %>" alt="connect" title="connect to editor">
+                    </button>
+                </div>
+                <h2 class="fileName">Runtime info</h2>
+                <h3 class="fileExtension"></h3>
+                <div class="right-buttons">
+                    <button class="headerButton start-button" onclick="getHandlerObj(this,'FileEditorHandler').sendCurrentFileToServer()">
+                        <img src="<%= getIcon("dot") %>" alt="start" title="start">
+                    </button>
+                    <button class="headerButton stop-button" onclick="getHandlerObj(this,'FileEditorHandler').assignFileToScheduler()"> 
+                        <img src="<%= getIcon("dot")%>" alt="stop" title="stop">
+                    </button>
+                </div>
+                <div class="popup" onclick="getHandlerObj(this,'FileEditorHandler').setHeaderPopup('ok','')"></div>
+            </div>
+
+
+            <div class="selected-script">
+                <div><h3>Selected script:</h3><h2 class="selected-script-name">script name</h2></div>
+                <div><h3>Process id:</h3><h2 class="selected-script-processID">123456</h2></div>
+            </div>
+        
+            <div class="horflex lower-stats">
+                <div class="subspace call-stack">
+                    <div class="header">
+                        <h2>Call Stack</h2>
+                    </div>
+                    <table class="body">
+                        <tr><td>5</td><td>measure_transmittance</td></tr>
+                        <tr><td>10</td><td>air</td></tr>
+                        <tr><td>24</td><td>heater 1 5 2</td></tr>
+                        <tr><td>37</td><td>test</td></tr>
+                        <tr><td>5</td><td>heater_on</td></tr>
+                                     
+                    </table>
+                </div>
+                <div class="time-stats">
+                    <h2>Started</h2>
+                    <h3 class="selected-script-timeStarted">25:66 15.8.2009</h3>
+                    <h2>Time Elapsed</h2>
+                    <h3 class="selected-script-timeElapsed">15d 1h 4m 13s</h3>
+                </div>
+                <div class="status">
+                    <div class="container horflex">
+                        <h2>Status:</h2><h2 class="status-string">Running</h2>
+                    </div>
+                    <div>
+                        <img class="status-image running" src="<%= getIcon("refresh") %>">
+                    </div>
+                </div>
+            </div>
+            <div class="console-container">
+                <div class="subspace console">
+                    <div class="header">
+                        <h2>OUTPUT</h2>
+                        <div class="log-counter-container">
+                            <h2> logs</h2>
+                            <h2 class="log-counter">0</h2>
+                        </div>
+                    </div>
+                    <table class="body">
+                        <tr>
+                            <td>></td>
+                            <td>print</td>
+                        </tr>
+                        <tr>
+                            <td>></td>
+                            <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</td>
+                        </tr>             
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%}%>
 </div>
