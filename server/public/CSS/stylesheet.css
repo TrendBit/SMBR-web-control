@@ -81,6 +81,11 @@ input[type=number] {
   appearance: textfield;
 }
 
+/*animations*/
+@keyframes spin360 {
+  from {transform: rotate(0deg)}
+  to {transform: rotate(360deg)}
+}
 /*global class rules*/
 .loadingBarBackground {
   background: linear-gradient(90deg, var(--acc-color-2) 50%, transparent 50%);
