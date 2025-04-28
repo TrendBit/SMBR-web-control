@@ -177,7 +177,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         });
         this.fileEditor.code.refresh()
         this.fileEditor.codeElement=this.fileEditor.code.getWrapperElement().getElementsByClassName("codemirror-code")[0];
-
+        this.runtimeInfo = element.getElementsByClassName("fileEditor-runtime-container")[0];
         this.resizeBar = {
             open:true,
             visible:true,
@@ -200,7 +200,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
             this.runtime.originalDisplay=this.runtime.element.style.display
         }
 
-        this.connectedToRuntime=false;
+        this.connectedToRuntimeInfo = false;
 
         console.log("FileEditorHandler",this);
         
@@ -213,12 +213,16 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
     setButtonState(state){
         if(state){
             this.fileEditor.deleteButton.disabled=undefined;
-            this.fileEditor.assignButton.disabled=undefined;
             this.fileEditor.saveButton.disabled=undefined;
+            if(this.fileEditor.assignButton!=undefined){
+                this.fileEditor.assignButton.disabled=undefined;
+            }
         }else{
             this.fileEditor.deleteButton.disabled=true;
-            this.fileEditor.assignButton.disabled=true;
             this.fileEditor.saveButton.disabled=true;
+            if(this.fileEditor.assignButton!=undefined){
+                this.fileEditor.assignButton.disabled=true;
+            }
         }
     }
 
@@ -263,7 +267,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         this.fileEditor.code.setOption('readOnly', true);
         this.fileEditor.fileName.innerHTML="No file selected";
         this.fileEditor.fileExtension.innerHTML = "";
-        this.connectedToRuntime = false;
+        this.connectedToRuntimeInfo = false;
     }
     async loadFileIntoEditor(fileName){
         const response = await fetchDataAsJson(this.url+"/"+fileName).catch(err => {
@@ -276,21 +280,24 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
             
             return;
         })
-
+        if(response == undefined) return
+        this.loadDataIntoEditor(response.name,response.content)
+    }
+    loadDataIntoEditor(fileName, data, readOnly = false){
         this.resetEditor();
 
-        this.fileEditor.fileName.innerHTML = response.name;
+        this.fileEditor.fileName.innerHTML = fileName;
         this.fileEditor.fileExtension.innerHTML = "";
 
-        this.fileEditor.code.setValue(response.content);
-        this.fileEditor.code.setOption('readOnly', false); 
+        this.fileEditor.code.setValue(data);
+        this.fileEditor.code.setOption('readOnly', readOnly); 
         this.fileEditor.code.refresh();
-        this.setButtonState(true)
+        this.setButtonState(!readOnly)
 
         this.setHeaderPopup("ok", "");
 
         this.selectFile(fileName);
-    }
+    } 
     async sendCurrentFileToServer(){
         if(this.fileEditor.code.getOption('readOnly')==true){
             this.setHeaderPopup("warning", "Cannot save file while in read only mode");
@@ -344,6 +351,11 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         this.reloadFileList()
     }
 
+    async assignCurrentFileToScheduler(){
+        await this.sendCurrentFileToServer();
+        this.runtimeInfo.handler.assignFile(this.getCurrFileName());
+    }
+
     async handleResponseError(response){
         if(response == undefined){
             console.error('Error , no response from server');
@@ -370,5 +382,264 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
     }
     getCurrFileName(){
         return this.fileEditor.fileName.innerHTML
+    }
+
+    setCalledLines(arrayOfLineNums = []){
+        if(this.connectedToRuntimeInfo){
+            requestAnimationFrame(() => {
+                for (let i = 0; i < this.fileEditor.calledLines.length; i++) {
+                    const element = this.fileEditor.calledLines[i];
+                    element.classList.remove("called");
+                }
+                this.fileEditor.calledLines = [];
+                for (let i = 0; i < arrayOfLineNums.length; i++) {
+                    const lineNum = arrayOfLineNums[i];
+                    const targetLine=this.fileEditor.codeElement.children[lineNum-1];
+                    targetLine.classList.add("called");
+                    this.fileEditor.calledLines.push(targetLine);
+                }
+            });
+        }
+        
+    }
+}
+
+
+handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
+    constructor(element){
+        console.log("CREATING RuntimeInfoHandler");
+        this.url=element.getAttribute("source-url");
+        this.scriptInfo = {
+            name:element.getElementsByClassName("selected-script-name")[0],
+            contentLines:[],
+            processID:element.getElementsByClassName("selected-script-processID")[0],
+            callStack:element.getElementsByClassName("call-stack")[0],
+            timeStarted:element.getElementsByClassName("selected-script-timeStarted")[0],
+            timeElapsed:element.getElementsByClassName("selected-script-timeElapsed")[0],
+            console:element.getElementsByClassName("console")[0],
+            status:{
+                element: element.getElementsByClassName("status")[0],
+                string: element.getElementsByClassName("status-string")[0],
+                image: element.getElementsByClassName("status-image")[0]
+            }
+        }
+        this.console = {
+            cachedMessages:[],
+        }
+        this.header=element.getElementsByClassName("header")[0]
+        this.headerPopup=element.getElementsByClassName("popup")[0]
+        this.scriptLoaded=false;
+
+        this.element = element;
+        this.fileEditor = undefined;
+
+        
+        this.currentPanel = element;
+        while(!this.currentPanel.classList.contains("content-panel")){
+            this.currentPanel = this.currentPanel.parentElement;
+        }
+
+        this.connectedToFileEditor=false;
+        //this.addToCallstack(45)
+
+        this.clearConsole()        
+
+        this.reload();
+        setInterval(()=>{
+            this.reload();
+            
+        },500);
+        console.log("RuntimeInfoHandler",this);
+        
+    }
+
+
+    setHeaderPopup(messageType, message){
+        this.header.classList = "header " + messageType;
+        this.headerPopup.innerHTML = message;
+    }
+    async handleResponseError(response){
+        if(response == undefined){
+            console.error('Error , no response from server');
+            this.setHeaderPopup("error", "Error,<br>no response from server");
+            return true
+        }
+        if(response.status != 200){
+            var messageBody=await streamToString(response.body);
+            console.error('Error code('+response.status+'):',messageBody);
+            this.setHeaderPopup("error", 'Error code('+response.status+'):'+messageBody);
+            return true
+        }
+        return false
+    }
+
+    async start(){
+        const response = await sendData(this.url+"/start","").catch(err => {
+            console.error('Unable to start script: ', err);
+            this.setHeaderPopup("error", "Unable to start script: " + err);
+            return
+        })
+        if(response == undefined){
+            return
+        }
+        if(await this.handleResponseError(response)){
+            return
+        }
+
+        this.setHeaderPopup("info","script started")
+        this.reload()
+    }
+
+    async stop(){
+        const response = await sendData(this.url+"/stop","").catch(err => {
+            console.error('Unable to start stop: ', err);
+            this.setHeaderPopup("error", "Unable to stop script: " + err);
+            return
+        })
+        if(response == undefined){
+            return
+        }
+
+        if(await this.handleResponseError(response)){
+            return
+        }
+
+        this.setHeaderPopup("info","script stopped")
+        this.reload()
+    }
+
+    setStatus(status){
+        this.scriptInfo.status.string.innerHTML = status;
+        this.scriptInfo.status.image.classList = "status-image " + status
+    }
+
+    async reload(){
+        if(this.currentPanel.classList.contains("hidden")){
+            return;
+        }
+        const response = await fetchDataAsJson(this.url+"/runtime").catch(err => {
+            console.error('Error while getting runtime info:', err);
+            this.setHeaderPopup("error", "error while getting runtime info:<br>" + err);
+            return
+        })
+        if(response == undefined) return
+        this.scriptLoaded=true;
+        if(response.name==""){
+            this.scriptLoaded=false;
+        }
+        this.scriptInfo.name.innerHTML=response.name
+        this.scriptInfo.processID.innerHTML=response.processId
+        this.scriptInfo.timeStarted.innerHTML=response.startedAt
+        this.setStatus("undefined")
+
+        if(response.started){
+            this.setStatus("running")
+        }
+        if(response.stopped){
+            this.setStatus("stopped")
+        }
+
+        this.setConsole(response.output)
+
+        if(this.scriptLoaded){
+            const response = await fetchDataAsJson(this.url+"/recipe").catch(err => {
+                console.error('Error while getting file:', err);
+                this.setHeaderPopup("error", "error while opening the file:<br>" + err);
+                return
+            })
+            if(response == undefined) return
+
+            this.scriptInfo.contentLines = response.content.split("\n");
+        }
+
+        this.clearCallstack();
+        for (let i = 0; i < response.stack.length; i++) {
+            this.addToCallstack(response.stack[i])                
+        }
+        if(this.fileEditor!=undefined){ 
+            this.fileEditor.setCalledLines(response.stack);
+        }
+
+        
+        
+    }
+
+    addToSubspace(element, left, right){
+        var body = element.getElementsByClassName("body")[0].children[0]
+        body.innerHTML+="<tr><td>"+left+"</td><td>"+right+"</td></tr>"
+    }
+    changeLineInSubspace(element,index,left,right){
+        var body = element.getElementsByClassName("body")[0].children[0]
+        body.children[index].innerHTML="<td>"+left+"</td><td>"+right+"</td>"
+    }
+    clearSubspace(element){
+        var body = element.getElementsByClassName("body")[0].children[0]
+        body.innerHTML=""
+    }
+    clearCallstack(){
+        this.clearSubspace(this.scriptInfo.callStack);
+    }
+    addToCallstack(lineNum){
+        this.addToSubspace(this.scriptInfo.callStack,lineNum,this.scriptInfo.contentLines[lineNum-1])
+    }
+    clearConsole(){
+        this.clearSubspace(this.scriptInfo.console);
+        this.scriptInfo.console.getElementsByClassName("log-counter")[0].innerHTML=0;
+        this.console.cachedMessages = [];
+    }
+    addToConsole(text){
+        const textSplit = text.split(" ");
+        const timestamp = textSplit[0]+" "+textSplit[1];
+
+        this.addToSubspace(this.scriptInfo.console,timestamp,textSplit[2]);
+        var logCount = this.scriptInfo.console.getElementsByClassName("log-counter")[0];
+        logCount.innerHTML = Number(logCount.innerHTML) + 1;
+        this.console.cachedMessages.push(text)
+    }
+    setConsole(outputArr){
+        requestAnimationFrame(() => {
+            this.clearConsole();
+            for (let i = outputArr.length-1; i >= 0 ; i--) {
+                this.addToConsole(outputArr[i]);
+            }
+        });
+    }
+
+    async connectToFileEditor(){
+        this.fileEditor = getHandlerObj(this.element,"FileEditorHandler");
+
+        const response = await fetchDataAsJson(this.url+"/recipe").catch(err => {
+            console.error('Error while connecting to file editor:', err);
+            this.setHeaderPopup("error", "Error while connecting to file editor:<br>" + err);
+            return
+        })
+        if(response == undefined){
+            return
+        }
+        
+        this.fileEditor.loadDataIntoEditor(response.name+" - scheduler cached", response.content, true);
+        this.fileEditor.connectedToRuntimeInfo=true;
+        this.connectedToFileEditor = true;
+    }
+
+    async loadSchedulerFileIntoEditor(){
+        await this.reload()
+        await this.scriptsHandler.loadSchedulerFileIntoEditor();
+        await this.reload()
+    }
+
+    async assignFile(fileName){
+        const response = await sendData(this.url+"/recipe", '"'+fileName+'"').catch(err => {
+            console.error('Unable to assign file:', err);
+            this.setHeaderPopup("error", "Error while assigning file:<br>" + err);
+            return
+        })
+        
+        if(await this.handleResponseError(response)){
+            return
+        }
+
+        this.setHeaderPopup("info", "file "+fileName+" assigned to sheduler");
+        this.reload()
     }
 }

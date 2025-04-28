@@ -7,8 +7,8 @@
         padding: 3px;
         display: flex;
         flex-direction: column;
-        width: 300px;
-        min-width: 300px;
+        width: 200px;
+        min-width: 200px;
 
         .search-bar {
             border-bottom: var(--acc-color-1) 2px solid;
@@ -363,17 +363,17 @@
         }
 
         .subspace {
-            height: 100%;
             border: var(--bg-color-5) 1px solid;
             border-radius: 10px;
             position: relative;
             background-color: var(--bg-color-1);
-            overflow-y: scroll;
 
             display: flex;
             flex-direction: column;
 
-            h3 {
+            height: 100%;
+            flex: 1 1 auto;
+                    h3 {
                 margin: 0;
             }
 
@@ -406,39 +406,45 @@
 
 
             }
-
-            .body {
-                border-collapse: collapse;
-                height: 100%;
-
-                tr {
-                    td {
-                        padding: 2px 5px;
-                        vertical-align: text-top;
+            .body-container{
+                overflow-y: scroll;
+                /*! height: 100%; */
+                display: flex;
+                            .body {
+                    border-collapse: collapse;
+                    height: 50px;
+    
+                    width: 100%;
+                                    tr {
+                        td {
+                            padding: 2px 5px;
+                            vertical-align: text-top;
+                        }
+    
+                        td:first-child {
+                            background-color: var(--bg-color-3);
+                            width: 1px;
+                            white-space: nowrap;
+                        }
+    
+                        td:last-child {
+                            border-bottom: 1px solid var(--bg-color-4);
+    
+                        }
                     }
-
-                    td:first-child {
-                        background-color: var(--bg-color-3);
-                        width: 1px;
-                    }
-
-                    td:last-child {
-                        border-bottom: 1px solid var(--bg-color-4);
-
-                    }
-                }
-
-                tr:last-child {
-                    height: 100%;
-
-                    * {
+    
+                    tr:last-child {
                         height: 100%;
-                        border: none;
+    
+                        * {
+                            height: 100%;
+                            border: none;
+                        }
                     }
-                }
-
-            }
-        }
+    
+}
+}
+}
 
         .selected-script{
             display: flex;
@@ -503,7 +509,9 @@
         }
 
         .console-container{
-            flex: 1 0 auto;
+            flex: 1 1 100%;
+            display: flex;
+            overflow: hidden;
         }
         
         

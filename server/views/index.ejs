@@ -183,7 +183,7 @@ var currNumOfCharts = 0;
                 <%- include('panels/TextEditor', {allowCreateFiles: true, resourceURL: ":8089/recipes", includeRuntimeInfo: true}) %>
             </div>
             <div id="configs-Panel" class="content-panel container hidden content-panel-fullscreen">
-                <%- include('panels/TextEditor', {allowCreateFiles: true, resourceURL: "/config-files", includeRuntimeInfo: true})%>
+                <%- include('panels/TextEditor', {allowCreateFiles: false, resourceURL: "/config-files", includeRuntimeInfo: false})%>
             </div>
 
             <% if(locals.DevicePanel){ %>
