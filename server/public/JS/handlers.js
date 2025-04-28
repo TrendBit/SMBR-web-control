@@ -512,6 +512,7 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
         this.scriptInfo.status.string.innerHTML = status;
         this.scriptInfo.status.image.classList.remove("running");
         this.scriptInfo.status.image.classList.remove("stopped");
+        this.scriptInfo.status.image.classList.remove("uundefined");
         this.scriptInfo.status.image.classList.add(status);
         switch (status) {
             case "running":
