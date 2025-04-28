@@ -168,6 +168,12 @@ body {
   }
 }
 
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  display: inline-block;
+}
+
 .button1,
 .button2,
 .radio1 {
@@ -314,6 +320,7 @@ body {
       border: var(--bg-color-3) 1px solid;
       border-style: none solid none none;
       padding-right: 5px;
+      white-space: nowrap;
     }
 
     *:last-child {
