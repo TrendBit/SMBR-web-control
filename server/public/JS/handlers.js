@@ -510,7 +510,22 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
 
     setStatus(status){
         this.scriptInfo.status.string.innerHTML = status;
-        this.scriptInfo.status.image.classList = "status-image " + status
+        this.scriptInfo.status.image.classList.remove("running");
+        this.scriptInfo.status.image.classList.remove("stopped");
+        this.scriptInfo.status.image.classList.add(status);
+        switch (status) {
+            case "running":
+                this.scriptInfo.status.image.innerHTML="clock_loader_10"
+                break;
+            case "stopped":
+                this.scriptInfo.status.image.innerHTML="pause"
+                break;
+        
+            default:
+                this.scriptInfo.status.image.innerHTML="help"
+                break;
+        }
+        
     }
 
     async reload(){
