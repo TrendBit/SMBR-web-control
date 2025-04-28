@@ -232,7 +232,6 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
 
     async reloadFileList(){
         var files=[]
-        this.fileBrowser.fileListEl.innerHTML=""
         try {
             files = await fetchDataAsJson(this.url)
         } catch (err) {
@@ -244,9 +243,8 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         for (let i = 0; i < files.length; i++) {
             newInnerHTML+=this.addToFileList(files[i])
         }
-        requestAnimationFrame(() => {
-            this.fileBrowser.fileListEl.innerHTML = newInnerHTML;
-        });
+        this.fileBrowser.fileListEl.innerHTML = newInnerHTML;
+        this.selectFile(this.getCurrFileName());
     }
     resetEditor(){
         this.setButtonState(false)
