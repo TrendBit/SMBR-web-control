@@ -145,15 +145,16 @@ function deepEqual(x, y) {
 var loadedConfig = {DashboardPanel:{TemperatureWidget:{rows:[]}}};
 var currentModuleTemps = {};
 async function temperatureGraphFetch(){
-    if(loadedConfig == undefined) return;
-    if(loadedConfig.DashboardPanel == undefined) return;
-    if(loadedConfig.DashboardPanel.TemperatureWidget == undefined) return;
-
+    
     const newConfig = webConfigAssembler.getConfig("[internal readings logger]");
     if(!deepEqual(newConfig,loadedConfig)){
         loadedConfig = newConfig;
         currentModuleTemps = {};
     }
+    
+    if(loadedConfig == undefined) return;
+    if(loadedConfig.DashboardPanel == undefined) return;
+    if(loadedConfig.DashboardPanel.TemperatureWidget == undefined) return;
 
     await fetchDataForRows(loadedConfig.DashboardPanel.TemperatureWidget.rows);
 

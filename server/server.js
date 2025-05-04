@@ -9,6 +9,17 @@ const yaml = require('js-yaml');
 const ajv = require('ajv'); //another json validator
 const toml = require('toml');
 
+
+global.SMBR_debugMode = false;
+process.argv.forEach(function (val, index, array) {
+    if(val == "-d"){
+        console.warn("#######################");
+        console.warn("##### DEBUG MODE ######");
+        console.warn("#######################");
+        global.SMBR_debugMode = true;
+    }
+});
+
 //colors all error outputs RED and warn outputs in YELLOW
 //colors all error outputs RED and warn outputs in YELLOW
 import("chalk").then(chalk => {
@@ -31,6 +42,8 @@ const { default: def } = require('ajv/dist/vocabularies/applicator/additionalIte
 const { randomInt } = require('crypto');
 const { uptime, config } = require('process');
 const configFilesPath = path.join("..","..","SMBR-config-files");
+
+
 
 
 //fixes the "TypeError: NetworkError when attempting to fetch resource" error by allowing anyone to use the api: 
