@@ -404,6 +404,25 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
     }
 }
 
+handlers["HostnameTitleHandler"] = class HostnameTitleHandler{
+    constructor(element){
+        this.element = element.getElementsByClassName("api-fetcher")[0];
+    }
+
+    async update(){
+        var response;
+        try {
+            response = await fetchDataAsJson(":"+this.element.getAttribute("port")+this.element.getAttribute("resource"));
+            const hostname = response[this.element.getAttribute("component")];
+            if(hostname != undefined){
+                document.title = "SMPBR-" + hostname;
+            }
+        } catch (error) {
+            document.title = "SMPBR";
+        }
+    }
+}
+
 
 handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
     constructor(element){
