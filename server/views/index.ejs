@@ -97,8 +97,7 @@ var currNumOfCharts = 0;
     
     <header id="HOTBAR">
         <button onclick="toggleClass_ByID('SIDEBAR', 'collapsed')"><img src="<%= getIcon("mini_logo") %>"></button>
-        <h1>Smart Modular Photo-Bio-Reactor</h1>
-        <div>
+        <h1>Smart Modular Photo Bioreaktor</h1>
         <div class="api-fetcher handler" handler-id="HostnameTitleHandler" update-cost="11">
             <p>hostname: </p>
             <p 
@@ -187,8 +186,8 @@ var currNumOfCharts = 0;
                     <% if(DashboardPanel.ControlWidget){  %>
                         <%- include('panels/dashboard/ControlWidget.ejs') %>
                     <% } %>    
-                    <% if(DashboardPanel.LedArrayWidget){ %>
-                        <%- include('panels/dashboard/LedArrayWidget.ejs') %>
+                    <% if(DashboardPanel.LedPanelWidget){ %>
+                        <%- include('panels/dashboard/LedPanelWidget.ejs') %>
                     <% } %>           
                 </div>  
             <% } %>

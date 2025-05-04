@@ -2,13 +2,20 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const axios = require('axios');
 const { networkInterfaces } = require('os');
-var loadedModules = [
-    {
-        module_type: "debug",
-        uid: "0x00000000000000000",
-        instance: "Virtual"
-    }
-];
+
+
+var loadedModules = [];
+if(global.SMBR_debugMode){
+    loadedModules = [
+        {
+            module_type: "debug",
+            uid: "0x00000000000000000",
+            instance: "Virtual"
+        }
+    ];
+}
+
+
 var assembledConfig = {};
 
 const allwaysRebuildConfig = false;

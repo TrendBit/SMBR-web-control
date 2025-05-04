@@ -130,7 +130,7 @@ DashboardPanel:
 
     chart:
       history: 30
-  LedArrayWidget:
+  LedPanelWidget:
     header: 
         rows:
           - name: "temperature"

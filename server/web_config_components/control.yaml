@@ -24,7 +24,7 @@
 #graph
 #   
 DashboardPanel:
-  LedArrayWidget:
+  LedPanelWidget:
     sliders:
       - name: "Channel 1"
         min: 0

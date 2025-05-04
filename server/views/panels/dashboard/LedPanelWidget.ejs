@@ -1,8 +1,8 @@
-<div id="LedArray-Widget" class="widget">
+<div id="LedPanel-Widget" class="widget">
     <div class="header">
-        <h1>Led array</h1>
+        <h1>Led panel</h1>
         <div class="right">
-            <% if(DashboardPanel.LedArrayWidget.header) DashboardPanel.LedArrayWidget.header.rows.forEach(element => { %>
+            <% if(DashboardPanel.LedPanelWidget.header) DashboardPanel.LedPanelWidget.header.rows.forEach(element => { %>
                 <div>
                     <p><%= element.name %></p>
                     <p class="table-dataField api-fetcher"
@@ -14,7 +14,7 @@
                 </div>
                 
             <% }); %>
-            <button class="button1" id="LedArray-Widget-setAll0Button" onclick="LedArray_Widget_disableButton(this);">disable</button>
+            <button class="button1" id="LedPanel-Widget-setAll0Button" onclick="LedPanel_Widget_disableButton(this);">disable</button>
             <button class="reset_button button1 hoverSpin" onclick="apiUpdateWorkerUpdate(this.parentElement.parentElement.parentElement)">
                 <p class="material-icons filled" title="refresh all values">autorenew</p>
             </button>
@@ -23,8 +23,8 @@
             <p>ERROR</p>
         </div>
     </div>
-    <div class="control-panel" id="LedArray-Widget-control-panel">
-        <%i = 0; DashboardPanel.LedArrayWidget.sliders.forEach(element => { %>
+    <div class="control-panel" id="LedPanel-Widget-control-panel">
+        <%i = 0; DashboardPanel.LedPanelWidget.sliders.forEach(element => { %>
             <div class="slider1 widget handler api-fetcher" handler-id="Slider1Handler">
                 <div class="slider-labels">
                     <h3 class="slider-name"><%= element.name %></h3>
@@ -61,7 +61,7 @@
         <% }); %> 
     </div>    
     <script>
-        function LedArray_Widget_disableButton(element){
+        function LedPanel_Widget_disableButton(element){
             element.disabled = true;
             setTimeout(() => { 
                 element.disabled = false;
