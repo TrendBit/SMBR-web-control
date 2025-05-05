@@ -41,7 +41,11 @@ const indexUtilities = require('./indexUtilities.js');
 const { default: def } = require('ajv/dist/vocabularies/applicator/additionalItems.js');
 const { randomInt } = require('crypto');
 const { uptime, config } = require('process');
-const configFilesPath = path.join("..","..","SMBR-config-files");
+const configFilesPath = (global.SMBR_debugMode)?
+            (path.join("..","..","SMBR-config-files")):
+            "/home/reactor/database-export/telegraf.d/";
+
+
 
 
 

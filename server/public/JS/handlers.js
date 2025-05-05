@@ -212,13 +212,17 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
 
     setButtonState(state){
         if(state){
-            this.fileEditor.deleteButton.disabled=undefined;
+            if(this.fileEditor.deleteButton!=undefined){
+                this.fileEditor.deleteButton.disabled=undefined;
+            }
             this.fileEditor.saveButton.disabled=undefined;
             if(this.fileEditor.assignButton!=undefined){
                 this.fileEditor.assignButton.disabled=undefined;
             }
         }else{
-            this.fileEditor.deleteButton.disabled=true;
+            if(this.fileEditor.deleteButton!=undefined){
+                this.fileEditor.deleteButton.disabled=true;
+            }
             this.fileEditor.saveButton.disabled=true;
             if(this.fileEditor.assignButton!=undefined){
                 this.fileEditor.assignButton.disabled=true;

@@ -22,10 +22,12 @@
     <div class="fileEditor-editor">
         <div class="header">
             <div class="left-buttons">
-                <button class="headerButton delete-button"
-                    onclick="getHandlerObj(this,'FileEditorHandler').deleteCurrentFile()">
-                    <i class="material-icons" title="delete file">delete</i>
-                </button>
+                <% if(allowDeleteFiles == true){%>
+                    <button class="headerButton delete-button"
+                        onclick="getHandlerObj(this,'FileEditorHandler').deleteCurrentFile()">
+                        <i class="material-icons" title="delete file">delete</i>
+                    </button>
+                <%}%>
             </div>
             <h2 class="fileName">Select file</h2>
             <h3 class="fileExtension"></h3>
