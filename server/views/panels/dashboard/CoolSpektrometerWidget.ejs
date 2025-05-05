@@ -125,7 +125,7 @@
                     this.relative_dataFields[response.channel].innerHTML = Number(response.relative_value*100).toFixed(1) + " %";
                     this.relative_dataFields[i].classList.remove("error");
                     if(response.absolute_value != undefined){
-                        this.absolute_dataFields[response.channel].innerHTML = response.absolute_value + " lm";    
+                        this.absolute_dataFields[response.channel].innerHTML = response.absolute_value ;    
                         this.absolute_dataFields[i].classList.remove("error");
                     }else{
                         this.absolute_dataFields[response.channel].innerHTML = "---"
