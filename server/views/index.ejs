@@ -193,10 +193,10 @@ var currNumOfCharts = 0;
             <% } %>
 
             <div id="experiments-Panel" class="content-panel container hidden content-panel-fullscreen">
-                <%- include('panels/TextEditor', {allowCreateFiles: true, resourceURL: ":8089/recipes", includeRuntimeInfo: true}) %>
+                <%- include('panels/TextEditor', {language:"text/x-yaml", allowCreateFiles: true, allowDeleteFiles: true, resourceURL: ":8089/recipes", includeRuntimeInfo: true}) %>
             </div>
             <div id="configs-Panel" class="content-panel container hidden content-panel-fullscreen">
-                <%- include('panels/TextEditor', {allowCreateFiles: false, resourceURL: "/config-files", includeRuntimeInfo: false})%>
+                <%- include('panels/TextEditor', {language:"text/x-toml", allowCreateFiles: false, allowDeleteFiles: false, resourceURL: "/config-files", includeRuntimeInfo: false})%>
             </div>
 
             <% if(locals.DevicePanel){ %>

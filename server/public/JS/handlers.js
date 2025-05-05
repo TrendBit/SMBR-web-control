@@ -165,7 +165,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         }
         this.fileEditor.code=CodeMirror.fromTextArea(fileEditor.getElementsByClassName('codeeditor')[0], {
             lineNumbers: true,
-            mode: 'text/x-yaml',
+            mode: element.getAttribute("language"),
             indentUnit: 2,
             readOnly: true,
             extraKeys: {
