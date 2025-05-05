@@ -1,6 +1,28 @@
 # Changelog SMBR Web Control
 This version number is trying to stick to the __MAJOR__.__MINOR__ identifiers but there are some exceptions (marked with a prefix # in the MINOR part).
 
+# 0.2.0
+- removed units for specrometer absolute values
+- fixed path to config files (so the config editor is now working)
+- added support for toml language in config files
+- Spectrofotometer name is unified across the website. So is LedPanel.
+- server can now be run with -d to enable debug mode
+- loaded modules are now completely empty when the server loses connection to api (don't contain debug virtual module)
+- website title now contains the devices hostname
+- most icons were replaced by google material icons
+- added a new FileEditor system with runtime info tab. To use it, you have to create a script, assign it to the scheduler and start it.
+- Runtime info includes a way to connect to FileEditor and display call stack in real time.
+- current webConfig is no longer stored in webConfig.yaml file
+- added IP address printout to hotbar
+- telegraf service in Service status was replaced by reactor-database-export
+- added a new way to control heater target temperature (located in Control widget)
+- temperature widget no longer has set target and reset inputs
+- changed the temperature widget chart to use a relative timestamp (relative to server time).
+- changed temperature-graph and temperature-graph-recent endpoints
+- increased granuality of day scope to 96 logs/day
+- title now says Smart Modular Photo-Bio-Reactor instead of PhenoBottle which was the WIP name for the project.
+- icons no longer have a faint colored box around them (some now have a faint white outline)
+
 # 0.1.8
 - sliders now update in realtime (can be buggy)
 - added refresh buttons to most widgets
