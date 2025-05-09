@@ -627,10 +627,9 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
         this.console.cachedMessages = [];
     }
     addToConsole(text){
-        const textSplit = text.split(" ");
-        const timestamp = textSplit[0]+" "+textSplit[1];
+        const timestamp = text.slice(0,19);
 
-        this.addToSubspace(this.scriptInfo.console,timestamp,textSplit[2]);
+        this.addToSubspace(this.scriptInfo.console,timestamp,text.slice(19));
         var logCount = this.scriptInfo.console.getElementsByClassName("log-counter")[0];
         logCount.innerHTML = Number(logCount.innerHTML) + 1;
         this.console.cachedMessages.push(text)
