@@ -163,6 +163,8 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
             code:          null, 
             codeElement:   null
         }
+
+        const self = this;
         this.fileEditor.code=CodeMirror.fromTextArea(fileEditor.getElementsByClassName('codeeditor')[0], {
             lineNumbers: true,
             mode: element.getAttribute("language"),
@@ -172,7 +174,9 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
                 "Tab": function(cm) {
                     var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
                     cm.replaceSelection(spaces);
-                }
+                },
+                "Ctrl-S": (cm) => self.sendCurrentFileToServer(),
+                "Cmd-S": (cm) => self.sendCurrentFileToServer(),
             }
         });
         this.fileEditor.code.refresh()
