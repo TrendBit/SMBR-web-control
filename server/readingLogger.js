@@ -161,11 +161,13 @@ async function temperatureGraphFetch(){
 
     //defined to allow recursion for sub"ELements
     async function fetchDataForRows(rows,last=""){
+        
         if(rows){
             for(var field in rows){
                 const element = rows[field];
 
-                if(element.charted == true){          
+
+                if(element.resource != undefined){          
                     try {
                         var response = await fetchDataAsJson("http://127.0.0.1:"+element.port+element.resource)
                         numberOfDecimalPLaces=(element.decimalPlaces)?element.decimalPlaces:0;
@@ -175,10 +177,10 @@ async function temperatureGraphFetch(){
                         console.error("ERROR while trying to fetch current temperature for: "+element.name + "\n"+err.message);
                     }          
                     
-                    if(element.sub_rows && last === ""){ //stops recursion
-                        await fetchDataForRows(element.sub_rows,element.name+".");
-                    }
                     
+                }
+                if(element.sub_rows && last === ""){ //stops recursion
+                    await fetchDataForRows(element.sub_rows,element.name+".");
                 }
             }
         }

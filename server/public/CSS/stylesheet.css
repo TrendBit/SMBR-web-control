@@ -1025,6 +1025,25 @@ body {
     #Temperature-Widget {
       grid-row: span 2;
 
+      
+      td.table-color{
+        cursor: pointer;
+      }
+      td.table-color:hover{
+        transform: scale(0.8);
+      }
+      td.table-color.charted {
+        cursor: pointer;
+    
+        >p:before {
+          position: absolute;
+          left: 0px;
+          content: "·";
+          scale: 3;
+          pointer-events: none;
+        }
+
+      }
 
 
       .apiChart {
