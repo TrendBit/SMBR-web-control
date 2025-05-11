@@ -553,7 +553,7 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
     }
 
     async reload(){
-        if(this.currentPanel.classList.contains("hidden")){
+        if(this.currentPanel.classList.contains("hidden") || !updateSwitch){
             return;
         }
         const response = await fetchDataAsJson(this.url+"/runtime").catch(err => {
