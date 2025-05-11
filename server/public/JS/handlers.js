@@ -587,7 +587,6 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
                 this.scriptInfo.status.image.innerHTML="clock_loader_10"
                 break;
             case "stopped":
-                this.scriptInfo.status.image.innerHTML="pause"
                 break;
         
             default:
