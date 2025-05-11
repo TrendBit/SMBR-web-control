@@ -286,7 +286,6 @@
             flex-direction: column;
             height: 100%;
             flex: 1 1 auto;
-            overflow-y: scroll;
                    h3 {
                 margin: 0;
            }
@@ -335,13 +334,7 @@
                         border-bottom: 1px solid var(--bg-color-4);
                    }
                }
-                tr:last-child {
-                    height: 100%;
-                    * {
-                        height: 100%;
-                        border: none;
-                   }
-               }
+
            }
 }
         .selected-script{
