@@ -292,6 +292,8 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         this.loadDataIntoEditor(response.name,response.content)
     }
     loadDataIntoEditor(fileName, data, readOnly = false){
+        if(this.checkChangesAbort()) return;
+
         this.resetEditor();
 
         this.fileEditor.fileName.innerHTML = fileName;
@@ -305,6 +307,8 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         this.setHeaderPopup("ok", "");
 
         this.selectFile(fileName);
+        
+        this.fileEditor.code.markClean();
     } 
     async sendCurrentFileToServer(){
         if(this.fileEditor.code.getOption('readOnly')==true){
@@ -337,15 +341,26 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
 
         this.setHeaderPopup("info", "file "+fileName+" uploaded");
         this.reloadFileList()
+
+        this.fileEditor.code.markClean();
+    }
+    checkChangesAbort(){
+        if(!this.fileEditor.code.isClean()){
+            return !window.confirm("you have unsaved changes, do you want to continue?");
+        }
+        return false;
     }
     async createNewFile(fileName){
         if(fileName == undefined || fileName == ""){
-            fileName = this.fileBrowser.newFileText.value
+            fileName = this.fileBrowser.newFileText.value;
         }
-        console.warn("createNewFile: name:",fileName)
-        this.sendFile(fileName,"")
+        console.warn("createNewFile: name:",fileName);
+        this.sendFile(fileName,"");
+        
+        this.fileEditor.code.markClean();
     }
     async deleteFile(fileName){
+        if(this.checkChangesAbort()) return;
         const response = await fetchData(this.url+"/"+fileName,undefined,"DELETE").catch(err => {
             console.error('Error while deleting file:', err);
             this.setHeaderPopup("error", "Error while deleting file:<br>" + err);
@@ -356,7 +371,9 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         }
 
         this.setHeaderPopup("info", "file "+fileName+" deleted");
-        this.reloadFileList()
+        this.reloadFileList();
+
+        this.fileEditor.code.markClean();
     }
 
     async assignCurrentFileToScheduler(){
