@@ -74,7 +74,7 @@ DashboardPanel:
             charted: false
             decimalPlaces: 2
 
-      - name: "Spectrofotometer"
+      - name: "Spectrophotometer"
         port: 8089
         icon: "wb_incandescent"
         resource: "/sensor/spectrophotometer/emitor_temperature"
@@ -82,7 +82,7 @@ DashboardPanel:
         charted: false
         decimalPlaces: 2
 
-      - name: "Led panel"
+      - name: "LED panel"
         port: 8089
         icon: "wb_twilight"
         resource: "/control/led_panel/temperature"
