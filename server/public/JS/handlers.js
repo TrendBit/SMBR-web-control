@@ -305,7 +305,6 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         this.setButtonState(!readOnly)
 
         this.setHeaderPopup("ok", "");
-
         this.selectFile(fileName);
         
         this.fileEditor.code.markClean();
@@ -448,7 +447,6 @@ handlers["HostnameTitleHandler"] = class HostnameTitleHandler{
     }
 }
 
-
 handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
     constructor(element){
         console.log("CREATING RuntimeInfoHandler");
@@ -491,7 +489,6 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
         this.reload();
         setInterval(()=>{
             this.reload();
-            
         },500);
         console.log("RuntimeInfoHandler",this);
         
@@ -699,6 +696,8 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
         }
 
         this.setHeaderPopup("info", "file "+fileName+" assigned to sheduler");
-        this.reload()
+        await this.reload()
+
+        this.connectToFileEditor();
     }
 }
