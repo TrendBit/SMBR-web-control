@@ -592,6 +592,7 @@
             }
 
             update(){
+                if(!updateSwitch) return;
                 this.fetchData(undefined, false);
             }
         }
