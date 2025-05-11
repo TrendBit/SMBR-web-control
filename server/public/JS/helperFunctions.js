@@ -438,3 +438,8 @@ function downloadCanvas(canvasElement, filename = 'image.png') {
     link.click();
     document.body.removeChild(link);
 }
+
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
