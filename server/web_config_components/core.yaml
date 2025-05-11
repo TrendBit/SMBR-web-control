@@ -5,6 +5,7 @@ DevicePanel:
       - name: "SID"
         port: 8089
         resource: "/core/sid"
+        component: "sid"
       - name: "IP address"
         port: 8089
         resource: "/core/ip_address"
@@ -12,9 +13,11 @@ DevicePanel:
       - name: "Hostname"
         port: 8089
         resource: "/core/hostname"
+        component: "hostname"
       - name: "Serial number"
         port: 8089
         resource: "/core/serial"
+        component: "serial"
       - name: "Supply voltage"
         unit: "V"
         decimalPlaces: 2
@@ -38,8 +41,10 @@ DevicePanel:
         decimalPlaces: 2
         port: 8089
         resource: "/core/supply/current"
+        component: "current"
       - name: "Supply power_draw"
         unit: "W"
         decimalPlaces: 2
         port: 8089
         resource: "/core/supply/power_draw"
+        component: "power_draw"

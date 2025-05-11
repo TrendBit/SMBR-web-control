@@ -1,7 +1,7 @@
 <div class="widget" id="DevicePanel-DeviceInfo">
     <div class="header">
         <h1>Device information</h1>
-        <button class="reset_button button1 hoverSpin" onclick="moduleApiUpdateWorkerUpdate(this.parentNode.parentNode.parentNode)">
+        <button class="reset_button button1 hoverSpin" onclick="apiUpdateWorkerUpdate(this.parentNode.parentNode.parentNode)">
             <p class="material-icons filled" title="refresh all values">autorenew</p>
         </button>
         <div class="top">
@@ -19,7 +19,7 @@
             <%if(DevicePanel.DeviceInfoWidget) DevicePanel.DeviceInfoWidget.rows.forEach(element => {%>
                 <tr>
                     <td class="table-name"><%= element.name %></td>
-                    <td class="module-api-fetcher table-dataField"
+                    <td class="api-fetcher table-dataField"
                         unit="<% if(element.unit){%><%=element.unit%><%}else{%><%=""%><%} %>" 
                         resource="<%= element.resource %>" 
                         component="<%= element.component %>"
