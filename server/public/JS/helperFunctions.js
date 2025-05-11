@@ -108,7 +108,7 @@ async function fetchDataAsJson(urlIn,additionalHeaders = {}, setMethod="GET") {
                         );
     //console.log(response);
     if(response.status != 200){
-        err = Error("server responded with code: ",response.status);
+        err = Error("server responded with code: "+response.status);
         err.response = response;
         err.fetchErrorCode = true;
         throw err;
