@@ -86,7 +86,35 @@ input[type=number] {
   from {transform: rotate(0deg)}
   to {transform: rotate(360deg)}
 }
+
+
+
 /*global class rules*/
+
+.fadeout-on-idle {
+  opacity: 1;
+  animation: fadeOut 1s ease forwards;
+  animation-delay: 2s;
+  animation-play-state: running;
+}
+
+.fadeout-on-idle:hover {
+  animation: unset;
+}
+.fadeout-on-idle:active {
+  animation: unset;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+  100%{
+    display: none;
+  }
+}
+
+
 .loadingBarBackground {
   background: linear-gradient(90deg, var(--acc-color-2) 50%, transparent 50%);
   background-size: 300% 100%;
