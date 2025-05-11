@@ -143,7 +143,11 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
             element:element.getElementsByClassName("fileEditor-browser")[0],
             files:[],
             fileListEl:element.getElementsByClassName("fileEditor-list")[0],
-            newFileText:element.getElementsByClassName("add-button-fileName")[0]
+            addButton:{
+                newFileText:element.getElementsByClassName("add-button-fileName")[0],
+                rolette:element.getElementsByClassName("add-button-rolette")[0],
+            }
+
         }
 
         
@@ -349,13 +353,11 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         }
         return false;
     }
-    async createNewFile(fileName){
-        if(fileName == undefined || fileName == ""){
-            fileName = this.fileBrowser.newFileText.value;
-        }
-        console.warn("createNewFile: name:",fileName);
+    async createNewFile(){
+        let fileName = this.fileBrowser.addButton.newFileText.value;
         this.sendFile(fileName,"");
-        
+        this.fileBrowser.addButton.newFileText.value = "";
+        this.fileBrowser.addButton.rolette.classList.remove("activated");
         this.fileEditor.code.markClean();
     }
     async deleteFile(fileName){
