@@ -1,4 +1,4 @@
-<div id="Temperature-Widget" class="widget ">
+<div id="Temperature-Widget"  update-cost="15" handler-id="TemperatureWidgetChartHandler" class="widget handler api-fetcher">
     <div class="header">
         <h1>Temperature</h1>
         <div class="right">
@@ -32,10 +32,12 @@
             </tr>
         </thead>
         <tbody id="Temperature-Widget-Table">
-            <% var i=-1; %>
+            <% let i=-1; let datasetIndex = 0; %>
             <% DashboardPanel.TemperatureWidget.rows.forEach(element => { %>
                 <tr class="table-master">
-                    <td class="table-color">
+                    <td class="table-color <%= (element.charted==true)?'charted':'' %> " 
+                        onclick="getHandlerObj(this,'TemperatureWidgetChartHandler').toggleDataset(this,'<%= datasetIndex++ %>');toggleClass(this,'charted');">
+
                         <p class="material-icons filled" style=<%='color:'+getColor(++i)+';'%>>
                             <%= element.icon %>
                         </p>
@@ -58,7 +60,9 @@
 
                 <% if(element.sub_rows){numOfSubRows=element.sub_rows.length; for( let u = 0; u < numOfSubRows; u++ ) { let sub_element = element.sub_rows[u];%>
                     <tr class="table-sub">
-                        <td class="table-color">
+                        <td class="table-color <%= (sub_element.charted==true)?'charted':'' %>" 
+                            onclick="getHandlerObj(this,'TemperatureWidgetChartHandler').toggleDataset(this,'<%= datasetIndex++ %>');toggleClass(this,'charted');">
+                            
                             <%const currIcon = ((u+1)<numOfSubRows)?'┣':'┗';%>
                             <p class="material-icons filled" style=<%='color:'+getSubColor(i,u+1)+';'%>><%= currIcon%></p>
                         </td>
@@ -73,7 +77,7 @@
                             resource="<%= sub_element.resource %>" 
                             component="<%= sub_element.component %>"
                             charted="<% if(sub_element.charted){%><%=sub_element.charted%><%}else{%><%="false"%><%} %>" 
-                            parent="<%=sub_element.name%>"
+                            parent="<%=element.name%>"
                             decimal-places="<%= sub_element.decimalPlaces %>"
                         >
                         </td>
@@ -83,7 +87,7 @@
             <% }); %>
         </tbody>
     </table>
-    <div class="container handler api-fetcher" update-cost="15" handler-id="TemperatureWidgetChartHandler">
+    <div class="container">
         <div class="horflex Temperature-Widget-Chart-ContextLen" id="Temperature-Widget-Chart-ContextLen" >
             <div class="radio1 minimal"> 
                 <input checked="checked" id="Temperature-Widget-Chart-ContextLen-1"  name="Temperature-Widget-Chart-ContextLen" type="radio" value="minute" onclick="getHandlerObj(this,'TemperatureWidgetChartHandler').reload(true)"> 
@@ -253,10 +257,15 @@
                 const possibleApiFetchers = document.getElementById("Temperature-Widget-Table").getElementsByClassName("api-fetcher");
                 var apiFetchers = [];
                 var coloredIcons = [];
+                var visibilityMask = [];
+
                 for(let i = 0; i< possibleApiFetchers.length; i++){
+                    apiFetchers.push(possibleApiFetchers[i]);
+                    coloredIcons.push(possibleApiFetchers[i].parentElement.getElementsByClassName("table-color")[0].children[0]);
                     if(possibleApiFetchers[i].getAttribute("charted") == "true"){
-                        apiFetchers.push(possibleApiFetchers[i]);
-                        coloredIcons.push(possibleApiFetchers[i].parentElement.getElementsByClassName("table-color")[0].children[0]);
+                        visibilityMask.push(true);
+                    }else{
+                        visibilityMask.push(false);
                     }
                 }
 
@@ -312,45 +321,44 @@
                         }
                     }
                 );
-                chartArray[chartIndex].apiFetchers= apiFetchers;    
-                chartArray[chartIndex].count = 0; 
+                const chartObject = chartArray[chartIndex];
+                chartObject.apiFetchers= apiFetchers;    
+                chartObject.count = 0; 
 
-            
+                    
 
-                var i = 0;
-                chartArray[chartIndex].apiFetchers.forEach(element => {
+                for (let i = 0; i < apiFetchers.length; i++) {
+                    const element = apiFetchers[i];
+                    
                     const targetColor = coloredIcons[i].style.color;
-                    const dataSet = chartArray[chartIndex].data.datasets[i++];
+                    const dataSet = chartObject.data.datasets[i];
 
                     element.dataSet = dataSet;
                     element.chart = chart;
 
                     dataSet.borderColor     = targetColor;
-                    dataSet.backgroundColor = darkenHexColor(targetColor,30);
+                    dataSet.backgroundColor = targetColor;
                     
                     var label = element.parentElement.getElementsByClassName("table-name")[0].innerHTML.trim();
                     if(element.getAttribute("parent")){
                         label = element.getAttribute("parent") + "." + label;
                     }
 
-                    const splitLabel = label.split(' ');
-                    dataSet.label = "";
-                    for (let i = 0; i < splitLabel.length; i++) {
-                        const element = splitLabel[i];
-                        if(element[0] == '<'){
-                            break;
-                        }
-                        dataSet.label += element;
-                    }     
-                    dataSet.label = dataSet.label.trim();         
+                    dataSet.label = label;  
                     
-                    console.log("new dataset borderColor:",dataSet.borderColor,
-                                ", backgroundColor:",dataSet.backgroundColor,
-                                ", label:",dataSet.label);
-                }); 
+                    if(element.getAttribute("charted")=="false"){
+                        chartObject.setDatasetVisibility(i,false);          
+                    }else{
+                        chartObject.setDatasetVisibility(i,true);
+                    }
+                }
             }
 
-            
+            toggleDataset(element,rowIndex){       
+                const datasets = this.chart.object.data.datasets;   
+                this.chart.object.setDatasetVisibility(rowIndex,!element.classList.contains("charted"));          
+                this.chart.object.update();
+            }
         }
              
 
