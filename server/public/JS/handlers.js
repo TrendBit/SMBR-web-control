@@ -308,7 +308,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         this.fileEditor.code.refresh();
         this.setButtonState(!readOnly)
 
-        this.setHeaderPopup("ok", "");
+        this.resetHeaderPopup();
         this.selectFile(fileName);
         
         this.fileEditor.code.markClean();
@@ -396,9 +396,22 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         }
         return false
     }
+
+    resetHeaderPopup(){
+        this.setHeaderPopup("ok","");
+    }
     setHeaderPopup(messageType, message){
         this.fileEditor.header.classList = "header " + messageType;
         this.fileEditor.headerPopup.innerHTML = message;
+
+        if(messageType=="info"){
+            setTimeout(() => {
+                if(this.fileEditor.headerPopup.innerHTML == message 
+                && this.fileEditor.header.classList.contains(messageType)){
+                    this.resetHeaderPopup();
+                }
+            }, 2000);
+        }
     }
     update(){
         this.reloadFileList();
@@ -496,10 +509,22 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
         
     }
 
-
+    resetHeaderPopup(){
+        this.setHeaderPopup("ok","");
+    }
     setHeaderPopup(messageType, message){
         this.header.classList = "header " + messageType;
         this.headerPopup.innerHTML = message;
+
+
+        if(messageType=="info"){
+            setTimeout(() => {
+                if(this.headerPopup.innerHTML == message 
+                && this.header.classList.contains(messageType)){
+                    this.resetHeaderPopup();
+                }
+            }, 2000);
+        }
     }
     async handleResponseError(response){
         if(response == undefined){
