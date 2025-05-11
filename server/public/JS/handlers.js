@@ -318,7 +318,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
             this.setHeaderPopup("warning", "Cannot save file while in read only mode");
             return;
         }
-        this.sendFile(this.getCurrFileName(),this.getEditorValue());
+        await this.sendFile(this.getCurrFileName(),this.getEditorValue());
     }
     async deleteCurrentFile(){
         if(this.fileEditor.code.getOption('readOnly')==true){
@@ -379,7 +379,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
 
     async assignCurrentFileToScheduler(){
         await this.sendCurrentFileToServer();
-        this.runtimeInfo.handler.assignFile(this.getCurrFileName());
+        await this.runtimeInfo.handler.assignFile(this.getCurrFileName());
     }
 
     async handleResponseError(response){
@@ -390,8 +390,8 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         }
         if(response.status != 200){
             var messageBody=await streamToString(response.body);
-            console.error('Error code('+response.status+'):',messageBody);
-            this.setHeaderPopup("error", 'Error code('+response.status+'):<br>'+messageBody);
+            console.error('Error('+response.status+'):',messageBody);
+            this.setHeaderPopup("error", 'Error('+response.status+'):<br>'+messageBody);
             return true
         }
         return false
@@ -535,7 +535,7 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
         if(response.status != 200){
             var messageBody=await streamToString(response.body);
             console.error('Error code('+response.status+'):',messageBody);
-            this.setHeaderPopup("error", 'Error code('+response.status+'):'+messageBody);
+            this.setHeaderPopup("error", 'Error('+response.status+'):<br>'+messageBody);
             return true
         }
         return false
@@ -587,6 +587,7 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
                 this.scriptInfo.status.image.innerHTML="clock_loader_10"
                 break;
             case "stopped":
+                this.scriptInfo.status.image.innerHTML="stop_circle"
                 break;
         
             default:
@@ -702,6 +703,8 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
         this.fileEditor.loadDataIntoEditor(response.name+" - scheduler cached", response.content, true);
         this.fileEditor.connectedToRuntimeInfo=true;
         this.connectedToFileEditor = true;
+
+        this.fileEditor.setHeaderPopup("info","successfully connected to runtime info");
     }
 
     async loadSchedulerFileIntoEditor(){
