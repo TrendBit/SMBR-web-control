@@ -1,6 +1,14 @@
 # Changelog SMBR Web Control
 This version number is trying to stick to the __MAJOR__.__MINOR__ identifiers but there are some exceptions (marked with a prefix # in the MINOR part).
 
+
+# 0.2.1
+- added a way to toggle charted temperature data
+- string syntax highlighting color changed to be more visible
+- text editor can now be saved by using ctrl + s (cmnd + s on mac)
+- runtime info is now open by default
+- fixed a bug where logs in runtime info are shown only until the first space.
+
 # 0.2.0
 - removed units for specrometer absolute values
 - fixed path to config files (so the config editor is now working)
