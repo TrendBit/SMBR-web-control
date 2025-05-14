@@ -261,6 +261,9 @@
                     background-color: var(--acc-color-1) 
                }
            }
+            .CodeMirror-scrollbar-filler{
+                background:none;
+            }
        }
         overflow: hidden;
    }
