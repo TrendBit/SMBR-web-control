@@ -279,6 +279,9 @@
         .headerButton {
             background-color: var(--acc-color-1);
        }
+        .headerButton:hover{
+            background-color: var(--acc-color-3);
+        }
         .subspace {
             border: var(--bg-color-5) 1px solid;
             border-radius: 10px;
