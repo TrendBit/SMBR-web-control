@@ -66,6 +66,9 @@
             margin: 0px;
             height: 100%;
             overflow: hidden;
+            overflow-y: scroll;
+            
+            
             li:nth-of-type(1) {
                 border-top: var(--bg-color-4) 1px solid;
            }
