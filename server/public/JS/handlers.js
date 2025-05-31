@@ -172,7 +172,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         this.fileEditor.code=CodeMirror.fromTextArea(fileEditor.getElementsByClassName('codeeditor')[0], {
             lineNumbers: true,
             mode: element.getAttribute("language"),
-            indentUnit: 2,
+            indentUnit: 4,
             readOnly: true,
             extraKeys: {
                 "Tab": function(cm) {
