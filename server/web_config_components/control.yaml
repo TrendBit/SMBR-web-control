@@ -92,6 +92,7 @@ DashboardPanel:
         max: 90
         getter:
           port: 8089
+          text: "current target: "
           component: "temperature"
           resource: "/control/heater/target_temperature"
         setter:
