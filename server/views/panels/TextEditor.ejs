@@ -33,11 +33,11 @@
             <h3 class="fileExtension"></h3>
             <div class="right-buttons">
                 <button class="headerButton save-button" onclick="getHandlerObj(this,'FileEditorHandler').sendCurrentFileToServer()">
-                    <i class="material-icons" title="upload file to server">upload</i>
+                    <i class="material-icons" title="save file">upload</i>
                 </button>
                 <% if(includeRuntimeInfo == true) {%>
                 <button class="headerButton assign-button" onclick="getHandlerObj(this,'FileEditorHandler').assignCurrentFileToScheduler()">
-                    <i class="material-icons" title="upload file to server and assign to scheduler">share_windows</i>
+                    <i class="material-icons" title="select file">share_windows</i>
                 </button>
                 <% } %>
             </div>
@@ -69,7 +69,11 @@
 
                     </button>
                     <button class="headerButton stop-button" onclick="getHandlerObj(this,'RuntimeInfoHandler').stop()"> 
-                        <i class="material-icons filled" title="pause script">stop</i>
+                        <i class="material-icons filled" title="stop script">stop</i>
+
+                    </button>
+                    <button class="headerButton pause-button" onclick="getHandlerObj(this,'RuntimeInfoHandler').pause()"> 
+                        <i class="material-icons filled" title="pause script">pause</i>
 
                     </button>
                 </div>
@@ -78,7 +82,7 @@
 
 
             <div class="selected-script">
-                <div><h3>Active script:</h3><h2 class="selected-script-name">script name</h2></div>
+                <div><h3>Selected script:</h3><h2 class="selected-script-name">script name</h2></div>
                 <div><h3>Process id:</h3><h2 class="selected-script-processID">123456</h2></div>
             </div>
         
