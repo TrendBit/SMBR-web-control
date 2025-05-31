@@ -75,6 +75,25 @@ DashboardPanel:
         port: 8089
         component: "speed"
         resource: "/control/cuvette_pump/speed"
+      - name: "Mixer target rpm"
+        type: "setter"
+        unit: "rpm"
+        decimalPlaces: 0
+        min: 0
+        max: 10000
+        getter:
+          text: "current speed: "
+          port: 8089
+          component: "rpm"
+          resource: "/control/mixer/rpm"
+        setter:
+          port: 8089
+          component: "rpm"
+          resource: "/control/mixer/rpm"
+        reset:
+          port: 8089
+          component: ""
+          resource: "/control/mixer/stop"
       - name: "Heater"
         min: -1
         max: 1
