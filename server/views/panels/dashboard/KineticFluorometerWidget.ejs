@@ -352,16 +352,32 @@
                 this.chart.obj = chartArray[chartIndex];
             }
 
+            getFileName(){
+                let filename = 'OJIP_';
+                try {
+                    filename+= device.info.Hostname + "_";
+                    filename+= device.info.SID + "_";
+                } catch (error) {
+                    
+                }
+                filename+= this.currentData.measurement_id + "_";
+                //#TODO change to the timestamp in file
+                filename+= new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_'); //ISO 8601
+                return filename;
+            }
+
             exportDataToFile(){
-                var filename = 'KineticFluorometerData_';
-                filename+=new Date().toLocaleDateString().replaceAll(" ","").replaceAll(".","-") + "_" + new Date().toLocaleTimeString().replaceAll(":","-");
+                //OJIP_hostname_SID_measurementID_timestamp.pdf/json
+                
+                let filename= this.getFileName() + ".json";
+
+
                 downloadStringAsFile(JSON.stringify(this.currentData, null, 2),filename);
             }
 
             exportGraphAsImage(){
-                var filename = 'KineticFluorometerChart_';
-                filename+=new Date().toLocaleDateString().replaceAll(" ","").replaceAll(".","-") + "_" + new Date().toLocaleTimeString().replaceAll(":","-");
-                downloadCanvas(this.chart.element,filename)
+                let filename= this.getFileName() + ".png";
+                downloadCanvas(this.chart.element,filename);
             }
 
 
