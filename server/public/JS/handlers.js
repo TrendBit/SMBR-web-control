@@ -203,6 +203,14 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
                 "Cmd-S": (cm) => self.sendCurrentFileToServer(),
             }
         });
+        
+        this.fileEditor.code.on("change", function(cm, change) {
+            if(!self.fileEditor.code.isClean()){
+                self.setHeaderPopup("warning","unsaved changes");
+                self.setAssignButtonState(false);
+            }
+            // Tady můžeš volat isClear(), nastavit "dirty" flag, atd.
+        });
         this.fileEditor.code.refresh()
         this.fileEditor.codeElement=this.fileEditor.code.getWrapperElement().getElementsByClassName("codemirror-code")[0];
         this.runtimeInfo = element.getElementsByClassName("fileEditor-runtime-container")[0];
@@ -244,18 +252,22 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
                 this.fileEditor.deleteButton.disabled=undefined;
             }
             this.fileEditor.saveButton.disabled=undefined;
-            if(this.fileEditor.assignButton!=undefined){
-                this.fileEditor.assignButton.disabled=undefined;
-            }
+            
         }else{
             if(this.fileEditor.deleteButton!=undefined){
                 this.fileEditor.deleteButton.disabled=true;
             }
             this.fileEditor.saveButton.disabled=true;
-            if(this.fileEditor.assignButton!=undefined){
-                this.fileEditor.assignButton.disabled=true;
-            }
+            
         }
+        this.setAssignButtonState(state);
+    }
+    
+    setAssignButtonState(state){
+        if(this.fileEditor.assignButton!=undefined){
+            this.fileEditor.assignButton.disabled=(state)?undefined:true;
+        }
+        
     }
 
     addToFileList(name){
@@ -341,7 +353,9 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
             this.setHeaderPopup("warning", "Cannot save file while in read only mode");
             return;
         }
-        await this.sendFile(this.getCurrFileName(),this.getEditorValue());
+        if(await this.sendFile(this.getCurrFileName(),this.getEditorValue()) === 0){
+            this.setAssignButtonState(true);
+        }
     }
     async deleteCurrentFile(){
         if(this.fileEditor.code.getOption('readOnly')==true){
@@ -359,16 +373,17 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         const response = await sendData(this.url+"/"+fileName, JSON.stringify(fileDataObj),undefined,"PUT").catch(err => {
             console.error('Error while uploading file:', err);
             this.setHeaderPopup("error", "Error while uploading file:<br>" + err);
-            return
+            return 1;
         })
         if(await this.handleResponseError(response)){
-            return
+            return 2;
         }
 
         this.setHeaderPopup("info", "file "+fileName+" uploaded");
         this.reloadFileList()
 
         this.fileEditor.code.markClean();
+        return 0;
     }
     checkChangesAbort(){
         if(!this.fileEditor.code.isClean()){
@@ -401,7 +416,6 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
     }
 
     async assignCurrentFileToScheduler(){
-        await this.sendCurrentFileToServer();
         await this.runtimeInfo.handler.assignFile(this.getCurrFileName());
     }
 
