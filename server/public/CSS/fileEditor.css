@@ -363,12 +363,14 @@
             .header {
                 display: flex;
                 width: 100%;
+                padding: 2px 0;
+                height: fit-content;
                 justify-content: space-between;
                 align-items: center;
-
+                border-bottom: var(--bg-color-4) 1px solid;
+                
                 >* {
-                    width: 100%;
-                    border-bottom: var(--bg-color-4) 1px solid;
+                    
                     margin: 0;
                     padding: 0 5px 0 5px;
                     display: flex;
@@ -444,6 +446,15 @@
             align-items: stretch;
             justify-content: space-between;
             height: 140px;
+            
+            .call-stack{
+                 width: 30%;
+                
+                tr>td:first-child{
+                    width: 20px;
+                    text-align: right;
+                }
+            }
 
             .time-stats {
                 display: flex;
@@ -506,6 +517,13 @@
             display: flex;
             overflow: hidden;
         }
+
+        .scriptPreview-container{
+            
+            height: 40%;
+            box-sizing: border-box;
+            width: 600px;
+        }
     }
 
     .fileEditor-runtime-container {
@@ -527,4 +545,5 @@
         margin-left: 0.25vw;
         min-width: fit-content;
     }
+    
 }

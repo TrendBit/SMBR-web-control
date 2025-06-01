@@ -52,7 +52,7 @@
     <button class="fileEditor-resizebar button1" onclick="toggleClass_nthParent_byClass(this,'hidden',1,'fileEditor-runtime-container')">
         <p class="vertical-text">V Runtime info V</p>
     </button>
-    <div class="fileEditor-runtime-container handler" handler-id="RuntimeInfoHandler" source-url=":8089/scheduler">
+    <div class="fileEditor-runtime-container handler" handler-id="RuntimeInfoHandler" source-url=":8089/scheduler" language="<%= language %>">
         <div class="fileEditor-runtime widget">
             <div class="header">
                 <div class="left-buttons">
@@ -137,6 +137,15 @@
                             </tr>             
                         </table>
                     </div>
+                </div>
+            </div>
+            <div class="scriptPreview-container"> 
+                <div class="subspace">
+                    <div class="header">
+                        <h2>SELECTED SCRIPT PREVIEW</h2>
+                        <h2>read-only view</h2>
+                    </div>
+                    <textarea class="scriptPreview"></textarea>
                 </div>
             </div>
         </div>

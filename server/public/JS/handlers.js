@@ -133,6 +133,26 @@ handlers["Slider2Handler"] = class Slider2Handler {
     }
 }
 
+
+handlers["HostnameTitleHandler"] = class HostnameTitleHandler{
+    constructor(element){
+        this.element = element.getElementsByClassName("api-fetcher")[0];
+    }
+
+    async update(){
+        var response;
+        try {
+            response = await fetchDataAsJson(":"+this.element.getAttribute("port")+this.element.getAttribute("resource"));
+            const hostname = response[this.element.getAttribute("component")];
+            if(hostname != undefined){
+                document.title = "SMPBR-" + hostname;
+            }
+        } catch (error) {
+            document.title = "SMPBR";
+        }
+    }
+}
+
 handlers["FileEditorHandler"] = class FileEditorHandler {
     constructor(element) {
         console.log("CREATING FileEditorHandler")
@@ -241,6 +261,9 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
     addToFileList(name){
         this.fileBrowser.files.push(name)
         return "<li onclick=\"getHandlerObj(this,'FileEditorHandler').loadFileIntoEditor('"+name+"')\">"+name+"</li>";
+    }
+    addSubFolder(name){
+
     }
     selectFile(fileName){
         const fileSelectElements = this.fileBrowser.fileListEl.children
@@ -390,8 +413,12 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         }
         if(response.status != 200){
             var messageBody=await streamToString(response.body);
+            if(response.status == 500){
+                this.setHeaderPopup("error",messageBody);
+            }else{
+                this.setHeaderPopup("error", 'Error('+response.status+'):<br>'+messageBody);
+            }
             console.error('Error('+response.status+'):',messageBody);
-            this.setHeaderPopup("error", 'Error('+response.status+'):<br>'+messageBody);
             return true
         }
         return false
@@ -443,24 +470,6 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
     }
 }
 
-handlers["HostnameTitleHandler"] = class HostnameTitleHandler{
-    constructor(element){
-        this.element = element.getElementsByClassName("api-fetcher")[0];
-    }
-
-    async update(){
-        var response;
-        try {
-            response = await fetchDataAsJson(":"+this.element.getAttribute("port")+this.element.getAttribute("resource"));
-            const hostname = response[this.element.getAttribute("component")];
-            if(hostname != undefined){
-                document.title = "SMPBR-" + hostname;
-            }
-        } catch (error) {
-            document.title = "SMPBR";
-        }
-    }
-}
 
 handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
     constructor(element){
@@ -499,6 +508,24 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
         this.connectedToFileEditor=false;
         //this.addToCallstack(45)
 
+        this.scriptPreview = {
+            name: "",
+            code: null,
+            codeElement: null,
+            calledLines: []
+        }
+
+        this.scriptPreview.code = CodeMirror.fromTextArea(element.getElementsByClassName('scriptPreview')[0], {
+            lineNumbers: true,
+            mode: element.getAttribute("language"),
+            indentUnit: 2,
+            readOnly: true,
+            extraKeys: {
+            }
+        });
+        this.scriptPreview.code.refresh();
+        this.scriptPreview.codeElement=this.scriptPreview.code.getWrapperElement().getElementsByClassName("codemirror-code")[0];
+
         this.clearConsole()        
 
         this.reload();
@@ -535,7 +562,11 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
         if(response.status != 200){
             var messageBody=await streamToString(response.body);
             console.error('Error code('+response.status+'):',messageBody);
-            this.setHeaderPopup("error", 'Error('+response.status+'):<br>'+messageBody);
+            if(response.status == 500){
+                this.setHeaderPopup("error",messageBody);
+            }else{
+                this.setHeaderPopup("error", 'Error('+response.status+'):<br>'+messageBody);
+            }
             return true
         }
         return false
@@ -611,6 +642,10 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
         if(response.name==""){
             this.scriptLoaded=false;
         }
+        if(response.name != this.scriptPreview.name){
+            this.scriptPreview.name = response.name;
+            this.reloadScriptPreview();
+        }
         this.scriptInfo.name.innerHTML=response.name
         this.scriptInfo.processID.innerHTML=response.processId
         this.scriptInfo.timeStarted.innerHTML=response.startedAt
@@ -640,11 +675,7 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
         for (let i = 0; i < response.stack.length; i++) {
             this.addToCallstack(response.stack[i])                
         }
-        if(this.fileEditor!=undefined){ 
-            this.fileEditor.setCalledLines(response.stack);
-        }
-
-        
+        this.setCalledLines(response.stack.slice(-2));      
         
     }
 
@@ -707,12 +738,6 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
         this.fileEditor.setHeaderPopup("info","successfully connected to runtime info");
     }
 
-    async loadSchedulerFileIntoEditor(){
-        await this.reload()
-        await this.scriptsHandler.loadSchedulerFileIntoEditor();
-        await this.reload()
-    }
-
     async assignFile(fileName){
         const response = await sendData(this.url+"/recipe", '"'+fileName+'"').catch(err => {
             console.error('Unable to assign file:', err);
@@ -725,8 +750,45 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
         }
 
         this.setHeaderPopup("info", "file "+fileName+" assigned to sheduler");
-        await this.reload()
+        this.scriptPreview.name = "";
+        await this.reload();
 
-        this.connectToFileEditor();
+        //this.connectToFileEditor();
+    }
+
+    async reloadScriptPreview(){
+        const response = await fetchDataAsJson(this.url+"/recipe").catch(err => {
+            console.error('Unable to get selected script content:', err);
+            this.setHeaderPopup("error", "Error while getting selected script content:<br>" + err);
+            return
+        })
+        if(response == undefined){
+            return
+        }
+
+        this.scriptPreview.code.setValue(response.content);
+        this.scriptPreview.code.refresh();
+
+        this.fileEditor.setHeaderPopup("info","successfully connected to runtime info");
+
+        this.setHeaderPopup("info", "file "+fileName+" assigned to sheduler");
+    }
+
+
+    setCalledLines(arrayOfLineNums = []){
+        requestAnimationFrame(() => {
+            for (let i = 0; i < this.scriptPreview.calledLines.length; i++) {
+                const element = this.scriptPreview.calledLines[i];
+                element.classList.remove("called");
+            }
+            this.scriptPreview.calledLines = [];
+            for (let i = 0; i < arrayOfLineNums.length; i++) {
+                const lineNum = arrayOfLineNums[i];
+                const targetLine=this.scriptPreview.codeElement.children[lineNum-1];
+                targetLine.classList.add("called");
+                this.scriptPreview.calledLines.push(targetLine);
+            }
+        });
+        
     }
 }
