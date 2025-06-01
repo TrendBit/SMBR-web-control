@@ -343,10 +343,10 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         this.fileEditor.code.refresh();
         this.setButtonState(!readOnly)
 
-        this.resetHeaderPopup();
         this.selectFile(fileName);
         
         this.fileEditor.code.markClean();
+        this.resetHeaderPopup();
     } 
     async sendCurrentFileToServer(){
         if(this.fileEditor.code.getOption('readOnly')==true){
@@ -439,7 +439,11 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
     }
 
     resetHeaderPopup(){
-        this.setHeaderPopup("ok","");
+        if(this.fileEditor.code.isClean()){
+            this.setHeaderPopup("ok","");
+        }else{
+            this.setHeaderPopup("warning","unsaved changes");
+        }
     }
     setHeaderPopup(messageType, message){
         this.fileEditor.header.classList = "header " + messageType;
