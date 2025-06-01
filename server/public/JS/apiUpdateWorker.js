@@ -1,5 +1,5 @@
 var apiUpdateWorkerUpdate;
-
+var device = {};
 
 
 (function() {
@@ -14,6 +14,21 @@ var apiUpdateWorkerUpdate;
         element.disabled = false;
     };
 var updateIndex = 0;
+
+function writeChangesToDeviceCache(path, value, target=device){
+    path = path.split("/");
+    
+    for (let i = 0; i < path.length-1; i++) {
+        const element = path[i];
+        if(target[element] == undefined){
+            target[element] = {};
+        }
+        target = target[element];
+    }
+    target[path[path.length-1]] = value;
+    
+}
+
 async function updateSite(root){
     if(!updateSwitch){
         return;
@@ -70,6 +85,11 @@ async function updateSite(root){
                     element.innerHTML = innerVal
                 }
                 element.classList.remove("error");
+
+                let devicePath = element.getAttribute("device-path");
+                if(devicePath!=undefined && devicePath!="" ){
+                    writeChangesToDeviceCache(devicePath,innerVal);
+                }
             })
             .catch(err => {
                 if(element.getAttribute("to-placeholder") != undefined){
