@@ -275,6 +275,7 @@ function buildWebConfig(){
                     unit: "%",
                     //port: 80,
                     resource: "/"+element.module_type+"/load", 
+                    'outputMultiplier': 100,
                     /*resource: "/"+element.module_type+"/ping",*/
                     component: "load"
                 }

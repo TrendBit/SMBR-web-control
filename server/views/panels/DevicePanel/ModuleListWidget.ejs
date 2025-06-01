@@ -54,6 +54,7 @@
                             resource="<%= dataField.resource %>" 
                             component="<%= dataField.component %>"
                             port="<% if(dataField.port){%><%=dataField.port%><%}else{%><%="8089"%><%} %>"
+                            output-multiplier="<%= dataField.outputMultiplier %>"
                         >
                         </td>
                     <%});%>
