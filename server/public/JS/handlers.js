@@ -591,7 +591,7 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
 
     async stop(){
         const response = await sendData(this.url+"/stop","").catch(err => {
-            console.error('Unable to start stop: ', err);
+            console.error('Unable to stop script: ', err);
             this.setHeaderPopup("error", "Unable to stop script: " + err);
             return
         })
@@ -604,6 +604,24 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
         }
 
         this.setHeaderPopup("info","script stopped")
+        this.reload()
+    }
+
+    async pause(){
+        const response = await sendData(this.url+"/pause","").catch(err => {
+            console.error('Unable to pause script: ', err);
+            this.setHeaderPopup("error", "Unable to pause script: " + err);
+            return
+        })
+        if(response == undefined){
+            return
+        }
+
+        if(await this.handleResponseError(response)){
+            return
+        }
+
+        this.setHeaderPopup("info","script paused")
         this.reload()
     }
 
