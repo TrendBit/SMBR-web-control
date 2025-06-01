@@ -401,7 +401,7 @@ function formatTime(formatString,timestamp =new Date()){
     formatString = formatString.replaceAll("hh",hours);
     formatString = formatString.replaceAll("dd",timestamp.getDate());
     formatString = formatString.replaceAll("wd",timestamp.getDay());
-    formatString = formatString.replaceAll("mo",timestamp.getMonth());
+    formatString = formatString.replaceAll("mo",timestamp.getMonth()+1);
     formatString = formatString.replaceAll("yyyy",timestamp.getFullYear());
 
     formatString = formatString.replaceAll("SS",(seconds<10)?"0"+seconds:seconds);
