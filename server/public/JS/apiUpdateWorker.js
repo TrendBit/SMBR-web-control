@@ -38,6 +38,10 @@ async function updateSite(root){
             }
             continue; 
         }
+        let outMultiplier = 1;
+        if(element.getAttribute("output-multiplier")!=undefined && element.getAttribute("output-multiplier")!=""){
+             outMultiplier = Number(element.getAttribute("output-multiplier"));
+        }
         if (element.getAttribute("resource")!="") {
             fetchDataAsJson(":"+element.getAttribute("port")+element.getAttribute("resource"))
             .then(response => {
@@ -53,7 +57,7 @@ async function updateSite(root){
                         if(numberOfDecimalPLaces==undefined){
                             numberOfDecimalPLaces = 0;
                         }
-                        var numberLabel = Number(responseValue);
+                        var numberLabel = Number(responseValue) * outMultiplier;
                         
                         innerVal = numberLabel.toFixed(numberOfDecimalPLaces) + " " + element.getAttribute("unit");
                     }
