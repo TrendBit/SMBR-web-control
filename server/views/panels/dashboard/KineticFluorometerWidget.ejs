@@ -361,8 +361,8 @@
                     
                 }
                 filename+= this.currentData.measurement_id + "_";
-                //#TODO change to the timestamp in file
-                filename+= new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_'); //ISO 8601
+                let timestamp = new Date(this.currentData.timestamp);
+                filename+= timestamp.toISOString().replace(/[:.]/g, '-'); //ISO 8601
                 return filename;
             }
 
