@@ -332,8 +332,6 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
     }
 
     async reloadFileList(){
-
-
         var files=[]
         try {
             files = await fetchDataAsJson(this.url)
@@ -382,6 +380,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         }*/
         this.fileBrowser.fileListEl.innerHTML = this.fileBrowser.files.getHTML();
         this.selectFile(this.getCurrFileName());
+        writeChangesToDeviceCache("fileEditors"+this.url+"/files",this.fileBrowser.files);
     }
     resetEditor(){
         this.setButtonState(false)
