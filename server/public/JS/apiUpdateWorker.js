@@ -2,7 +2,6 @@ var apiUpdateWorkerUpdate;
 var device = {};
 
 
-(function() {
     setInterval(() => {updateSite(document);}, 5000);
     
     onloadQueue.push( () => updateSite(document));
@@ -113,4 +112,3 @@ async function updateSite(root){
     
     updateIndex++;
 }
-})();
