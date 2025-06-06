@@ -1,0 +1,55 @@
+#Control-Widget {
+    grid-row: span 1;
+
+    #Control-Widget-sliders {
+        padding-top: 0;
+        padding-bottom: 0;
+
+        >* {
+            margin: 12px 0;
+        }
+
+        .slider1 {
+            width: 100%;
+            height: fit-content;
+            display: flex;
+            flex-direction: row;
+
+            box-sizing: border-box;
+
+            >*.slider-labels {
+                width: min-content;
+                min-width: 120px;
+            }
+
+            >*.slider-slider {
+                width: 100%;
+
+                >* {
+                    width: 100%;
+                }
+            }
+
+            .slider-minmax {
+                position: relative;
+                z-index: 5;
+
+                >* {
+                    padding: 0;
+                    margin: 0;
+                }
+
+                >.slider-max {
+                    float: right;
+                }
+
+                >.slider-min {
+                    float: left;
+                }
+            }
+
+            align-items: center;
+        }
+    }
+
+}

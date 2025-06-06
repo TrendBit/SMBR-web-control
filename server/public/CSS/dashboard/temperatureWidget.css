@@ -1,0 +1,48 @@
+#Temperature-Widget {
+    grid-row: span 2;
+
+
+    td.table-color {
+        cursor: pointer;
+    }
+
+    td.table-color:hover {
+        transform: scale(0.8);
+    }
+
+    td.table-color.charted {
+        cursor: pointer;
+
+        >p:before {
+            position: absolute;
+            left: 0px;
+            content: "·";
+            scale: 3;
+            pointer-events: none;
+        }
+
+    }
+
+
+    .apiChart {
+        min-height: 200px;
+        height: 100%;
+    }
+
+    .container {
+        height: auto;
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+    }
+
+    #Temperature-Widget-Chart-ContextLen {
+        padding-top: 0px;
+        padding-bottom: 2px;
+
+        * {
+            border-radius: 0;
+        }
+
+    }
+}
