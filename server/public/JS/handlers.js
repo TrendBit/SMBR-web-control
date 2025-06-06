@@ -162,12 +162,49 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         this.fileBrowser = {
             element:element.getElementsByClassName("fileEditor-browser")[0],
             files:[],
+            filesRaw:[],
             fileListEl:element.getElementsByClassName("fileEditor-list")[0],
             addButton:{
                 newFileText:element.getElementsByClassName("add-button-fileName")[0],
                 rolette:element.getElementsByClassName("add-button-rolette")[0],
             }
 
+        }
+
+        this.fileClass = class FileEditorHandlerFileClass{
+            constructor(name, isDirectory = false){
+                this.name = name;
+                this.subFiles = {};
+                this.isDirectory = isDirectory;
+            }
+
+            addSubFile(file, shortFileName = file.name) {
+                this.subFiles[shortFileName] = file;
+                this.isDirectory = true;
+            }
+
+            getHTML(displayFileName = this.name){
+                let result = "";
+                if(this.isDirectory){
+                    const filesArray = Object.entries(this.subFiles).map(([shortFileName, file]) => ({ shortFileName, file }));
+                    filesArray.sort((a, b) => {
+                        if (a.file.isDirectory && !b.file.isDirectory) return -1;
+                        if (!a.file.isDirectory && b.file.isDirectory) return 1;
+                        
+                        return a.file.name.localeCompare(b.file.name);
+                    });
+
+                    result+="<ul>";
+                    result+="<h2 onclick=\"toggleClass_Parent(this,'closed')\">"+displayFileName+"<i class=\"material-icons\" title=\"collapse/extend folder\">keyboard_arrow_down</i></h2>";
+                    filesArray.forEach(({ shortFileName, file }) => {
+                        result+= file.getHTML(shortFileName);
+                    });
+                    result+="</ul>";
+                }else{
+                    result+="<li full-name=\""+this.name+"\" onclick=\"getHandlerObj(this,'FileEditorHandler').loadFileIntoEditor('"+this.name+"')\">"+displayFileName+"</li>";
+                }
+                return result;
+            }
         }
 
         
@@ -270,22 +307,23 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         
     }
 
-    addToFileList(name){
-        this.fileBrowser.files.push(name)
-        return "<li onclick=\"getHandlerObj(this,'FileEditorHandler').loadFileIntoEditor('"+name+"')\">"+name+"</li>";
+    addToFileList(file){
+        this.fileBrowser.files.push(file)
+        return "<li onclick=\"getHandlerObj(this,'FileEditorHandler').loadFileIntoEditor('"+file+"')\">"+file+"</li>";
     }
-    addSubFolder(name){
 
-    }
-    selectFile(fileName){
-        const fileSelectElements = this.fileBrowser.fileListEl.children
+
+
+    selectFile(fileName, fileSelectElements = this.fileBrowser.fileListEl.children){
         for (let i = 0; i < fileSelectElements.length; i++) {
             const element = fileSelectElements[i];
+            const elementFullName = element.getAttribute("full-name");
             
             element.classList.remove("active")
-            if(element.innerHTML == fileName){
+            if(elementFullName === fileName){
                 element.classList.add("active")
             }
+            this.selectFile(fileName,element.children);
         }
     }
     clearFileList(){
@@ -294,6 +332,8 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
     }
 
     async reloadFileList(){
+
+
         var files=[]
         try {
             files = await fetchDataAsJson(this.url)
@@ -301,12 +341,46 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
             this.setHeaderPopup("error","error while reloading files:<br>"+err)
             return
         }
-        var newInnerHTML = "";
+
+        if(this.fileBrowser.filesRaw.length==files.length){
+            let changeDetected = false;
+            for (let i = 0; i < files.length; i++) {
+                if(files[i] != this.fileBrowser.filesRaw[i]){
+                    changeDetected=true;
+                    break;
+                }
+            }
+            if(!changeDetected){
+                return;
+            }
+        }
+
+        this.fileBrowser.filesRaw=files;
+        
+
+        this.fileBrowser.files= new this.fileClass("root",true);
+        for (let i = 0; i < files.length; i++) {
+            let file = files[i];
+
+            let filePath = file.split("|");
+            let target = this.fileBrowser.files;
+            for (let i = 0; i < filePath.length-1; i++) {
+                const element = filePath[i];
+                if(target.subFiles[element] == undefined){
+                    target.addSubFile(new this.fileClass(element,true));
+                }
+                target = target.subFiles[element];
+            }
+            let shortFileName = filePath[filePath.length-1];
+            target.addSubFile(new this.fileClass(file),shortFileName);
+        }
+
+        /*var newInnerHTML = "";
         console.log("reloadFiles ",files)
         for (let i = 0; i < files.length; i++) {
             newInnerHTML+=this.addToFileList(files[i])
-        }
-        this.fileBrowser.fileListEl.innerHTML = newInnerHTML;
+        }*/
+        this.fileBrowser.fileListEl.innerHTML = this.fileBrowser.files.getHTML();
         this.selectFile(this.getCurrFileName());
     }
     resetEditor(){
@@ -317,7 +391,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         this.connectedToRuntimeInfo = false;
     }
     async loadFileIntoEditor(fileName){
-        const response = await fetchDataAsJson(this.url+"/"+fileName).catch(err => {
+        const response = await fetchDataAsJson(this.url+"/"+encodeURIComponent(fileName)).catch(err => {
             this.resetEditor();
             console.error('Error while getting file:', err);
             this.fileEditor.fileName.innerHTML="ERROR WHILE OPENING FILE"
@@ -335,7 +409,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
 
         this.resetEditor();
 
-        this.fileEditor.fileName.innerHTML = fileName;
+        this.fileEditor.fileName.innerHTML = fileName.replaceAll("|","/");
         this.fileEditor.fileExtension.innerHTML = "";
 
         this.fileEditor.code.setValue(data);
@@ -370,7 +444,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
             content:fileData
         }
 
-        const response = await sendData(this.url+"/"+fileName, JSON.stringify(fileDataObj),undefined,"PUT").catch(err => {
+        const response = await sendData(this.url+"/"+encodeURIComponent(fileName), JSON.stringify(fileDataObj),undefined,"PUT").catch(err => {
             console.error('Error while uploading file:', err);
             this.setHeaderPopup("error", "Error while uploading file:<br>" + err);
             return 1;
@@ -400,7 +474,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
     }
     async deleteFile(fileName){
         if(this.checkChangesAbort()) return;
-        const response = await fetchData(this.url+"/"+fileName,undefined,"DELETE").catch(err => {
+        const response = await fetchData(this.url+"/"+encodeURIComponent(fileName),undefined,"DELETE").catch(err => {
             console.error('Error while deleting file:', err);
             this.setHeaderPopup("error", "Error while deleting file:<br>" + err);
             return
@@ -465,7 +539,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         return this.fileEditor.code.getValue()
     }
     getCurrFileName(){
-        return this.fileEditor.fileName.innerHTML
+        return this.fileEditor.fileName.innerHTML.replaceAll("/","|");
     }
 
     setCalledLines(arrayOfLineNums = []){
@@ -682,7 +756,7 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
             this.scriptPreview.name = response.name;
             this.reloadScriptPreview();
         }
-        this.scriptInfo.name.innerHTML=response.name
+        this.scriptInfo.name.innerHTML=response.name.replaceAll("|","/");
         this.scriptInfo.processID.innerHTML=response.processId
         this.scriptInfo.timeStarted.innerHTML=response.startedAt
         this.setStatus("undefined")
