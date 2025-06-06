@@ -188,7 +188,10 @@ var currNumOfCharts = 0;
                     <% } %>    
                     <% if(DashboardPanel.LedPanelWidget){ %>
                         <%- include('panels/dashboard/LedPanelWidget.ejs') %>
-                    <% } %>           
+                    <% } %>  
+                    <% if(DashboardPanel.MacrosWidget){ %>
+                        <%- include('panels/dashboard/MacrosWidget.ejs') %>
+                    <% } %>         
                 </div>  
             <% } %>
 
