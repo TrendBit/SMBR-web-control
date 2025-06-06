@@ -73,15 +73,70 @@
                 }
             }
         }
-
+        
         .fileEditor-list {
-            list-style: none;
             padding: 5px;
-            margin: 0px;
+            
             height: 100%;
             overflow: hidden;
             overflow-y: scroll;
-
+            
+            ul{
+                border-left: var(--acc-color-2) 2px solid;
+                /*! border-radius: 5px 0 0 5px; */
+                list-style: none;
+                margin: 5px 0;
+                padding: 2px;
+                
+                
+                > h2{
+                    margin: 0;
+                    padding: 2px;
+                    > i{
+                        border: none;
+                        float: right;
+                        rotate: 0deg;
+                        transition: rotate 0.2s ease-in-out;
+                    }
+                }
+                
+                >li{
+                    border-bottom: var(--bg-color-4) 1px solid;
+                }
+                
+                
+            }
+            
+            >ul{
+                margin: 0;
+                border-left: none;
+                >h2{
+                    display: none;
+                   
+                }
+            }
+            
+            ul.closed{
+                li{
+                    display: none;
+                }
+                ul{
+                    display: none;
+                }
+                h2{
+                    border-bottom: none;
+                    > i{
+                        border: none;
+                        float: right;
+                        rotate: 180deg;
+            
+                    }
+                }
+            }
+            
+            *{
+                transition: background-color 0.2s ease-in, border-color 0.2s ease-in;
+            }
 
             li:nth-of-type(1) {
                 border-top: var(--bg-color-4) 1px solid;
@@ -90,14 +145,19 @@
             li {
                 font-size: small;
                 padding: 8px 10px 8px 10px;
-                border-bottom: var(--bg-color-4) 1px solid;
-                transition: background-color 0.2s ease-in, border-color 0.2s ease-in;
+                
+                
             }
 
-            li:hover {
+            li:hover,  h2:hover{
                 background-color: var(--acc-color-2);
                 cursor: pointer;
             }
+            
+            ul:hover, ul:has(li.active) {
+                border-left-color: var(--acc-color-4);
+            }
+           
 
             li.active {
                 border-right: var(--acc-color-4) 2px solid;
