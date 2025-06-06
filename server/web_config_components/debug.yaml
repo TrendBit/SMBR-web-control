@@ -245,7 +245,6 @@ DashboardPanel:
           port: 80
           component: "test"
           resource: "/test-get"
-
   KineticFluorometerWidget:
     header: 
       rows:
@@ -261,3 +260,5 @@ DashboardPanel:
     newTest:
       resource: "/test-post"
       port: "80"
+  MacrosWidget:
+    header:

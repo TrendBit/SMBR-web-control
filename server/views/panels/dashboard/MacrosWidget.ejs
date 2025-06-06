@@ -1,0 +1,126 @@
+<div id="Macros-Widget" class="widget handler api-fetcher" handler-id="MacrosHandler">
+    <div class="header">
+        <h1>Quick launch</h1>
+        <div class="right">
+            <% if(DashboardPanel.MacrosWidget.header) DashboardPanel.MacrosWidget.header.rows.forEach(element => { %>
+                <div>
+                    <p><%= element.name %></p>
+                    <p class="table-dataField api-fetcher"
+                        port="<% if(element.port){%><%=element.port%><%}else{%><%="8089"%><%} %>" 
+                        unit="<% if(element.unit){%><%=element.unit%><%}else{%><%="°C"%><%} %>" 
+                        resource="<%= element.resource %>" 
+                        component="<%= element.component %>"
+                    ></p>
+                </div>
+                
+            <% }); %>
+            <button class="reset_button button1 hoverSpin" onclick="apiUpdateWorkerUpdate(this.parentElement.parentElement.parentElement)">
+                <p class="material-icons filled" title="refresh all values">autorenew</p>
+            </button>
+        </div>
+        <div class="top">
+            <p>ERROR</p>
+        </div>
+    </div>
+    <div class="running-script-name-container">
+        
+        <h2>
+            Currently running script:
+        </h2>
+        <h2 class="running-script-name">
+            ---
+        </h2>
+    </div>   
+    <div class="macro-gallery-grid-container">
+        <div class="macro-gallery-grid">
+            <button class="button1">Test1</button>
+            <button class="button1">ahoj</button>
+            <button class="button1">Dlouhe jmeno</button>
+            <button class="button1">Dlouhe jmeno</button>
+            <button class="button1">Dlouhe jmeno</button>
+            <button class="button1">Dlouhe jmeno</button>
+            <button class="button1">Dlouhe jmeno</button>
+            <button class="button1">Dlouhe jmeno</button>
+            <button class="button1">Dlouhe jmeno</button>
+            <button class="button1">Dlouhe jmeno</button>
+            <button class="button1">Dlouhe jmeno</button>
+            <button class="button1">Test1</button>
+            <button class="button1">ahoj</button>
+            <button class="button1">Dlouhe jmeno</button>
+            <button class="button1">Dlouhe jmeno</button>
+            <button class="button1">Dlouhe jmeno</button>
+            <button class="button1">Dlouhe jmeno</button>
+            <button class="button1">Dlouhe jmeno</button>
+            <button class="button1">Test1</button>
+            <button class="button1">ahoj</button>
+            <button class="button1">Test1</button>
+            <button class="button1">ahoj</button>
+            <button class="button1">Test1</button>
+            <button class="button1">ahoj</button>
+            <button class="button1">Test1</button>
+            <button class="button1">ahoj</button>
+            <button class="button1">Dlouhe jmeno</button>
+            
+        </div>
+    </div>
+    <script>     
+        handlers["MacrosHandler"] = class MacrosHandler {
+            constructor(element) {
+                console.log("CREATING MacrosHandler")
+                this.grid = element.getElementsByClassName("macro-gallery-grid")[0];
+                this.runningScript = element.getElementsByClassName("running-script-name")[0];
+
+                this.update();
+                console.log(this)
+            }
+
+            async launchMacro(macroFullName){
+                
+            }
+
+            async reloadMacros(){
+                var files=[]
+                try {
+                    files = await fetchDataAsJson(":8089/recipes");
+                } catch (err) {
+                    return
+                }
+
+                let newHTML = "";
+
+                const macroRegex = /^macros\|[^\|]$/;
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    if(macroRegex.test(file)){
+                        const fileShortName = file.split("|");
+                        newHTML+="<button class=\"button1\" onclick=\"getHandlerObj(this,'MacrosHandler').launchMacro('"+file+"'')\">"+fileShortName[fileShortName.length -1]+"</button>"
+                    }   
+                }
+
+
+                this.grid.innerHTML = newHTML;                
+            }
+
+            async reloadRunningScript(){
+                let response = undefined;
+                try {
+                    response = await fetchDataAsJson(":8089/scheduler/runtime");
+                } catch (err) {
+                    return
+                }
+                if(response.started && !response.stopped){
+                    this.runningScript.innerHTML = response.name.replaceAll("|","/");
+                    this.runningScript.classList.add("running");
+                }else{
+                    this.runningScript.innerHTML = "None..."
+                    this.runningScript.classList.remove("running");
+                }
+            }
+
+            update(){
+                this.reloadMacros();
+                this.reloadRunningScript();
+            }
+        }
+    </script>
+</div>
