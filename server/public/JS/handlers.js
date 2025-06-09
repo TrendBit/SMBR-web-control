@@ -462,7 +462,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         return false;
     }
     async createNewFile(){
-        let fileName = this.fileBrowser.addButton.newFileText.value;
+        let fileName = this.fileBrowser.addButton.newFileText.value.replaceAll("/","|");
         this.sendFile(fileName,"");
         this.fileBrowser.addButton.newFileText.value = "";
         this.fileBrowser.addButton.rolette.classList.remove("activated");
