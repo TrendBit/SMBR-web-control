@@ -324,13 +324,17 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         this.fileBrowser.fileListEl.innerHTML="";
     }
 
-    async reloadFileList(){
+    async reloadFileList(reloadFromDisk = false){
         var files=[]
         try {
-            files = await fetchDataAsJson(this.url)
+            files = await fetchDataAsJson(this.url,undefined,(reloadFromDisk)?"PATCH":"GET");
         } catch (err) {
             this.setHeaderPopup("error","error while reloading files:<br>"+err)
             return
+        }
+
+        if(reloadFromDisk){
+            this.setHeaderPopup("info","files were succesfully reloaded from disk");
         }
 
         if(this.fileBrowser.filesRaw.length==files.length){
