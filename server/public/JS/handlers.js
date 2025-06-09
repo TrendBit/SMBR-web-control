@@ -194,7 +194,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
                         return a.file.name.localeCompare(b.file.name);
                     });
 
-                    result+="<ul>";
+                    result+="<ul class=\"closed\">";
                     result+="<h2 onclick=\"toggleClass_Parent(this,'closed')\">"+displayFileName+"<i class=\"material-icons\" title=\"collapse/extend folder\">keyboard_arrow_down</i></h2>";
                     filesArray.forEach(({ shortFileName, file }) => {
                         result+= file.getHTML(shortFileName);
@@ -306,13 +306,6 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         }
         
     }
-
-    addToFileList(file){
-        this.fileBrowser.files.push(file)
-        return "<li onclick=\"getHandlerObj(this,'FileEditorHandler').loadFileIntoEditor('"+file+"')\">"+file+"</li>";
-    }
-
-
 
     selectFile(fileName, fileSelectElements = this.fileBrowser.fileListEl.children){
         for (let i = 0; i < fileSelectElements.length; i++) {
