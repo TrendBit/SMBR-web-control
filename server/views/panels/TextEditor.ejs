@@ -4,15 +4,24 @@
             <input type="text">
             <img src="UI/icons/search_icon.svg" alt="searchIcon" class="icon">
         </div>
-        <% if(allowCreateFiles == true){%>
-        <div class="add-button ">
-            <div class="button1 add-button-rolette">
-                <div class="button2container">
-                    <input type="text" class="button2 left add-button-fileName" placeholder="file name">
-                    <button class="button2 right"
-                        onclick="getHandlerObj(this,'FileEditorHandler').createNewFile()">create</button>
+        <% if(allowCreateFiles === true || allowPatchFiles === true){%>
+        <div class="button-rolette-container">
+            <div class="button-rolette">
+                <% if(allowPatchFiles === true){ %>
+                <button onclick="getHandlerObj(this,'FileEditorHandler').reloadFileList(true)">
+                    Reload files from disk
+                </button>
+                <% } %>
+                <% if(allowCreateFiles === true){ %>
+                <div class="add-button">
+                    <div class="button2container">
+                        <input type="text" class="button2 left add-button-fileName" placeholder="file name">
+                        <button class="button2 right"
+                            onclick="getHandlerObj(this,'FileEditorHandler').createNewFile()">create</button>
+                    </div>
+                    <img src="UI/icons/add_icon.svg" alt="addIcon" onclick="toggleClass_Parent(this, 'activated')">
                 </div>
-                <img src="UI/icons/add_icon.svg" alt="addIcon" onclick="toggleClass_Parent(this, 'activated')">
+                <% } %>
             </div>
         </div>
         <% } %>
