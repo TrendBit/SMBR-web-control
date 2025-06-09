@@ -85,7 +85,7 @@
                 border-left: var(--acc-color-2) 2px solid;
                 /*! border-radius: 5px 0 0 5px; */
                 list-style: none;
-                margin: 5px 0;
+                margin: 5px 0 10px 0;
                 padding: 2px;
                 
                 
@@ -114,14 +114,14 @@
                     display: none;
                    
                 }
-            }
-            
-            ul.closed{
+                ul.closed{
+                margin: 5px 0;
                 li{
                     display: none;
                 }
                 ul{
                     display: none;
+                    
                 }
                 h2{
                     border-bottom: none;
@@ -132,6 +132,7 @@
             
                     }
                 }
+            }
             }
             
             *{
@@ -145,6 +146,7 @@
             li {
                 font-size: small;
                 padding: 8px 10px 8px 10px;
+                overflow-x: hidden;
                 
                 
             }
