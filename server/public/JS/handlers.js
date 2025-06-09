@@ -183,7 +183,10 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
                 this.isDirectory = true;
             }
 
-            getHTML(displayFileName = this.name){
+            getHTML(recursionDepth = -1,displayFileName = this.name){
+                if(recursionDepth === 0){
+                    return "";
+                }
                 let result = "";
                 if(this.isDirectory){
                     const filesArray = Object.entries(this.subFiles).map(([shortFileName, file]) => ({ shortFileName, file }));
@@ -194,10 +197,10 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
                         return a.file.name.localeCompare(b.file.name);
                     });
 
-                    result+="<ul class=\"closed\">";
+                    result+="<ul full-name=\""+this.name+"\" class=\"closed\">";
                     result+="<h2 onclick=\"toggleClass_Parent(this,'closed')\">"+displayFileName+"<i class=\"material-icons\" title=\"collapse/extend folder\">keyboard_arrow_down</i></h2>";
                     filesArray.forEach(({ shortFileName, file }) => {
-                        result+= file.getHTML(shortFileName);
+                        result+= file.getHTML(recursionDepth-1,shortFileName);
                     });
                     result+="</ul>";
                 }else{
@@ -205,9 +208,24 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
                 }
                 return result;
             }
+
+            getHTML_alt(recursionDepth = -1,displayFileName = this.name){
+                if(recursionDepth === 0){
+                    return "";
+                }
+                let result = "";
+                if(this.isDirectory){
+                    result+="<ul full-name=\""+this.name+"\" class=\"closed\">";
+                    result+="<h2 onclick=\"getHandlerObj(this,'FileEditorHandler').twoCol_changeFolder('"+displayFileName+"')\">"+displayFileName+"<i class=\"material-icons\" title=\"collapse/extend folder\">chevron_right</i></h2>";
+                    for(let shortFileName in this.subFiles){
+                        result+= this.subFiles[shortFileName].getHTML_alt(recursionDepth-1,shortFileName);
+                    }
+                    result+="</ul>";
+                }
+                return result;
+            }
         }
 
-        
         
         const fileEditor = element.getElementsByClassName("fileEditor-editor")[0];
         const header = fileEditor.getElementsByClassName("header")[0];
@@ -275,6 +293,13 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
 
         this.connectedToRuntimeInfo = false;
 
+        this.twoCol ={
+            active: element.getAttribute("two-column") === "true",
+            fileListEl: undefined,
+            currFolder: undefined
+        }
+        this.twoCol.fileListEl = (this.twoCol.active)?element.getElementsByClassName("fileEditor-browser-folders-list")[0]:undefined;
+
         console.log("FileEditorHandler",this);
         
         this.setButtonState(false)
@@ -324,7 +349,19 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         this.fileBrowser.fileListEl.innerHTML="";
     }
 
-    async reloadFileList(reloadFromDisk = false){
+    twoCol_changeFolder(folderName){
+        let path = folderName.split("|");
+        let target = this.fileBrowser.files;
+        for (let i = 0; i < path.length; i++) {
+            const pathSegment = path[i];
+            target = target.subFiles[pathSegment];
+        }
+        this.twoCol.currFolder = target;
+        console.log("FileEditorHandler - changed current folder to",target);
+        this.reloadFileList(undefined, true);
+    }
+
+    async reloadFileList(reloadFromDisk = false, forcedReload = false){
         var files=[]
         try {
             files = await fetchDataAsJson(this.url,undefined,(reloadFromDisk)?"PATCH":"GET");
@@ -338,7 +375,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         }
 
         if(this.fileBrowser.filesRaw.length==files.length){
-            let changeDetected = false;
+            let changeDetected = forcedReload;
             for (let i = 0; i < files.length; i++) {
                 if(files[i] != this.fileBrowser.filesRaw[i]){
                     changeDetected=true;
@@ -359,10 +396,12 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
 
             let filePath = file.split("|");
             let target = this.fileBrowser.files;
+            let usedPath = "";
             for (let i = 0; i < filePath.length-1; i++) {
                 const element = filePath[i];
+                usedPath += element + "|";
                 if(target.subFiles[element] == undefined){
-                    target.addSubFile(new this.fileClass(element,true));
+                    target.addSubFile(new this.fileClass(usedPath,true),element);
                 }
                 target = target.subFiles[element];
             }
@@ -375,7 +414,15 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         for (let i = 0; i < files.length; i++) {
             newInnerHTML+=this.addToFileList(files[i])
         }*/
-        this.fileBrowser.fileListEl.innerHTML = this.fileBrowser.files.getHTML();
+        if(this.twoCol.active){
+            this.twoCol.fileListEl.innerHTML = this.fileBrowser.files.getHTML_alt(2);      
+            if(this.twoCol.currFolder != undefined){
+                this.fileBrowser.fileListEl.innerHTML = this.twoCol.currFolder.getHTML();
+                this.selectFile(this.twoCol.currFolder.name,this.twoCol.fileListEl.children);
+            }      
+        }else{
+            this.fileBrowser.fileListEl.innerHTML = this.fileBrowser.files.getHTML();
+        }
         this.selectFile(this.getCurrFileName());
         writeChangesToDeviceCache("fileEditors"+this.url+"/files",this.fileBrowser.files);
     }
@@ -393,7 +440,11 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
             this.fileEditor.fileName.innerHTML="ERROR WHILE OPENING FILE"
             this.fileEditor.code.setValue("");
             this.fileEditor.code.refresh();
-            this.setHeaderPopup("error", "error while opening the file:<br>" + err);
+            if(err.response != undefined){
+                this.handleResponseError(err.response);
+            }else{
+                this.setHeaderPopup("error", "error while opening the file:<br>" + err);
+            }
             
             return;
         })

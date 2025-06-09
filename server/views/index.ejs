@@ -196,10 +196,10 @@ var currNumOfCharts = 0;
             <% } %>
 
             <div id="experiments-Panel" class="content-panel container hidden content-panel-fullscreen">
-                <%- include('panels/TextEditor', {language:"text/x-yaml", allowPatchFiles: true, allowCreateFiles: true, allowDeleteFiles: true, resourceURL: ":8089/recipes", includeRuntimeInfo: true}) %>
+                <%- include('panels/TextEditor', {language:"text/x-yaml",useTwoColumnLayout: false, allowPatchFiles: true, allowCreateFiles: true, allowDeleteFiles: true, resourceURL: ":8089/recipes", includeRuntimeInfo: true}) %>
             </div>
             <div id="configs-Panel" class="content-panel container hidden content-panel-fullscreen">
-                <%- include('panels/TextEditor', {language:"text/x-toml", allowPatchFiles: false, allowCreateFiles: false, allowDeleteFiles: false, resourceURL: "/config-files", includeRuntimeInfo: false})%>
+                <%- include('panels/TextEditor', {language:"text/x-toml",useTwoColumnLayout: true, allowPatchFiles: false, allowCreateFiles: false, allowDeleteFiles: false, resourceURL: "/config-files", includeRuntimeInfo: false})%>
             </div>
 
             <% if(locals.DevicePanel){ %>
