@@ -1,4 +1,17 @@
-<div class="container handler fileEditor api-fetcher" handler-id="FileEditorHandler" source-url="<%= resourceURL %>" language="<%= language %>">
+<div class="container handler fileEditor api-fetcher" handler-id="FileEditorHandler" source-url="<%= resourceURL %>" language="<%= language %>" two-column="<%= useTwoColumnLayout %>">
+    <% if(useTwoColumnLayout === true){ %>
+    <div class="fileEditor-browser-folders">
+        <div class="fileEditor-browser-folders-search-bar">
+            <input type="text">
+            <img src="UI/icons/search_icon.svg" alt="searchIcon" class="icon">
+        </div>
+        <div class="fileEditor-browser-folders-list">
+            <ul>
+            </ul>
+        </div>
+    </div>
+    <% } %>
+
     <div class="fileEditor-browser">
         <div class="search-bar">
             <input type="text">
