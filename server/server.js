@@ -43,7 +43,7 @@ const { randomInt } = require('crypto');
 const { uptime, config } = require('process');
 const configFilesPath = (global.SMBR_debugMode)?
             (path.join("..","..","SMBR-config-files")):
-            "/home/reactor/database-export/telegraf.d/";
+            "/home/reactor/database-export/";
 
 
 
@@ -305,23 +305,69 @@ app.get('/fluoro-curve',(req, res) => {
 });
 
 
-app.get('/config-files', async (req, res) => {
-    var files = undefined;
-    try {
-        files = fs.readdirSync(configFilesPath);
-    } catch (error) {
-        res.status(500).send("directory not found");
-        return;
+
+var configFiles_FileList = [];
+function configFiles_reloadFileListFromDisk(){
+    const result = [];
+
+    function readDirRecursive(dir, prefix = '') {
+        const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+        for (const entry of entries) {
+            const fullPath = path.join(dir, entry.name);
+            const relativePath = prefix ? `${prefix}|${entry.name}` : entry.name;
+
+            if (entry.isFile()) {
+                result.push(relativePath);
+            } else if (entry.isDirectory()) {
+                readDirRecursive(fullPath, prefix ? `${prefix}|${entry.name}` : entry.name);
+            }
+        }
     }
-    res.status(200).send(JSON.stringify(files));
-    return;
+
+    try {
+        readDirRecursive(configFilesPath);
+        configFiles_FileList = result;
+        return result;
+    } catch (err) {
+        console.error("[configFiles] unable to reload file list:\n",err);
+        configFiles_FileList = [];
+        return [];
+    }
+}
+
+
+app.get('/config-files', (req, res) => {
+    if(configFiles_FileList.length === 0){
+        configFiles_reloadFileListFromDisk();
+    }
+    res.status(200).json(configFiles_FileList);
 });
+
+app.patch('/config-files', (req, res) => {
+    configFiles_reloadFileListFromDisk();
+    res.status(200).json(configFiles_FileList);
+});
+
+function configFiles_FileNameSecurityCheck(fileName){
+    if(fileName.includes("..")){
+        return true;
+    }
+    return false;
+}
+
 app.get('/config-files/:userPath', async (req, res) => {
     const fileName = req.params.userPath;
+    const fileNameSplit = fileName.split("|");
+    if(configFiles_FileNameSecurityCheck(fileName)){
+        res.status(403).send("ILLEGAL ACCESS DETECTED");
+        console.warn("[config-files] Illegal acces to file:",fileName,"detected!!!");
+        return;
+    } 
 
     var fileData = "";
     try {
-        fileData = fs.readFileSync(path.join(configFilesPath,fileName),'utf8');
+        fileData = fs.readFileSync(path.join(configFilesPath,...fileNameSplit),'utf8');
     } catch (error) {
         res.status(500).send("file cannot be opened");
         return;
@@ -335,6 +381,12 @@ app.get('/config-files/:userPath', async (req, res) => {
 });
 app.put('/config-files/:userPath', async (req, res) => {
     const fileName = req.params.userPath;
+    const fileNameSplit = fileName.split("|");
+    if(configFiles_FileNameSecurityCheck(fileName)){
+        res.status(403).send("ILLEGAL ACCESS DETECTED");
+        console.warn("Illegal acces to file: ",fileName,"detected!!!");
+        return;
+    } 
     const maxBodySize = 500000;
 
     if(req.body.name!=fileName){
@@ -349,23 +401,30 @@ app.put('/config-files/:userPath', async (req, res) => {
         fileData = req.body.content;
     }
     try {
-        fs.writeFileSync(path.join(configFilesPath,fileName), fileData);
+        fs.writeFileSync(path.join(configFilesPath,...fileNameSplit), fileData);
     } catch (error) {
         res.status(500).send("unable to write to file: "+error.message);
         return
     }
     res.status(200).send("file transfer successfull");
+    configFiles_reloadFileListFromDisk();
 });
 app.delete('/config-files/:userPath', async (req, res) => {
     const fileName = req.params.userPath;
+    const fileNameSplit = fileName.split("|");
+    if(configFiles_FileNameSecurityCheck(fileName)){
+        res.status(403).send("ILLEGAL ACCESS DETECTED");
+        console.warn("Illegal acces to file: ",fileName,"detected!!!");
+        return;
+    } 
     try {
-        fs.unlinkSync(path.join(configFilesPath,fileName));
+        fs.unlinkSync(path.join(configFilesPath,...fileNameSplit));
     } catch (error) {
         res.status(500).send("failed to delete file: "+error.message);
         return;
     }
     res.status(200).send("file deleted successfully");
-    return;
+    configFiles_reloadFileListFromDisk();
 });
 
 /*
