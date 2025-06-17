@@ -14,6 +14,15 @@
                 </div>
                 
             <% }); %>
+            <button class="start_button button1" onclick="getHandlerObj(this,'MacrosHandler').start()">
+                <p class="material-icons filled" title="start script">play_arrow</p>
+            </button>
+            <button class="stop_button button1" onclick="getHandlerObj(this,'MacrosHandler').stop()">
+                <p class="material-icons filled" title="stop script">stop</p>
+            </button>
+            <button class="pause_button button1" onclick="getHandlerObj(this,'MacrosHandler').pause()">
+                <p class="material-icons filled" title="pause script">pause</p>
+            </button>
             <button class="reset_button button1 hoverSpin" onclick="apiUpdateWorkerUpdate(this.parentElement.parentElement.parentElement)">
                 <p class="material-icons filled" title="refresh all values">autorenew</p>
             </button>
@@ -21,45 +30,32 @@
         <div class="popup-container">
         </div>
     </div>
-    <div class="running-script-name-container">
-        
+    <div class="macros-data-container selected-script-name-container">
         <h2>
-            Currently running script:
+            Selected script:
         </h2>
-        <h2 class="running-script-name">
+        <h2 class="selected-script-data selected-script-name">
             ---
         </h2>
     </div>   
+    <div class="macros-data-container selected-script-state-container">
+        <h2>
+            Current state:
+        </h2>
+        <h2 class="macros-data selected-script-state">
+            ---
+        </h2>
+    </div> 
+    <div class="macros-data-container macro-gallery-label">
+        <h2>
+            Macros gallery:
+        </h2>
+        <h2 class="macros-data">
+            (includes files saved in macros folder)
+        </h2>
+    </div> 
     <div class="macro-gallery-grid-container">
-        <div class="macro-gallery-grid">
-            <button class="button1">Test1</button>
-            <button class="button1">ahoj</button>
-            <button class="button1">Dlouhe jmeno</button>
-            <button class="button1">Dlouhe jmeno</button>
-            <button class="button1">Dlouhe jmeno</button>
-            <button class="button1">Dlouhe jmeno</button>
-            <button class="button1">Dlouhe jmeno</button>
-            <button class="button1">Dlouhe jmeno</button>
-            <button class="button1">Dlouhe jmeno</button>
-            <button class="button1">Dlouhe jmeno</button>
-            <button class="button1">Dlouhe jmeno</button>
-            <button class="button1">Test1</button>
-            <button class="button1">ahoj</button>
-            <button class="button1">Dlouhe jmeno</button>
-            <button class="button1">Dlouhe jmeno</button>
-            <button class="button1">Dlouhe jmeno</button>
-            <button class="button1">Dlouhe jmeno</button>
-            <button class="button1">Dlouhe jmeno</button>
-            <button class="button1">Test1</button>
-            <button class="button1">ahoj</button>
-            <button class="button1">Test1</button>
-            <button class="button1">ahoj</button>
-            <button class="button1">Test1</button>
-            <button class="button1">ahoj</button>
-            <button class="button1">Test1</button>
-            <button class="button1">ahoj</button>
-            <button class="button1">Dlouhe jmeno</button>
-            
+        <div class="macro-gallery-grid">            
         </div>
     </div>
     <script>     
@@ -67,28 +63,110 @@
             constructor(element) {
                 console.log("CREATING MacrosHandler")
                 this.grid = element.getElementsByClassName("macro-gallery-grid")[0];
-                this.runningScript = element.getElementsByClassName("running-script-name")[0];
+                this.selectedScript = {
+                    name: element.getElementsByClassName("selected-script-name")[0],
+                    state: element.getElementsByClassName("selected-script-state")[0]
+                }
+                this.currentFileList = [];
+
+                this.buttons = {
+                    start: element.getElementsByClassName("start_button")[0],
+                    stop:  element.getElementsByClassName("stop_button")[0],
+                    pause: element.getElementsByClassName("pause_button")[0]
+                }
+
+                this.popupContainer = element.getElementsByClassName("popup-container")[0];
 
                 this.update();
                 console.log(this)
             }
 
-            async launchMacro(macroFullName){
-                try {
-                    const response1 = await sendData(":8089/scheduler/recipe",`\"${macroFullName}\"`);
-                    if(response1==200){
-                        const response2 = await sendData(":8089/scheduler/start","");
-                        if(response1==200){
-                            console.log("OK");
-                        }else{
-                            throw Error("Unable to start the script");
-                        }
-                    }else{
-                        throw Error("Unable to select the script");
-                    }
-                } catch (error) {
-                    
+            setHeaderPopup(type, body){
+                new handlers["Popup"](this.popupContainer,body,type,(type=="info")?4000:undefined);
+            }
+
+            async handleResponseError(response){
+                if(response == undefined){
+                    console.error('Error , no response from server');
+                    this.setHeaderPopup("error", "Error,<br>no response from server");
+                    return true
                 }
+                if(response.status != 200){
+                    var messageBody=await streamToString(response.body);
+                    console.error('Error code('+response.status+'):',messageBody);
+                    if(response.status == 500){
+                        this.setHeaderPopup("error",messageBody);
+                    }else{
+                        this.setHeaderPopup("error", 'Error('+response.status+'):<br>'+messageBody);
+                    }
+                    return true
+                }
+                return false
+            }
+
+            disableButtons(){
+                this.buttons.start.disabled = true;
+                this.buttons.stop.disabled = true;
+                this.buttons.pause.disabled = true;
+            }
+            setButtonsStates(start, stop, pause){
+                this.buttons.start.disabled = (start)?undefined:true;
+                this.buttons.stop.disabled  = (stop)?undefined:true;
+                this.buttons.pause.disabled = (pause)?undefined:true;
+            }
+
+            async start(){
+                return await this.unifiedAction("start");
+            }
+
+            async stop(){
+                return await this.unifiedAction("stop");
+            }
+
+            async pause(){
+                return await this.unifiedAction("pause");
+            }
+
+
+            async unifiedAction(type){
+                const response = await sendData(":8089/scheduler/"+type,"").catch(err => {
+                    console.error(`Unable to ${type} script: `, err);
+                    this.setHeaderPopup("error", `Unable to ${type} script: ` + err);
+                    return
+                })
+                if(response == undefined){
+                    return
+                }
+
+                if(await this.handleResponseError(response)){
+                    return
+                }
+
+                this.disableButtons();
+                let self = this;
+                setTimeout(()=>{
+                    self.update();
+                },400);
+            }
+
+            async launchMacro(macroFullName){
+                const response1 = await sendData(":8089/scheduler/recipe",`\"${macroFullName}\"`).catch(err => {
+                    console.error('Unable to select script: ', err);
+                    this.setHeaderPopup("error", "Unable to select script: \n" + err);
+                    return
+                })
+                if(response1 == undefined){
+                    return
+                }
+                if(await this.handleResponseError(response1)){
+                    return
+                }
+
+                let self = this;
+                setTimeout(()=>{
+                    self.start();
+                },400);
+                
             }
 
             async reloadMacros(){
@@ -99,9 +177,31 @@
                     return
                 }
 
+
+                
+                let changes = true;
+                if(files.length == this.currentFileList.length){
+                    changes = false;
+                    for (let i = 0; i < files.length; i++) {
+                        const currFileName1 = files[i];
+                        const currFileName2 = this.currentFileList[i];
+                        
+                        if(currFileName1 != currFileName2){
+                            changes = true;
+                            break;
+                        }
+                    }
+                }
+                if(!changes){
+                    return false;
+                }
+
+                this.currentFileList = files;
+
+
                 let newHTML = "";
 
-                const macroRegex = /^macros\|[^\|]$/;
+                const macroRegex = /^macros\|[^\|]*$/;
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
                     if(macroRegex.test(file)){
@@ -110,8 +210,19 @@
                     }   
                 }
 
+                if(this.grid.innerHTML!=newHTML){
+                    this.grid.innerHTML = newHTML;                
+                }
+                return true;
+            }
 
-                this.grid.innerHTML = newHTML;                
+            setState(state){
+                this.selectedScript.state.innerHTML = state;
+                this.selectedScript.state.classList.remove("running");
+                this.selectedScript.state.classList.remove("stopped");
+                if(state == "running" || state == "stopped"){
+                    this.selectedScript.state.classList.add(state);
+                }
             }
 
             async reloadRunningScript(){
@@ -121,18 +232,53 @@
                 } catch (err) {
                     return
                 }
+
+
+
+                //#TODO change when pause is introduced
+                const newName = response.name.replaceAll("|","/");
+                const oldName = this.selectedScript.name.innerHTML;
+
+                this.selectedScript.name.innerHTML = newName;
+                
+
                 if(response.started && !response.stopped){
-                    this.runningScript.innerHTML = response.name.replaceAll("|","/");
-                    this.runningScript.classList.add("running");
-                }else{
-                    this.runningScript.innerHTML = "None..."
-                    this.runningScript.classList.remove("running");
+                    this.setButtonsStates(false,true,false);
+                    this.setState("running");
+                }
+                if(!response.started && response.stopped){
+                    this.setButtonsStates(true,false,false);
+                    this.setState("unknown");
+                }
+                if(response.started && response.stopped){
+                    this.setButtonsStates(true,false,false);
+                    this.setState("stopped");
+                }
+                if(!response.started && !response.stopped){
+                    this.setButtonsStates(false,false,false);
+                    this.setState("stopped");
+                }
+                        
+                return newName != oldName;
+            }
+
+            async reloadSelectedMacro(){
+                for (let i = 0; i < this.grid.children.length; i++) {
+                    const fileElement = this.grid.children[i];
+                    const fileName = "macros/"+fileElement.innerHTML;
+                    if(fileName == this.selectedScript.name.innerHTML){
+                        fileElement.classList.add("active");
+                    }else{
+                        fileElement.classList.remove("active");
+                    }
+                    
                 }
             }
 
-            update(){
-                this.reloadMacros();
-                this.reloadRunningScript();
+            async update(){
+                if(await this.reloadMacros() || await this.reloadRunningScript()){
+                    await this.reloadSelectedMacro();
+                }
             }
         }
     </script>
