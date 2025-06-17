@@ -1,5 +1,7 @@
 #Macros-Widget{
-  .running-script-name-container{
+  grid-row: span 2;
+  
+  .macros-data-container{
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -10,33 +12,56 @@
     *{
       margin: 0;
       box-sizing: border-box;
+      white-space: nowrap;
     }
     
-    .running-script-name{
+    
+  }
+  .selected-script-state-container{
+    .macros-data{
       color: var(--bg-color-5);
     }
-    .running-script-name.running{
-      color: var(--acc-color-4);
+    .running{
+      color: var(--acc-color-3);
+    }
+    .stopped{
+      color: var(--warn-color-3);
     }
   }
   
+  .macro-gallery-label{
+      border-bottom: none;
+      .macros-data{
+        color: var(--bg-color-4);
+        font-size: small;
+      }
+  }
+
   .macro-gallery-grid-container{
-    height: 100%;
-    max-height: 200px;
+    /*max-height: 500px;*/
     overflow-y: scroll;
     
     
+    
     .macro-gallery-grid{
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      /* flex-wrap: wrap; */
       grid-template-columns: repeat(2, 1fr);
       height: min-content;
+      grid-gap: 5px;
       
       grid-gap: 5px;
       >*{
         min-width: 30%;
         flex-grow: 1;
         white-space:nowrap;
+      }
+      
+      >*.active{
+        background-color: var(--acc-color-1);
+      }
+      >*.active:hover{
+        background-color: var(--acc-color-2) !important;;
       }
       
     }
