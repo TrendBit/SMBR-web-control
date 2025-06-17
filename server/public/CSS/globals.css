@@ -236,6 +236,13 @@ body {
     border-color: var(--acc-color-3) !important;
 }
 
+.button1:active:enabled,
+.button2:active:enabled,
+.radio1:active {
+    background-color: var(--acc-color-2) !important;
+}
+
+
 .radio1.minimal {
     padding: 1px;
 }
