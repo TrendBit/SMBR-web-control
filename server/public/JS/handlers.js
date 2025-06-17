@@ -18,6 +18,44 @@ onloadQueue.push(()=>{
 });
 
 
+handlers["Popup"] = class Popup {
+    constructor(element, text = "debug", type = "info", disapearTimer = undefined){
+        let self = this;
+        
+        if(disapearTimer!=undefined){
+            setTimeout(()=>{
+                self.disapear();
+            }, disapearTimer);
+        }
+
+        const popup = document.createElement("div");
+        const closeButton = document.createElement("i");
+
+        popup.setAttribute("handler-id", "Popup");
+        popup.className = `handler popup ${type}`;
+
+        popup.innerHTML = text.replaceAll("\n", "<br>");
+        
+        closeButton.className = "popup-closeButton material-icons";
+        closeButton.title     = "close popup"
+        closeButton.onclick = () => {
+            self.disapear();
+        };
+        closeButton.innerHTML = "close";
+        popup.appendChild(closeButton);
+        element.appendChild(popup);
+
+        this.element = popup;
+    }
+    disapear(){
+        if(this.element === undefined){
+            return;
+        }
+        this.element.parentNode.removeChild(this.element);
+        this.element = undefined;
+    }
+}
+
 handlers["Slider1Handler"] = class Slider1Handler {
     constructor(element) {
         console.log("CREATING Slider1Handler")
