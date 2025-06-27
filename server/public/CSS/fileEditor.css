@@ -450,6 +450,12 @@
                 >*.called {
                     background-color: var(--acc-color-1)
                 }
+                >*.called1{
+                    background-color: var(--acc-color-2);
+                }
+                >*.called2{
+                    background-color: var(--acc-color-1);
+                }
             }
 
             .CodeMirror-scrollbar-filler {

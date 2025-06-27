@@ -632,13 +632,18 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
             requestAnimationFrame(() => {
                 for (let i = 0; i < this.fileEditor.calledLines.length; i++) {
                     const element = this.fileEditor.calledLines[i];
+                    const calledLineID = this.fileEditor.calledLines.length-i;
                     element.classList.remove("called");
+                    element.classList.remove("called"+calledLineID);
                 }
                 this.fileEditor.calledLines = [];
                 for (let i = 0; i < arrayOfLineNums.length; i++) {
                     const lineNum = arrayOfLineNums[i];
+                    const calledLineID = arrayOfLineNums.length-i;
+
                     const targetLine=this.fileEditor.codeElement.children[lineNum-1];
                     targetLine.classList.add("called");
+                    targetLine.classList.add("called"+calledLineID);
                     this.fileEditor.calledLines.push(targetLine);
                 }
             });
@@ -974,13 +979,18 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
         requestAnimationFrame(() => {
             for (let i = 0; i < this.scriptPreview.calledLines.length; i++) {
                 const element = this.scriptPreview.calledLines[i];
+                const calledLineID = this.scriptPreview.calledLines.length-i;
                 element.classList.remove("called");
+                element.classList.remove("called"+calledLineID);
             }
             this.scriptPreview.calledLines = [];
             for (let i = 0; i < arrayOfLineNums.length; i++) {
                 const lineNum = arrayOfLineNums[i];
                 const targetLine=this.scriptPreview.codeElement.children[lineNum-1];
+
+                const calledLineID = arrayOfLineNums.length-i;
                 targetLine.classList.add("called");
+                targetLine.classList.add("called"+calledLineID);
                 this.scriptPreview.calledLines.push(targetLine);
             }
         });
