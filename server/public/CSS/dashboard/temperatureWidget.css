@@ -2,11 +2,11 @@
     grid-row: span 2;
 
 
-    td.table-color {
+    td.table-color:not(.unchartable) {
         cursor: pointer;
     }
 
-    td.table-color:hover {
+    td.table-color:hover:not(.unchartable) {
         transform: scale(0.8);
     }
 
