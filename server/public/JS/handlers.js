@@ -236,7 +236,15 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
                     });
 
                     result+="<ul full-name=\""+this.name+"\" class=\"closed\">";
-                    result+="<h2 onclick=\"toggleClass_Parent(this,'closed')\">"+displayFileName+"<i class=\"material-icons\" title=\"collapse/extend folder\">keyboard_arrow_down</i></h2>";
+                    result+="<div class=\"fileEditor-browser-folderTitle\">";
+                        result+="<div class=\"folderTitle-left\" onclick=\"toggleClass_nthParent(this,'closed',2)\">";
+                            result+="<h2>"+displayFileName+"</h2>";
+                            result+="<i class=\"material-icons folderTitle-collapser\" title=\"collapse/extend folder\">keyboard_arrow_down</i>";
+                        result+="</div>";
+                        result+="<div class=\"folderTitle-right\" >";
+                            result+="<i class=\"material-icons folderTitle-create\" title=\"create file in this folder\">+</i>";
+                        result+="</div>";
+                    result+="</div>";
                     filesArray.forEach(({ shortFileName, file }) => {
                         result+= file.getHTML(recursionDepth-1,shortFileName);
                     });
@@ -254,7 +262,12 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
                 let result = "";
                 if(this.isDirectory){
                     result+="<ul full-name=\""+this.name+"\" class=\"closed\">";
-                    result+="<h2 onclick=\"getHandlerObj(this,'FileEditorHandler').twoCol_changeFolder('"+displayFileName+"')\">"+displayFileName+"<i class=\"material-icons\" title=\"collapse/extend folder\">chevron_right</i></h2>";
+                    result+="<div class=\"fileEditor-browser-folderTitle\" onclick=\"getHandlerObj(this,'FileEditorHandler').twoCol_changeFolder('"+displayFileName+"')\">";
+                        result+="<div class=\"folderTitle-left\">";
+                            result+="<h2>"+displayFileName+"</h2>"
+                            result+="<i class=\"material-icons\" title=\"collapse/extend folder\">chevron_right</i>"
+                        result+="</div>"
+                    result+="</div>"
                     for(let shortFileName in this.subFiles){
                         result+= this.subFiles[shortFileName].getHTML_alt(recursionDepth-1,shortFileName);
                     }
