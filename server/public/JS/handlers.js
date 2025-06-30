@@ -242,7 +242,8 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
                             result+="<i class=\"material-icons folderTitle-collapser\" title=\"collapse/extend folder\">keyboard_arrow_down</i>";
                         result+="</div>";
                         result+="<div class=\"folderTitle-right\" >";
-                            result+="<i class=\"material-icons folderTitle-create\" title=\"create file in this folder\">+</i>";
+                            result+="<i onclick=\"getHandlerObj(this,'FileEditorHandler').prepareNewFileCreation('"+this.name+"')\" ";
+                            result+="class=\"material-icons folderTitle-create\" title=\"create file in this folder\">+</i>";
                         result+="</div>";
                     result+="</div>";
                     filesArray.forEach(({ shortFileName, file }) => {
@@ -570,6 +571,12 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         this.fileBrowser.addButton.rolette.classList.remove("activated");
         this.fileEditor.code.markClean();
     }
+
+    async prepareNewFileCreation(presetPath = ""){
+        this.fileBrowser.addButton.rolette.classList.add("activated");
+        this.fileBrowser.addButton.newFileText.value = presetPath.replaceAll("|","/");
+    }
+
     async deleteFile(fileName){
         if(this.checkChangesAbort()) return;
         const response = await fetchData(this.url+"/"+encodeURIComponent(fileName),undefined,"DELETE").catch(err => {
