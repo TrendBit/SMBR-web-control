@@ -566,6 +566,13 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
     }
     async createNewFile(){
         let fileName = this.fileBrowser.addButton.newFileText.value.replaceAll("/","|");
+        for (let i = 0; i < this.fileBrowser.filesRaw.length; i++) {
+            const file = this.fileBrowser.filesRaw[i];
+            if(file == fileName){
+                this.setHeaderPopup("warning","file \""+fileName+"\" allready exists!<br>No file was created or changed.");
+                return
+            }
+        }
         this.sendFile(fileName,"");
         this.fileBrowser.addButton.newFileText.value = "";
         this.fileBrowser.addButton.rolette.classList.remove("activated");
