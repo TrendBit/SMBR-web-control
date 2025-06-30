@@ -204,7 +204,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
             fileListEl:element.getElementsByClassName("fileEditor-list")[0],
             addButton:{
                 newFileText:element.getElementsByClassName("add-button-fileName")[0],
-                rolette:element.getElementsByClassName("add-button-rolette")[0],
+                rolette:element.getElementsByClassName("add-button")[0],
             }
 
         }
