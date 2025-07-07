@@ -1,0 +1,840 @@
+{
+  "@kurkle/color@0.3.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/kurkle/color",
+    "publisher": "Jukka Kurkela",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/@kurkle/color",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/@kurkle/color/LICENSE.md"
+  },
+  "@types/hammerjs@2.0.46": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/@types/hammerjs",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/@types/hammerjs/LICENSE"
+  },
+  "accepts@1.3.8": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/accepts",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/accepts",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/accepts/LICENSE"
+  },
+  "ajv@8.17.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ajv-validator/ajv",
+    "publisher": "Evgeny Poberezkin",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/ajv",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/ajv/LICENSE"
+  },
+  "ansi-styles@4.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chalk/ansi-styles",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/ansi-styles",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/ansi-styles/license"
+  },
+  "argparse@2.0.1": {
+    "licenses": "Python-2.0",
+    "repository": "https://github.com/nodeca/argparse",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/argparse",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/argparse/LICENSE"
+  },
+  "array-flatten@1.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/blakeembrey/array-flatten",
+    "publisher": "Blake Embrey",
+    "email": "hello@blakeembrey.com",
+    "url": "http://blakeembrey.me",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/array-flatten",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/array-flatten/LICENSE"
+  },
+  "async@3.2.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/caolan/async",
+    "publisher": "Caolan McMahon",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/async",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/async/LICENSE"
+  },
+  "asynckit@0.4.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/alexindigo/asynckit",
+    "publisher": "Alex Indigo",
+    "email": "iam@alexindigo.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/asynckit",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/asynckit/LICENSE"
+  },
+  "axios@1.7.7": {
+    "licenses": "MIT",
+    "repository": "https://github.com/axios/axios",
+    "publisher": "Matt Zabriskie",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/axios",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/axios/LICENSE"
+  },
+  "balanced-match@1.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/juliangruber/balanced-match",
+    "publisher": "Julian Gruber",
+    "email": "mail@juliangruber.com",
+    "url": "http://juliangruber.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/balanced-match",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/balanced-match/LICENSE.md"
+  },
+  "body-parser@1.20.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/expressjs/body-parser",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/body-parser",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/body-parser/LICENSE"
+  },
+  "brace-expansion@1.1.11": {
+    "licenses": "MIT",
+    "repository": "https://github.com/juliangruber/brace-expansion",
+    "publisher": "Julian Gruber",
+    "email": "mail@juliangruber.com",
+    "url": "http://juliangruber.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/brace-expansion",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/brace-expansion/LICENSE"
+  },
+  "brace-expansion@2.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/juliangruber/brace-expansion",
+    "publisher": "Julian Gruber",
+    "email": "mail@juliangruber.com",
+    "url": "http://juliangruber.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/filelist/node_modules/brace-expansion",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/filelist/node_modules/brace-expansion/LICENSE"
+  },
+  "bytes@3.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/visionmedia/bytes.js",
+    "publisher": "TJ Holowaychuk",
+    "email": "tj@vision-media.ca",
+    "url": "http://tjholowaychuk.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/bytes",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/bytes/LICENSE"
+  },
+  "call-bind@1.0.7": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/call-bind",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/call-bind",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/call-bind/LICENSE"
+  },
+  "chalk@4.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chalk/chalk",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/jake/node_modules/chalk",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/jake/node_modules/chalk/license"
+  },
+  "chalk@5.4.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chalk/chalk",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/chalk",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/chalk/license"
+  },
+  "chart.js@4.4.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chartjs/Chart.js",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/chart.js",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/chart.js/LICENSE.md"
+  },
+  "chartjs-plugin-zoom@2.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chartjs/chartjs-plugin-zoom",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/chartjs-plugin-zoom",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/chartjs-plugin-zoom/LICENSE.md"
+  },
+  "color-convert@2.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/Qix-/color-convert",
+    "publisher": "Heather Arthur",
+    "email": "fayearthur@gmail.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/color-convert",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/color-convert/LICENSE"
+  },
+  "color-name@1.1.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/colorjs/color-name",
+    "publisher": "DY",
+    "email": "dfcreative@gmail.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/color-name",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/color-name/LICENSE"
+  },
+  "combined-stream@1.0.8": {
+    "licenses": "MIT",
+    "repository": "https://github.com/felixge/node-combined-stream",
+    "publisher": "Felix Geisendörfer",
+    "email": "felix@debuggable.com",
+    "url": "http://debuggable.com/",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/combined-stream",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/combined-stream/License"
+  },
+  "concat-map@0.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/substack/node-concat-map",
+    "publisher": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/concat-map",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/concat-map/LICENSE"
+  },
+  "content-disposition@0.5.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/content-disposition",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/content-disposition",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/content-disposition/LICENSE"
+  },
+  "content-type@1.0.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/content-type",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/content-type",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/content-type/LICENSE"
+  },
+  "cookie-signature@1.0.6": {
+    "licenses": "MIT",
+    "repository": "https://github.com/visionmedia/node-cookie-signature",
+    "publisher": "TJ Holowaychuk",
+    "email": "tj@learnboost.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/cookie-signature",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/cookie-signature/Readme.md"
+  },
+  "cookie@0.7.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/cookie",
+    "publisher": "Roman Shtylman",
+    "email": "shtylman@gmail.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/cookie",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/cookie/LICENSE"
+  },
+  "cors@2.8.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/expressjs/cors",
+    "publisher": "Troy Goode",
+    "email": "troygoode@gmail.com",
+    "url": "https://github.com/troygoode/",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/cors",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/cors/LICENSE"
+  },
+  "debug@2.6.9": {
+    "licenses": "MIT",
+    "repository": "https://github.com/visionmedia/debug",
+    "publisher": "TJ Holowaychuk",
+    "email": "tj@vision-media.ca",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/debug",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/debug/LICENSE"
+  },
+  "define-data-property@1.1.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/define-data-property",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/define-data-property",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/define-data-property/LICENSE"
+  },
+  "delayed-stream@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/felixge/node-delayed-stream",
+    "publisher": "Felix Geisendörfer",
+    "email": "felix@debuggable.com",
+    "url": "http://debuggable.com/",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/delayed-stream",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/delayed-stream/License"
+  },
+  "depd@2.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/dougwilson/nodejs-depd",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/depd",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/depd/LICENSE"
+  },
+  "destroy@1.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/stream-utils/destroy",
+    "publisher": "Jonathan Ong",
+    "email": "me@jongleberry.com",
+    "url": "http://jongleberry.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/destroy",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/destroy/LICENSE"
+  },
+  "ee-first@1.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jonathanong/ee-first",
+    "publisher": "Jonathan Ong",
+    "email": "me@jongleberry.com",
+    "url": "http://jongleberry.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/ee-first",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/ee-first/LICENSE"
+  },
+  "ejs@3.1.10": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/mde/ejs",
+    "publisher": "Matthew Eernisse",
+    "email": "mde@fleegix.org",
+    "url": "http://fleegix.org",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/ejs",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/ejs/LICENSE"
+  },
+  "encodeurl@1.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/pillarjs/encodeurl",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/send/node_modules/encodeurl",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/send/node_modules/encodeurl/LICENSE"
+  },
+  "encodeurl@2.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/pillarjs/encodeurl",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/encodeurl",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/encodeurl/LICENSE"
+  },
+  "es-define-property@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/es-define-property",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/es-define-property",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/es-define-property/LICENSE"
+  },
+  "es-errors@1.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/es-errors",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/es-errors",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/es-errors/LICENSE"
+  },
+  "escape-html@1.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/component/escape-html",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/escape-html",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/escape-html/LICENSE"
+  },
+  "etag@1.8.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/etag",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/etag",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/etag/LICENSE"
+  },
+  "express@4.21.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/expressjs/express",
+    "publisher": "TJ Holowaychuk",
+    "email": "tj@vision-media.ca",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/express",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/express/LICENSE"
+  },
+  "fast-deep-equal@3.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/epoberezkin/fast-deep-equal",
+    "publisher": "Evgeny Poberezkin",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/fast-deep-equal",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/fast-deep-equal/LICENSE"
+  },
+  "fast-uri@3.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/fastify/fast-uri",
+    "publisher": "Vincent Le Goff",
+    "email": "vince.legoff@gmail.com",
+    "url": "https://github.com/zekth",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/fast-uri",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/fast-uri/LICENSE"
+  },
+  "filelist@1.0.4": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/mde/filelist",
+    "publisher": "Matthew Eernisse",
+    "email": "mde@fleegix.org",
+    "url": "http://fleegix.org",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/filelist",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/filelist/README.md"
+  },
+  "finalhandler@1.3.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/pillarjs/finalhandler",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/finalhandler",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/finalhandler/LICENSE"
+  },
+  "follow-redirects@1.15.9": {
+    "licenses": "MIT",
+    "repository": "https://github.com/follow-redirects/follow-redirects",
+    "publisher": "Ruben Verborgh",
+    "email": "ruben@verborgh.org",
+    "url": "https://ruben.verborgh.org/",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/follow-redirects",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/follow-redirects/LICENSE"
+  },
+  "form-data@4.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/form-data/form-data",
+    "publisher": "Felix Geisendörfer",
+    "email": "felix@debuggable.com",
+    "url": "http://debuggable.com/",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/form-data",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/form-data/License"
+  },
+  "forwarded@0.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/forwarded",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/forwarded",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/forwarded/LICENSE"
+  },
+  "fresh@0.5.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/fresh",
+    "publisher": "TJ Holowaychuk",
+    "email": "tj@vision-media.ca",
+    "url": "http://tjholowaychuk.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/fresh",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/fresh/LICENSE"
+  },
+  "function-bind@1.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/Raynos/function-bind",
+    "publisher": "Raynos",
+    "email": "raynos2@gmail.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/function-bind",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/function-bind/LICENSE"
+  },
+  "get-intrinsic@1.2.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/get-intrinsic",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/get-intrinsic",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/get-intrinsic/LICENSE"
+  },
+  "gopd@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/gopd",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/gopd",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/gopd/LICENSE"
+  },
+  "hammerjs@2.0.8": {
+    "licenses": "MIT",
+    "repository": "https://github.com/hammerjs/hammer.js",
+    "publisher": "Jorik Tangelder",
+    "email": "j.tangelder@gmail.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/hammerjs",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/hammerjs/LICENSE.md"
+  },
+  "has-flag@4.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/has-flag",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/has-flag",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/has-flag/license"
+  },
+  "has-property-descriptors@1.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/inspect-js/has-property-descriptors",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/has-property-descriptors",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/has-property-descriptors/LICENSE"
+  },
+  "has-proto@1.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/inspect-js/has-proto",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/has-proto",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/has-proto/LICENSE"
+  },
+  "has-symbols@1.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/inspect-js/has-symbols",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "url": "http://ljharb.codes",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/has-symbols",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/has-symbols/LICENSE"
+  },
+  "hasown@2.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/inspect-js/hasOwn",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/hasown",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/hasown/LICENSE"
+  },
+  "http-errors@2.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/http-errors",
+    "publisher": "Jonathan Ong",
+    "email": "me@jongleberry.com",
+    "url": "http://jongleberry.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/http-errors",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/http-errors/LICENSE"
+  },
+  "iconv-lite@0.4.24": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ashtuchkin/iconv-lite",
+    "publisher": "Alexander Shtuchkin",
+    "email": "ashtuchkin@gmail.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/iconv-lite",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/iconv-lite/LICENSE"
+  },
+  "inherits@2.0.4": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/inherits",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/inherits",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/inherits/LICENSE"
+  },
+  "ipaddr.js@1.9.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/whitequark/ipaddr.js",
+    "publisher": "whitequark",
+    "email": "whitequark@whitequark.org",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/ipaddr.js",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/ipaddr.js/LICENSE"
+  },
+  "jake@10.9.2": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/jakejs/jake",
+    "publisher": "Matthew Eernisse",
+    "email": "mde@fleegix.org",
+    "url": "http://fleegix.org",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/jake",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/jake/README.md"
+  },
+  "js-yaml@4.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/nodeca/js-yaml",
+    "publisher": "Vladimir Zapparov",
+    "email": "dervus.grim@gmail.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/js-yaml",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/js-yaml/LICENSE"
+  },
+  "json-schema-traverse@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/epoberezkin/json-schema-traverse",
+    "publisher": "Evgeny Poberezkin",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/json-schema-traverse",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/json-schema-traverse/LICENSE"
+  },
+  "media-typer@0.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/media-typer",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/media-typer",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/media-typer/LICENSE"
+  },
+  "merge-descriptors@1.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/merge-descriptors",
+    "publisher": "Jonathan Ong",
+    "email": "me@jongleberry.com",
+    "url": "http://jongleberry.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/merge-descriptors",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/merge-descriptors/LICENSE"
+  },
+  "methods@1.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/methods",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/methods",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/methods/LICENSE"
+  },
+  "mime-db@1.52.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/mime-db",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/mime-db",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/mime-db/LICENSE"
+  },
+  "mime-types@2.1.35": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/mime-types",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/mime-types",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/mime-types/LICENSE"
+  },
+  "mime@1.6.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/broofa/node-mime",
+    "publisher": "Robert Kieffer",
+    "email": "robert@broofa.com",
+    "url": "http://github.com/broofa",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/mime",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/mime/LICENSE"
+  },
+  "minimatch@3.1.2": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/minimatch",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/minimatch",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/minimatch/LICENSE"
+  },
+  "minimatch@5.1.6": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/minimatch",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/filelist/node_modules/minimatch",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/filelist/node_modules/minimatch/LICENSE"
+  },
+  "ms@2.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/zeit/ms",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/ms",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/ms/license.md"
+  },
+  "ms@2.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/zeit/ms",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/serve-favicon/node_modules/ms",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/serve-favicon/node_modules/ms/license.md"
+  },
+  "ms@2.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/vercel/ms",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/send/node_modules/ms",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/send/node_modules/ms/license.md"
+  },
+  "negotiator@0.6.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/negotiator",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/negotiator",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/negotiator/LICENSE"
+  },
+  "object-assign@4.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/object-assign",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/object-assign",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/object-assign/license"
+  },
+  "object-inspect@1.13.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/inspect-js/object-inspect",
+    "publisher": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/object-inspect",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/object-inspect/LICENSE"
+  },
+  "on-finished@2.4.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/on-finished",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/on-finished",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/on-finished/LICENSE"
+  },
+  "parseurl@1.3.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/pillarjs/parseurl",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/parseurl",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/parseurl/LICENSE"
+  },
+  "path-to-regexp@0.1.12": {
+    "licenses": "MIT",
+    "repository": "https://github.com/pillarjs/path-to-regexp",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/path-to-regexp",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/path-to-regexp/LICENSE"
+  },
+  "proxy-addr@2.0.7": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/proxy-addr",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/proxy-addr",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/proxy-addr/LICENSE"
+  },
+  "proxy-from-env@1.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/Rob--W/proxy-from-env",
+    "publisher": "Rob Wu",
+    "email": "rob@robwu.nl",
+    "url": "https://robwu.nl/",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/proxy-from-env",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/proxy-from-env/LICENSE"
+  },
+  "qs@6.13.0": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/ljharb/qs",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/qs",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/qs/LICENSE.md"
+  },
+  "range-parser@1.2.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/range-parser",
+    "publisher": "TJ Holowaychuk",
+    "email": "tj@vision-media.ca",
+    "url": "http://tjholowaychuk.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/range-parser",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/range-parser/LICENSE"
+  },
+  "raw-body@2.5.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/stream-utils/raw-body",
+    "publisher": "Jonathan Ong",
+    "email": "me@jongleberry.com",
+    "url": "http://jongleberry.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/raw-body",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/raw-body/LICENSE"
+  },
+  "require-from-string@2.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/floatdrop/require-from-string",
+    "publisher": "Vsevolod Strukchinsky",
+    "email": "floatdrop@gmail.com",
+    "url": "github.com/floatdrop",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/require-from-string",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/require-from-string/license"
+  },
+  "safe-buffer@5.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/feross/safe-buffer",
+    "publisher": "Feross Aboukhadijeh",
+    "email": "feross@feross.org",
+    "url": "http://feross.org",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/serve-favicon/node_modules/safe-buffer",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/serve-favicon/node_modules/safe-buffer/LICENSE"
+  },
+  "safe-buffer@5.2.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/feross/safe-buffer",
+    "publisher": "Feross Aboukhadijeh",
+    "email": "feross@feross.org",
+    "url": "https://feross.org",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/safe-buffer",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/safe-buffer/LICENSE"
+  },
+  "safer-buffer@2.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ChALkeR/safer-buffer",
+    "publisher": "Nikita Skovoroda",
+    "email": "chalkerx@gmail.com",
+    "url": "https://github.com/ChALkeR",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/safer-buffer",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/safer-buffer/LICENSE"
+  },
+  "send@0.19.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/pillarjs/send",
+    "publisher": "TJ Holowaychuk",
+    "email": "tj@vision-media.ca",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/send",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/send/LICENSE"
+  },
+  "serve-favicon@2.5.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/expressjs/serve-favicon",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/serve-favicon",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/serve-favicon/LICENSE"
+  },
+  "serve-static@1.16.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/expressjs/serve-static",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/serve-static",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/serve-static/LICENSE"
+  },
+  "set-function-length@1.2.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/set-function-length",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/set-function-length",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/set-function-length/LICENSE"
+  },
+  "setprototypeof@1.2.0": {
+    "licenses": "ISC",
+    "repository": "https://github.com/wesleytodd/setprototypeof",
+    "publisher": "Wes Todd",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/setprototypeof",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/setprototypeof/LICENSE"
+  },
+  "side-channel@1.0.6": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/side-channel",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/side-channel",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/side-channel/LICENSE"
+  },
+  "smbr-web-control@0.6.0": {
+    "licenses": "UNKNOWN",
+    "publisher": "TrendBit",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server"
+  },
+  "statuses@2.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/statuses",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/statuses",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/statuses/LICENSE"
+  },
+  "supports-color@7.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chalk/supports-color",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/supports-color",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/supports-color/license"
+  },
+  "toidentifier@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/component/toidentifier",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/toidentifier",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/toidentifier/LICENSE"
+  },
+  "toml@3.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/BinaryMuse/toml-node",
+    "publisher": "Michelle Tilley",
+    "email": "michelle@michelletilley.net",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/toml",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/toml/LICENSE"
+  },
+  "type-is@1.6.18": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/type-is",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/type-is",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/type-is/LICENSE"
+  },
+  "unpipe@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/stream-utils/unpipe",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/unpipe",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/unpipe/LICENSE"
+  },
+  "utils-merge@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jaredhanson/utils-merge",
+    "publisher": "Jared Hanson",
+    "email": "jaredhanson@gmail.com",
+    "url": "http://www.jaredhanson.net/",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/utils-merge",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/utils-merge/LICENSE"
+  },
+  "vary@1.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/vary",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/vary",
+    "licenseFile": "/media/VAULT/Prace/SMBR/SMBR-web-control/server/node_modules/vary/LICENSE"
+  }
+}
+
