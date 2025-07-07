@@ -1,6 +1,13 @@
 # Changelog SMBR Web Control
 This version number is trying to stick to the __MAJOR__.__MINOR__ identifiers but there are some exceptions (marked with a prefix # in the MINOR part).
 
+# 0.2.4
+- added an add button to folders to allow easier and faster file creation
+- called lines are now distinguished by color brightness.
+- icons are no longer selectable as text
+- temperatureWidget "folders" that don't have any temperature associated with them no longer allow the user to select them and show them in the chart
+- added a new widget: `Quick launch` that allows the user to quickly review if a recipe is running, start stop and pause it, and launch a macro if needed (macros are normal recipes stored in the macros subfolder)
+
 # 0.2.3
 - added a different layout for config supporting multiple subDirectories while still being uncluttered
 - creating files with the create button now supports `/` character to create subfolders
