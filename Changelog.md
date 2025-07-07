@@ -1,6 +1,13 @@
 # Changelog SMBR Web Control
 This version number is trying to stick to the __MAJOR__.__MINOR__ identifiers but there are some exceptions (marked with a prefix # in the MINOR part).
 
+# 0.2.3
+- added a different layout for config supporting multiple subDirectories while still being uncluttered
+- creating files with the create button now supports `/` character to create subfolders
+- A button was added to the FileEditor to reload files from disk (using the patch api endpoint)
+- added support for multiple directories in recipes data folder. Diplayed folders can be collapsed for better visibility.
+- Kinetic fluorometer exported data files vere renamed to include the following data in the given order: hostname, SID, measurementID, timestamp, separated by "_".
+
 # 0.2.2
 - added a warning when there are unsaved changes. Also locked the select script button when there are unsaved changes.
 - added support for pausing scripts using RuntimeInfo
