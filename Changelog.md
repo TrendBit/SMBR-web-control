@@ -1,6 +1,16 @@
 # Changelog SMBR Web Control
 This version number is trying to stick to the __MAJOR__.__MINOR__ identifiers but there are some exceptions (marked with a prefix # in the MINOR part).
 
+# 0.2.2
+- added a warning when there are unsaved changes. Also locked the select script button when there are unsaved changes.
+- added support for pausing scripts using RuntimeInfo
+- removed "link to file editor" button in RuntimeInfo as its no longer needed
+- selected script preview and call stack highlighting has been moved to RuntimeInfo
+- fileEditor [tab] key now increments by 4 spaces instad of 2
+- minor changes in textEditor button hints
+- control widget now supports setting mixer rpm directly
+- a scrollbar was added to file list in file editor
+- animations in Kinematic fluorometers graph were disabled
 
 # 0.2.1
 - added a way to toggle charted temperature data
