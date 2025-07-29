@@ -172,7 +172,7 @@
         gap: 15px;
         min-height: min-content;
         max-height: unset;
-        height: min-content;
+        height: auto;
 
         >.widget {
             height: 100%;
