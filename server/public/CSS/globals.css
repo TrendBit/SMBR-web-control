@@ -752,6 +752,7 @@ body {
 
 .slider1 {
     width: min-content;
+    height: 100%;
 
     h3 {
         white-space: nowrap;
@@ -781,6 +782,11 @@ body {
             rotate: -180deg;
         }
     }
+    .slider-slider{
+        flex: 1 1 auto;
+        display: flex;
+        justify-content: center;
+    }
 
     >* {
         width: 100%;
@@ -789,9 +795,7 @@ body {
 
     }
 
-    slider {
-        background-color: var(--acc-color-4);
-    }
+    
 }
 
 .apiChart {

@@ -15,9 +15,9 @@
 
         >p:before {
             position: absolute;
-            left: 0px;
-            content: "·";
-            scale: 3;
+            left: -3px;
+            content: "check_circle";
+            scale: 0.6;
             pointer-events: none;
         }
 

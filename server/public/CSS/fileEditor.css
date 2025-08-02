@@ -698,6 +698,12 @@
         border-radius: 10px 0 0 10px;
         margin-left: 0.25vw;
         min-width: fit-content;
+        flex: 0 0 auto;
+        white-space: nowrap;
     }
 
+}
+
+html.safari .fileEditor .fileEditor-resizebar {
+    width: 30px;
 }

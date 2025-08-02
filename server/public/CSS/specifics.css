@@ -177,13 +177,14 @@
         >.widget {
             height: 100%;
         }
-
+        
         .control-panel {
             display: flex;
             width: 100%;
             box-sizing: border-box;
             align-items: center;
             justify-content: space-around;
+            height: 100%;
 
             .slider1 {
                 width: min-content;
