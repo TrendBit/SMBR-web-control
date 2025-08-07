@@ -1024,3 +1024,48 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
         
     }
 }
+
+handlers["AutoGridHandler"] = class AutoGridHandler{
+    constructor(element) {
+        console.log("CREATING AutoGridHandler")
+
+        this.element = element
+        this.lastClientHeights = []
+        requestAnimationFrame(() => {
+            this.update();
+        });
+
+
+        console.log(this)
+    }
+
+    
+    update(){
+        let overflow_detected = false
+        let had_effect = false
+        for (let i = 0; i < this.element.children.length; i++) {
+            const child = this.element.children[i];
+            if(child.clientHeight<child.scrollHeight){
+                if(child.style.gridRow!=""){
+                    const gridRow = child.style.gridRow;
+                    const gridRowSpan = Number(gridRow.split(" ")[1])
+                    child.style.gridRow = "span "+(gridRowSpan+1);
+                    overflow_detected = true
+                }else{
+                    child.style.gridRow = "span 1"
+                }
+
+            }
+            if(this.lastClientHeights[i] !== child.clientHeight){
+                this.lastClientHeights[i] = child.clientHeight;
+                had_effect = true
+            }
+        }
+        console.warn("AutoGridHandler update");
+        if(overflow_detected && had_effect){
+            requestAnimationFrame(() => {
+                this.update();
+            });
+        }
+    }
+}

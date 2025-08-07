@@ -581,9 +581,11 @@ body {
     color: var(--text-color-light);
     border-radius: 5px;
     border: var(--bg-color-4) 1px solid;
-    min-height: min-content;
-    min-width: min-content;
+    min-height: 0px;
+    min-width: 0px;
     height: fit-content;
+    max-height: 100%;
+    max-width: 100%;
     overflow: hidden;
 
     >* {
@@ -797,6 +799,7 @@ body {
 
     
 }
+
 
 .apiChart {
     position: relative;

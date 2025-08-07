@@ -34,6 +34,7 @@ var currNumOfCharts = 0;
 
     const onloadQueue = [];
     function executeOnloadQueue(){
+        console.log("-------executing onload queue")
         onloadQueue.forEach(element => {
             element();
         })
@@ -103,8 +104,7 @@ var currNumOfCharts = 0;
     <link rel="stylesheet" href="CSS/stylesheet.css">
     <link rel="stylesheet" href="CSS/fileEditor.css">
 </head>
-<body onload="executeOnloadQueue()">
-    
+<body>
     <header id="HOTBAR">
         <button onclick="toggleClass_ByID('SIDEBAR', 'collapsed')"><img src="<%= getIcon("mini_logo") %>"></button>
         <h1>Smart Modular Photo Bioreaktor</h1>
@@ -183,7 +183,7 @@ var currNumOfCharts = 0;
         <div id="CONTENT">
             
             <% if(locals.DashboardPanel){ %>
-                <div id="DashBoard-Panel" class="content-panel container">
+                <div id="DashBoard-Panel" class="content-panel container handler api-fetcher" handler-id="AutoGridHandler">
                     <% if(DashboardPanel.TemperatureWidget){  %>
                         <%- include('panels/dashboard/TemperatureWidget.ejs', {currNumOfCharts: currNumOfCharts++}) %>
                     <% } %>      
@@ -371,3 +371,6 @@ var currNumOfCharts = 0;
     <script src="JS/apiUpdateWorker.js"></script>
 </body>
 </html>
+<script>
+    executeOnloadQueue()
+</script>
