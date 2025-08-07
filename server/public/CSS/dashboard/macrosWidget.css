@@ -38,7 +38,7 @@
   }
 
   .macro-gallery-grid-container{
-    /*max-height: 500px;*/
+    min-height: 200px;
     overflow-y: scroll;
     
     
