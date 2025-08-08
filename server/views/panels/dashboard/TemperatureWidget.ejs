@@ -36,8 +36,8 @@
                 <tr class="table-master">
                     <td class="table-color <%= (element.charted==true)?'charted':'' %> <%= (element.resource==undefined || element.resource=="")?"unchartable":""%>" 
                         <%if (element.resource!=undefined && element.resource!="") {%>
-                            onclick="getHandlerObj(this,'TemperatureWidgetChartHandler').toggleDataset(this,'<%= datasetIndex++ %>');toggleClass(this,'charted');"
-                        <%}%>
+                            onclick="getHandlerObj(this,'TemperatureWidgetChartHandler').toggleDataset(this,'<%= datasetIndex %>');toggleClass(this,'charted');"
+                        <%}datasetIndex++;%>
                         >
 
                         <p class="material-icons filled" style=<%='color:'+getColor(++i)+';'%>>
@@ -64,8 +64,8 @@
                     <tr class="table-sub">
                         <td class="table-color <%= (sub_element.charted==true)?'charted':'' %> <%= (sub_element.resource==undefined || sub_element.resource=="")?"unchartable":""%>" 
                             <%if (sub_element.resource!=undefined && sub_element.resource!="") {%>
-                                onclick="getHandlerObj(this,'TemperatureWidgetChartHandler').toggleDataset(this,'<%= datasetIndex++ %>');toggleClass(this,'charted');"
-                            <%}%>
+                                onclick="getHandlerObj(this,'TemperatureWidgetChartHandler').toggleDataset(this,'<%= datasetIndex %>');toggleClass(this,'charted');"
+                            <%}datasetIndex++;%>
                             >
                             <%const currIcon = ((u+1)<numOfSubRows)?'┣':'┗';%>
                             <p class="material-icons filled" style=<%='color:'+getSubColor(i,u+1)+';'%>><%= currIcon%></p>
