@@ -44,6 +44,7 @@ img {
 
 * {
     font-family: Roboto, Arial;
+    font-size: small;
 }
 
 h1 {
@@ -55,8 +56,15 @@ h2 {
     font-size: medium;
 }
 
-* {
-    font-size: small;
+auto-scroll{
+    font-size: inherit;
+    font-weight: inherit;
+    font-family: inherit;
+    white-space: nowrap;
+    position: relative;
+    width: 100%;
+    display: block;
+    transition: right 0.05s linear;
 }
 
 html,

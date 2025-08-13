@@ -103,11 +103,12 @@ var currNumOfCharts = 0;
     <link rel="stylesheet" href="CSS/fonts/Roboto.css">
     <link rel="stylesheet" href="CSS/stylesheet.css">
     <link rel="stylesheet" href="CSS/fileEditor.css">
+    <script type="module" src="JS/autoScrollElement.js"></script>
 </head>
 <body>
     <header id="HOTBAR">
         <button onclick="toggleClass_ByID('SIDEBAR', 'collapsed')"><img src="<%= getIcon("mini_logo") %>"></button>
-        <h1>Smart Modular Photo Bioreaktor</h1>
+        <h1><auto-scroll>Smart Modular Photo Bioreaktor</auto-scroll></h1>
         <div class="api-fetcher handler" handler-id="HostnameTitleHandler" update-cost="11">
             <p>hostname: </p>
             <p 

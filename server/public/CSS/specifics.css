@@ -24,6 +24,7 @@
     h1 {
         margin: auto auto auto 0;
         font-size: 30px;
+        overflow: hidden;
     }
 
     >div {

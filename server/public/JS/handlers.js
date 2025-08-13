@@ -238,7 +238,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
                     result+="<ul full-name=\""+this.name+"\" class=\"closed\">";
                     result+="<div class=\"fileEditor-browser-folderTitle\">";
                         result+="<div class=\"folderTitle-left\" onclick=\"toggleClass_nthParent(this,'closed',2)\">";
-                            result+="<h2>"+displayFileName+"</h2>";
+                            result+="<h2><auto-scroll>"+displayFileName+"</auto-scroll></h2>";
                             result+="<i class=\"material-icons folderTitle-collapser\" title=\"collapse/extend folder\">keyboard_arrow_down</i>";
                         result+="</div>";
                         result+="<div class=\"folderTitle-right\" >";
