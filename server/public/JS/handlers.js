@@ -251,7 +251,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
                     });
                     result+="</ul>";
                 }else{
-                    result+="<li full-name=\""+this.name+"\" onclick=\"getHandlerObj(this,'FileEditorHandler').loadFileIntoEditor('"+this.name+"')\">"+displayFileName+"</li>";
+                    result+="<li full-name=\""+this.name+"\" onclick=\"getHandlerObj(this,'FileEditorHandler').loadFileIntoEditor('"+this.name+"')\"><auto-scroll>"+displayFileName+"</auto-scroll></li>";
                 }
                 return result;
             }
@@ -265,7 +265,7 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
                     result+="<ul full-name=\""+this.name+"\" class=\"closed\">";
                     result+="<div class=\"fileEditor-browser-folderTitle\" onclick=\"getHandlerObj(this,'FileEditorHandler').twoCol_changeFolder('"+displayFileName+"')\">";
                         result+="<div class=\"folderTitle-left\">";
-                            result+="<h2>"+displayFileName+"</h2>"
+                            result+="<h2><auto-scroll>"+displayFileName+"</auto-scroll></h2>"
                             result+="<i class=\"material-icons\" title=\"collapse/extend folder\">chevron_right</i>"
                         result+="</div>"
                     result+="</div>"

@@ -1,43 +1,91 @@
 class AutoScrollElement extends HTMLElement {
-
     constructor() {
         super();
-        this.currentOffset = 0;
-        this.currentIntervalID = null;
-        this.move_speed = 2;
+        this.speedFactor = 1;
+        this.speed = 0; 
+        this.direction = 1;
+        this.extraTrailingSpace = 10;
+        this.resizeObserver = new ResizeObserver(() => this.onResize());
+        this.onTransitionEnd = this.onTransitionEnd.bind(this);
+        this.changingDirection = false
     }
 
     connectedCallback() {
         console.debug("creating a new auto-scroll element");
-        
-        this.currentIntervalID = setInterval(() => this.onIntervalUpdate(), 50);
+        this.updateSpeedFromFont();
+        this.resizeObserver.observe(this);
+        this.addEventListener("transitionend", this.onTransitionEnd);
+        if (this.scrollWidth - this.clientWidth > 0) {
+            requestAnimationFrame(() => this.updateScrollAnimation());
+        }
     }
 
     disconnectedCallback() {
         console.debug("destroying an auto-scroll element");
-        clearInterval(this.currentIntervalID);
+        this.resizeObserver.disconnect();
+        this.removeEventListener("transitionend", this.onTransitionEnd);
     }
 
-    clamp(num, min, max) {
-        return num <= min 
-            ? min 
-            : num >= max 
-            ? max 
-            : num
+    updateSpeedFromFont() {
+        const style = getComputedStyle(this);
+
+        this.speed = (parseFloat(style.fontSize)||1) * 0.5
     }
 
-    onIntervalUpdate() {
-        let widthDiff = this.scrollWidth - this.clientWidth;
-        if (widthDiff > 0) {
-            if (this.currentOffset >= widthDiff || this.currentOffset < 0){
-                this.move_speed = -this.move_speed;
-            }
-            this.style.right = `${this.currentOffset}px`;
-            this.currentOffset=this.clamp(this.currentOffset+this.move_speed,-1,widthDiff) ;
-        } else {
-            this.currentOffset = 0;
-            this.style.right = "";
+    onResize() {
+        this.updateSpeedFromFont();
+        this.direction = 1;
+        this.updateScrollAnimation();
+    }
+
+    updateScrollAnimation() {
+        const widthDiff = this.scrollWidth - this.clientWidth;
+        if (widthDiff <= 0) {
+            this.removeScrollProperties();
+            return;
         }
+
+        let targetOffset = this.direction > 0
+            ? widthDiff + this.extraTrailingSpace
+            : 0;
+
+        let currentOffset = parseFloat(this.style.right) || 0;
+        let distance = Math.abs(targetOffset - currentOffset);
+        if (distance === 0) {
+            this.changeDirection();
+            return;
+        }
+
+        let duration = distance / (this.speed * (this.direction > 0 ? 1 : 5));
+
+        this.style.transition = `right ${duration}s linear`;
+        this.style.right = `${targetOffset}px`;
+    }
+
+    onTransitionEnd(e) {
+        if (e.propertyName !== "right") return;
+        this.changingDirection = true
+        let self = this
+        setTimeout(() => {
+            self.changingDirection = false
+            self.changeDirection();
+        },500)
+        
+    }
+
+    changeDirection() {
+        if(this.changingDirection===true) return
+        const widthDiff = this.scrollWidth - this.clientWidth;
+        if (widthDiff <= 0) return;
+
+        this.direction *= -1;
+        this.style.transition = "";
+        requestAnimationFrame(() => this.updateScrollAnimation());
+    }
+
+    removeScrollProperties() {
+        this.style.transition = "";
+        this.style.right = "";
     }
 }
 

@@ -64,7 +64,7 @@ auto-scroll{
     position: relative;
     width: 100%;
     display: block;
-    transition: right 0.05s linear;
+    right: 0px
 }
 
 html,
