@@ -124,7 +124,7 @@
                 <div class="slider2">
                     <input class="slider" 
                     type="range" 
-                    min=0.1 
+                    min=0.2 
                     max="4" 
                     step="0.1"
                     default="1" 
@@ -132,7 +132,7 @@
                     <div class="button2container slider2-inputLabel">
                         <input class="button2 left KineticFluorometer-Widget-NewTest-length"  
                                 type="text" 
-                                min=0.1 
+                                min=0.2
                                 max="4" 
                                 placeholder="0.1-4" 
                                 value="1"
@@ -571,13 +571,12 @@
                 }
 
                 const data = {
-                    //"detector_gain": gain,
+                    "detector_gain": gain,
                     "emitor_intensity": intensity/100,
-                    //"timebase": "logarithmic",
-                    //"length_ms": length*1000,
-                    //"sample_count": 1000
+                    "timebase": "Logarithmic",
+                    "length_ms": Number(Number(length*1000).toFixed(0)),
+                    "sample_count": 1000
                 }
-                const queryData = "?gain="+gain+"&timing=Logarithmic&length_ms="+Number(length*1000).toFixed(0)+"&sample_count=1000"
                 const timeout = length*3;
                 
                 this.newTest.startButton.disabled = true;
@@ -590,7 +589,7 @@
 
                 var response;
                 try {
-                    response = await sendData(":" + this.newTest.startButton.getAttribute("port") + this.newTest.startButton.getAttribute("resource")+queryData,JSON.stringify(data));
+                    response = await sendData(":" + this.newTest.startButton.getAttribute("port") + this.newTest.startButton.getAttribute("resource"),JSON.stringify(data));
                 }catch(err){
                     console.error("FluoroMeterHandler: cannot start a new capture: ",err);
                     this.newTest.startButton.disabled = false;
