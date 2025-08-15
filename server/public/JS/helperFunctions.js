@@ -83,6 +83,25 @@ function deactivateClass_nthParent(event, element, className, hopCount){
 }
 
 
+function getCountdownArray(length){
+    var result = [];
+    for (let i = 0; i < length; i++) {
+        result.push(i);
+    }
+    return result;
+}
+
+function getEmptyDatasets(qantity){
+    var result = [];
+    for (let i = 0; i < qantity; i++) {
+        result.push({
+            data: [],
+            cubicInterpolationMode: 'monotone',
+        })
+    }
+    return result;
+}
+
 async function streamToString(stream) {
     const chunks = [];
 

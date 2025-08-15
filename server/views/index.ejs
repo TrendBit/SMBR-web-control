@@ -2,31 +2,7 @@
     var updateSwitch = true;
     var currentDateTime = new Date();
 
-    function callback(func){
-        func();
-    }
-     
-    const startMilis = Date.now();
-
-    function getCountdownArray(length){
-        var result = [];
-        for (let i = 0; i < length; i++) {
-            result.push(i);
-        }
-        return result;
-    }
-    function getEmptyDatasets(qantity){
-        var result = [];
-        for (let i = 0; i < qantity; i++) {
-            result.push({
-                data: [],
-                cubicInterpolationMode: 'monotone',
-            })
-        }
-        return result;
-    }
-
-    
+    const startMilis = Date.now();    
 
     const onloadQueue = [];
     function executeOnloadQueue(){
@@ -80,14 +56,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <script>
-    var isSafari =  navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
-                    navigator.userAgent &&
-                    navigator.userAgent.indexOf('CriOS') == -1 &&
-                    navigator.userAgent.indexOf('FxiOS') == -1;
-    if(isSafari){
-        document.children[0].classList.add("safari");
+    {    
+        let isSafari =  navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+                        navigator.userAgent &&
+                        navigator.userAgent.indexOf('CriOS') == -1 &&
+                        navigator.userAgent.indexOf('FxiOS') == -1;
+        if(isSafari){
+            document.children[0].classList.add("safari");
+        }
     }
-    
 </script>
 <head>
     <meta charset="UTF-8">
