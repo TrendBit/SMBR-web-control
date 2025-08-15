@@ -1,6 +1,3 @@
-<% 
-var currNumOfCharts = 0;
-%>
 <script>
     var updateSwitch = true;
     var currentDateTime = new Date();
@@ -10,7 +7,6 @@ var currNumOfCharts = 0;
     }
      
     const startMilis = Date.now();
-    var chartArray = [];
 
     function getCountdownArray(length){
         var result = [];
@@ -186,13 +182,13 @@ var currNumOfCharts = 0;
             <% if(locals.DashboardPanel){ %>
                 <div id="DashBoard-Panel" class="content-panel container handler api-fetcher" handler-id="AutoGridHandler">
                     <% if(DashboardPanel.TemperatureWidget){  %>
-                        <%- include('panels/dashboard/TemperatureWidget.ejs', {currNumOfCharts: currNumOfCharts++}) %>
+                        <%- include('panels/dashboard/TemperatureWidget.ejs') %>
                     <% } %>      
                     <% if(DashboardPanel.CoolSpektrometerWidget){  %>
                         <%- include('panels/dashboard/CoolSpektrometerWidget.ejs') %>
                     <% } %>     
                     <% if(DashboardPanel.KineticFluorometerWidget){  %>
-                        <%- include('panels/dashboard/KineticFluorometerWidget.ejs', {currNumOfCharts: currNumOfCharts++}) %>
+                        <%- include('panels/dashboard/KineticFluorometerWidget.ejs') %>
                     <% } %>   
                     <% if(DashboardPanel.ControlWidget){  %>
                         <%- include('panels/dashboard/ControlWidget.ejs') %>

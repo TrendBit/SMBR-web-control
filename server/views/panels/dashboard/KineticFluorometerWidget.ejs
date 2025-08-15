@@ -36,7 +36,6 @@
             <canvas 
             id="KineticFluorometer-Widget-Chart" 
             class="KineticFluorometer-Widget-Chart inactive-chart" 
-            chartIndex="<%= currNumOfCharts++ %>"
             resource="<%= DashboardPanel.KineticFluorometerWidget.chart.resource %>"
             port="<%= DashboardPanel.KineticFluorometerWidget.chart.port %>"
             ></canvas>
@@ -233,9 +232,7 @@
 
             initChart(){
                 const chart = this.chart.element;
-                const chartIndex = chart.getAttribute("chartIndex");
                 
-                console.log("Iitializing a new chart\nindex: ",chartIndex);
                 const data = {
                     labels: [],
                     datasets: [
@@ -265,7 +262,7 @@
                 };
 
                 console.log("data: ",data)
-                chartArray[chartIndex] = new Chart(chart, {
+                this.chart.obj = new Chart(chart, {
                     type: 'line',
                     data: data,
                     options: {
@@ -348,7 +345,6 @@
                         }
                     },
                 });
-                this.chart.obj = chartArray[chartIndex];
             }
 
             getFileName(){

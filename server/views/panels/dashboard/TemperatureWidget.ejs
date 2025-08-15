@@ -108,7 +108,7 @@
         </div>
         <div class="apiChart" >
             <div>
-                <canvas class="Temperature-Widget-Chart" chartIndex="<%= currNumOfCharts++ %>" history="<%= DashboardPanel.TemperatureWidget.chart.history %>"></canvas>
+                <canvas class="Temperature-Widget-Chart" history="<%= DashboardPanel.TemperatureWidget.chart.history %>"></canvas>
             </div>
         </div>
     </div>
@@ -123,10 +123,8 @@
                     index: null,
                     object: null
                 } 
-                this.chart.index = this.chart.element.getAttribute("chartIndex");
 
-                this.initGraph(this.chart.element, this.chart.index);
-                this.chart.object = chartArray[this.chart.index];
+                this.chart.object = this.initGraph(this.chart.element);
                 this.granuality = 0;
                 this.lastID = -1;
                 this.radioButtons = element.getElementsByClassName("Temperature-Widget-Chart-ContextLen")[0];
@@ -257,7 +255,7 @@
                 this.reload(true);
             }
 
-            initGraph(chart, chartIndex){
+            initGraph(chart){
                 const possibleApiFetchers = document.getElementById("Temperature-Widget-Table").getElementsByClassName("api-fetcher");
                 var apiFetchers = [];
                 var coloredIcons = [];
@@ -273,8 +271,7 @@
                     }
                 }
 
-                console.log("Iitializing a new chart\nindex: ",chartIndex,"\nhistory:",chart.getAttribute("history"),"\napiFetchers:",apiFetchers,"\ncoloredIcons",coloredIcons);
-                chartArray[chartIndex] = new Chart(chart,
+                const chartObject = new Chart(chart,
                     {
                         type: 'line',
                         data: {
@@ -325,7 +322,6 @@
                         }
                     }
                 );
-                const chartObject = chartArray[chartIndex];
                 chartObject.apiFetchers= apiFetchers;    
                 chartObject.count = 0; 
 
@@ -356,6 +352,8 @@
                         chartObject.setDatasetVisibility(i,true);
                     }
                 }
+
+                return chartObject
             }
 
             toggleDataset(element,rowIndex){       
