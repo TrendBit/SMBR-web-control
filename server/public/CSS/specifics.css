@@ -279,7 +279,7 @@
 
 
 #SIDEBAR,
-#CONTENT>*:not(#mainPopup) {
+#CONTENT>* {
     transition: 0.5s filter cubic-bezier(0, .35, 0, .84);
 }
 
@@ -287,60 +287,10 @@
 #MAIN.disabled {
 
     #SIDEBAR,
-    #CONTENT>*:not(#mainPopup) {
+    #CONTENT>*{
         transition: 10s filter cubic-bezier(0, .35, 0, .84);
         filter: brightness(0.6) grayscale(0.8);
     }
-}
-
-
-#mainPopup {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    z-index: 10;
-    max-width: 30%;
-    min-width: 250px;
-    width: fit-content;
-
-    display: none;
-
-    background: var(--bg-color-1);
-    border: var(--bg-color-5) 2px solid;
-
-    * {
-        font-weight: 1000;
-        font-size: 15px;
-
-        padding: 0px;
-        margin: 0px;
-    }
-
-
-    padding: 15px;
-
-    border-radius: 0 0 0 20px;
-}
-
-#mainPopup:hover {
-    border-width: 3px;
-    padding: 13px;
-    filter: brightness(1.1);
-    cursor: pointer;
-}
-
-#mainPopup.warning {
-    border-color: var(--warn-color-3);
-    background-color: var(--warn-color-3);
-    color: var(--text-color-light);
-    display: block;
-}
-
-#mainPopup.error {
-    border-color: rgb(200, 50, 30);
-    background-color: rgba(150, 25, 10, 1);
-    color: var(--text-color-light);
-    display: block;
 }
 
 *.noBorder {

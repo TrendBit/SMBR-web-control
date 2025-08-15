@@ -10,6 +10,7 @@
         onloadQueue.forEach(element => {
             element();
         })
+        console.log("-------onload queue execution done")
     }
 
     var handlers={} //global variable containing all handler classes
@@ -193,7 +194,6 @@
                     <%- include('panels/DevicePanel/DeviceInfoWidget.ejs') %>
                 </div>  
             <% } %>
-            <div id="mainPopup" onclick="resetMainPopup()"></div>
         </div>
 
     </div>
@@ -318,29 +318,6 @@
                 }
             }
         }
-
-        function setMainPopup(messageType, message){
-            const popup = document.getElementById("mainPopup")
-
-            
-
-            if(popup.innerHTML != ("<p> "+message+" </p>")){
-                if(message!=""){
-                    document.getElementById("MAIN").classList.add("disabled");
-                }
-                popup.innerHTML = "<p> "+message+" </p>";
-                popup.classList = messageType;
-            }
-        }
-
-        function resetMainPopup(){
-            const popup = document.getElementById("mainPopup")
-
-            document.getElementById("MAIN").classList.remove("disabled");
-
-            popup.classList = "";
-        }
-        
     </script>
     <script src="JS/apiUpdateWorker.js"></script>
 </body>

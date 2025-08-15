@@ -31,9 +31,7 @@
                         "uid" : "" + targetModuleID
                     }
                     response = await sendData(":8089/"+targetModuleNAME+"/restart","{\n  \"uid\": \""+targetModuleID+"\"\n}");
-                    if(response.status != 200){
-                        setMainPopup("error","couldn't restart module "+targetModuleNAME+" ["+targetModuleID+"] got error code: "+response.status);
-                    }
+                    
                     element.disabled = true;
                     setTimeout(() => { 
                         element.disabled = false;
