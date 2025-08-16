@@ -1,3 +1,4 @@
 @import "./globals.css";
 @import "./specifics.css";
 @import "./dashboard/cumulativeImport.css";
+@import "./statusIndicator.css";

@@ -1,0 +1,85 @@
+<div class="handler status-indicator api-fetcher" handler-id="StatusInfoPanelHandler">
+    <div class="status-indicator-container">
+        <div class="status-indicator-closed container" onclick="getHandlerObj(this,'StatusInfoPanelHandler').open()">
+            <div>
+                <p>errors:</p>
+                <p class="errors-count bold"></p>
+            </div>
+            <div>
+                <p>warnings:</p>
+                <p class="warnings-count bold"></p>
+            </div>
+        </div>
+        <div class="status-indicator-open container">
+            <div class="tab-switcher handler" handler-id="TabSwitcherHandler">
+                <div class="head">
+                  <button onclick="getHandlerObj(this,'TabSwitcherHandler').changeTab(this)" class="button1 active"><h2  >warnings</h2></button> 
+                  <button onclick="getHandlerObj(this,'TabSwitcherHandler').changeTab(this)"  class="button1" ><h2>errors</h2></button>
+                </div>
+                <div class="bodies">
+                    <div class="warnings active">
+                        <table class="table-widget-segment">
+                            <thead>
+                                <tr>
+                                    <th>type</th>
+                                    <th>id</th>
+                                    <th>message</th>
+                                    <th>current</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr >
+                                    <td>
+                                        FirmwareVersionMismatch
+                                    </td>
+                                    <td>
+                                        1
+                                    </td>
+                                    <td class="long-text-entry">
+                                        <auto-scroll>
+                                            Firmware versions differ between modules of different types (excluding core modules)
+                                        </auto-scroll>
+                                    </td>
+                                    <td class="long-text-entry">
+                                        <auto-scroll>
+                                            Sensor module firmware 1.1.0 vs control module firmware 1.3.5
+                                        </auto-scroll>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="errors">
+                        <table class="table-widget-segment">
+                            <thead>
+                                <tr>
+                                    <th>type</th>
+                                    <th>id</th>
+                                    <th>message</th>
+                                    <th>current</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr >
+                                    <td>
+                                        FirmwareVersionMismatch
+                                    </td>
+                                    <td>
+                                        1
+                                    </td>
+                                    <td>
+                                        Firmware versions differ between modules of different types (excluding core modules)
+                                    </td>
+                                    <td>
+                                        Sensor module firmware 1.1.0 vs control module firmware 1.3.5
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="status-indicator-close-btn" onclick="getHandlerObj(this,'StatusInfoPanelHandler').close()"><i class="material-icons">close</i></div>
+        </div>
+    </div>
+</div>

@@ -1115,3 +1115,78 @@ handlers["AutoGridHandler"] = class AutoGridHandler extends BaseHandler{
         }
     }
 }
+
+handlers["StatusInfoPanelHandler"] = class StatusInfoPanelHandler extends BaseHandler{
+    constructor(element) {
+        super(element)
+
+        this.container = element.getElementsByClassName("status-indicator-container")[0];
+
+        this.errorCount = element.getElementsByClassName("errors-count")[0];
+        this.warningCount = element.getElementsByClassName("warnings-count")[0];
+
+        this.errors = []
+        this.warnings = []
+
+        this.updatedValues = 0;
+        this.errorEncountered = false;
+
+        console.log(this)
+    }
+
+    afterFetchDone(){
+        if(this.updatedValues<2 || this.errorEncountered){
+            return
+        }
+        this.errorCount.classList.remove("api-fetcher-error")
+        this.warningCount.classList.remove("api-fetcher-error")
+    }
+
+    onErrorEncountered(){
+        this.errorEncountered = true;
+        
+        this.errorCount.innerHTML = "Null";
+        this.errorCount.classList.add("api-fetcher-error");
+
+        this.warningCount.innerHTML = "Null";
+        this.warningCount.classList.add("api-fetcher-error");
+    }
+
+    open(){
+        this.container.classList.add("open")
+    }
+    close(){
+        this.container.classList.remove("open")
+    }
+
+    async update(){
+        this.updatedValues = 0;
+        this.errorEncountered = false;
+        fetchDataAsJson(":8089/system/errors").then(response => {
+            this.updatedValues++;
+
+            if(response.message == undefined){
+                this.errors=response;
+            }else{
+                this.errors=[];
+            }
+
+            this.afterFetchDone();
+        }).catch(err => {
+            this.onErrorEncountered();
+        })
+        fetchDataAsJson(":8089/system/warnings").then(response => {
+            this.updatedValues++;
+
+            if(response.message == undefined){
+                this.warnings=response;
+            }else{
+                this.warnings=[];
+            }
+
+            this.afterFetchDone();
+        }).catch(err => {
+            this.onErrorEncountered();
+        })
+    }
+}
