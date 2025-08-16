@@ -17,8 +17,35 @@ onloadQueue.push(()=>{
     initHandlers()
 });
 
+class BaseHandler{
+    constructor(element){
+        console.log("creating handler: ",this.constructor.name, element)
+        this.element = element
+    }
 
-handlers["Popup"] = class Popup {
+    consoleLog(...args){
+        console.log(`handler [${this.constructor.name}] `,...args)
+    }
+    consoleDebug(...args){
+        console.debug(`handler [${this.constructor.name}] `,...args)
+    }
+    consoleWarn(...args){
+        console.warn(`handler [${this.constructor.name}] `,...args)
+    }
+    consoleError(...args){
+        console.error(`handler [${this.constructor.name}] `,...args)
+    }
+    consoleInfo(...args){
+        console.info(`handler [${this.constructor.name}] `,...args)
+    }
+
+    update(){
+
+    }
+}
+
+
+handlers["Popup"] = class Popup{
     constructor(element, text = "debug", type = "info", disapearTimer = undefined){
         let self = this;
         
@@ -56,10 +83,9 @@ handlers["Popup"] = class Popup {
     }
 }
 
-handlers["Slider1Handler"] = class Slider1Handler {
+handlers["Slider1Handler"] = class Slider1Handler  extends BaseHandler{
     constructor(element) {
-        console.log("CREATING Slider1Handler")
-
+        super(element)
         this.labels={
             name:element.getElementsByClassName("slider-name")[0],
             value: element.getElementsByClassName("slider-value")[0]
@@ -159,9 +185,9 @@ handlers["Slider1Handler"] = class Slider1Handler {
     }
 }
 
-handlers["Slider2Handler"] = class Slider2Handler {
+handlers["Slider2Handler"] = class Slider2Handler  extends BaseHandler{
     constructor(element) {
-        console.log("CREATING Slider1Handler")
+        super(element)
 
         console.log(this)
     }
@@ -172,16 +198,18 @@ handlers["Slider2Handler"] = class Slider2Handler {
 }
 
 
-handlers["HostnameTitleHandler"] = class HostnameTitleHandler{
+handlers["HostnameTitleHandler"] = class HostnameTitleHandler extends BaseHandler{
     constructor(element){
-        this.element = element.getElementsByClassName("api-fetcher")[0];
+        super(element)
+        this.updatedField = element.getElementsByClassName("api-fetcher")[0];
+        console.log(this)
     }
 
     async update(){
         var response;
         try {
-            response = await fetchDataAsJson(":"+this.element.getAttribute("port")+this.element.getAttribute("resource"));
-            const hostname = response[this.element.getAttribute("component")];
+            response = await fetchDataAsJson(":"+this.updatedField.getAttribute("port")+this.updatedField.getAttribute("resource"));
+            const hostname = response[this.updatedField.getAttribute("component")];
             if(hostname != undefined){
                 document.title = "SMPBR-" + hostname;
             }
@@ -191,9 +219,9 @@ handlers["HostnameTitleHandler"] = class HostnameTitleHandler{
     }
 }
 
-handlers["FileEditorHandler"] = class FileEditorHandler {
+handlers["FileEditorHandler"] = class FileEditorHandler  extends BaseHandler{
     constructor(element) {
-        console.log("CREATING FileEditorHandler")
+        super(element)
 
         this.url=element.getAttribute("source-url");
 
@@ -352,12 +380,13 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
         }
         this.twoCol.fileListEl = (this.twoCol.active)?element.getElementsByClassName("fileEditor-browser-folders-list")[0]:undefined;
 
-        console.log("FileEditorHandler",this);
         
         this.setButtonState(false)
         
         this.reloadFileList()
         this.resetEditor()
+
+        console.log(this);
     }
 
     setButtonState(state){
@@ -680,9 +709,9 @@ handlers["FileEditorHandler"] = class FileEditorHandler {
 }
 
 
-handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
+handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler extends BaseHandler{
     constructor(element){
-        console.log("CREATING RuntimeInfoHandler");
+        super(element)
         this.url=element.getAttribute("source-url");
         this.scriptInfo = {
             name:element.getElementsByClassName("selected-script-name")[0],
@@ -705,7 +734,6 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
         this.headerPopup=element.getElementsByClassName("popup")[0]
         this.scriptLoaded=false;
 
-        this.element = element;
         this.fileEditor = undefined;
 
         
@@ -741,7 +769,7 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
         setInterval(()=>{
             this.reload();
         },500);
-        console.log("RuntimeInfoHandler",this);
+        console.log(this);
         
     }
 
@@ -996,8 +1024,6 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
         this.scriptPreview.code.setValue(response.content);
         this.scriptPreview.code.refresh();
 
-        this.fileEditor.setHeaderPopup("info","successfully connected to runtime info");
-
         this.setHeaderPopup("info", "file "+fileName+" assigned to sheduler");
     }
 
@@ -1025,11 +1051,10 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler{
     }
 }
 
-handlers["AutoGridHandler"] = class AutoGridHandler{
+handlers["AutoGridHandler"] = class AutoGridHandler extends BaseHandler{
     constructor(element) {
-        console.log("CREATING AutoGridHandler")
+        super(element)
 
-        this.element = element
         this.lastClientHeights = []
         requestAnimationFrame(() => {
             this.update();

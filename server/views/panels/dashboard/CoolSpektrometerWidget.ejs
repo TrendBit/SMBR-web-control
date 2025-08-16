@@ -84,14 +84,14 @@
         </tbody>
     </table>
     <script>
-        handlers["SpectrometerHandler"] = class SpectrometerHandler {
+        handlers["SpectrometerHandler"] = class SpectrometerHandler extends BaseHandler{
             constructor(element) {
-                console.log("CREATING SpectrometerHandler")
+                super(element)
 
                 this.relative_dataFields = element.getElementsByClassName("CoolSpektrometer-relative");
                 this.absolute_dataFields = element.getElementsByClassName("CoolSpektrometer-absolute");
 
-                console.log("SpectrometerHandler", this)
+                console.log(this)
             }
             
             async setReference(){

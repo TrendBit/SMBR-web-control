@@ -115,9 +115,9 @@
     
     
     <script>
-        handlers["TemperatureWidgetChartHandler"] = class TemperatureWidgetChartHandler {
+        handlers["TemperatureWidgetChartHandler"] = class TemperatureWidgetChartHandler extends BaseHandler{
             constructor(element) {
-                console.log("CREATING TemperatureWidgetChartHandler")
+                super(element)
                 this.chart ={
                     element: element.getElementsByClassName("Temperature-Widget-Chart")[0],
                     index: null,
@@ -130,14 +130,14 @@
                 this.radioButtons = element.getElementsByClassName("Temperature-Widget-Chart-ContextLen")[0];
                 this.selectedScale = this.radioButtons.querySelector('input:checked').value;
 
-                console.log("TemperatureWidgetChartHandler", this);
-
+                
                 if(updateSwitch){
                     setInterval(()=>{
-                    this.softReload();
-                },1000);
+                        this.softReload();
+                    },1000);
                 }   
                 
+                console.log(this);
             }
 
             async reload(reloadScale = false){

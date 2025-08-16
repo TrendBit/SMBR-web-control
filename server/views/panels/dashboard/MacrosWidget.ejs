@@ -59,9 +59,9 @@
         </div>
     </div>
     <script>     
-        handlers["MacrosHandler"] = class MacrosHandler {
+        handlers["MacrosHandler"] = class MacrosHandler extends BaseHandler{
             constructor(element) {
-                console.log("CREATING MacrosHandler")
+                super(element)
                 this.grid = element.getElementsByClassName("macro-gallery-grid")[0];
                 this.selectedScript = {
                     name: element.getElementsByClassName("selected-script-name")[0],

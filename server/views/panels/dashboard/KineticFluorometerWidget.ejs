@@ -195,10 +195,9 @@
     
     <script>
 
-        handlers["FluoroMeterHandler"] = class FluoroMeterHandler {
+        handlers["FluoroMeterHandler"] = class FluoroMeterHandler extends BaseHandler{
             constructor(element) {
-                console.log("CREATING FluoroMeterHandler")
-                this.element = element;
+                super(element)
                 this.chart = {
                     obj:null,
                     element:element.getElementsByClassName("KineticFluorometer-Widget-Chart")[0]
