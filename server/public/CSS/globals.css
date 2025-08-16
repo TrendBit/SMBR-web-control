@@ -476,6 +476,7 @@ body {
 }
 
 .api-fetcher.error,
+.api-fetcher-error,
 .module-api-fetcher.error,
 .api-data.error {
     color: red;
