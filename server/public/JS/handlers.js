@@ -196,6 +196,27 @@ handlers["Slider2Handler"] = class Slider2Handler  extends BaseHandler{
         this.fetchData(undefined, false);
     }
 }
+handlers["TabSwitcherHandler"] = class TabSwitcherHandler extends BaseHandler{
+    constructor(element) {
+        super(element)
+
+        this.heads = element.getElementsByClassName("head")[0].children;
+        this.bodies = element.getElementsByClassName("bodies")[0].children;
+
+        console.log(this)
+    }
+    changeTab(target){
+        let currTabIndex = Array.from(target.parentNode.children).indexOf(target)
+        for (let i = 0; i < this.bodies.length; i++) {
+            this.bodies[i].classList.remove("active");                 
+        }
+        for (let i = 0; i < this.heads.length; i++) {
+            this.heads[i].classList.remove("active");                   
+        }
+        target.classList.add("active");   
+        this.bodies[currTabIndex].classList.add("active");  
+    }
+}
 
 
 handlers["HostnameTitleHandler"] = class HostnameTitleHandler extends BaseHandler{
