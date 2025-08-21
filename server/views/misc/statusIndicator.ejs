@@ -19,6 +19,12 @@
                 <div class="bodies">
                     <div class="warnings active">
                         <table class="table-widget-segment">
+                             <colgroup>
+                                <col style="width:36%" />
+                                <col style="width:5%" />
+                                <col style="width:30%" />
+                                <col style="width:30%" />
+                            </colgroup>
                             <thead>
                                 <tr>
                                     <th>type</th>
@@ -27,30 +33,19 @@
                                     <th>current</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr >
-                                    <td>
-                                        FirmwareVersionMismatch
-                                    </td>
-                                    <td>
-                                        1
-                                    </td>
-                                    <td class="long-text-entry">
-                                        <auto-scroll>
-                                            Firmware versions differ between modules of different types (excluding core modules)
-                                        </auto-scroll>
-                                    </td>
-                                    <td class="long-text-entry">
-                                        <auto-scroll>
-                                            Sensor module firmware 1.1.0 vs control module firmware 1.3.5
-                                        </auto-scroll>
-                                    </td>
-                                </tr>
+                            <tbody class="warnings-tbody">
+                                
                             </tbody>
                         </table>
                     </div>
                     <div class="errors">
                         <table class="table-widget-segment">
+                            <colgroup>
+                                <col style="width:36%" />
+                                <col style="width:5%" />
+                                <col style="width:30%" />
+                                <col style="width:30%" />
+                            </colgroup>
                             <thead>
                                 <tr>
                                     <th>type</th>
@@ -59,21 +54,7 @@
                                     <th>current</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr >
-                                    <td>
-                                        FirmwareVersionMismatch
-                                    </td>
-                                    <td>
-                                        1
-                                    </td>
-                                    <td>
-                                        Firmware versions differ between modules of different types (excluding core modules)
-                                    </td>
-                                    <td>
-                                        Sensor module firmware 1.1.0 vs control module firmware 1.3.5
-                                    </td>
-                                </tr>
+                            <tbody class="errors-tbody">
                             </tbody>
                         </table>
                     </div>
