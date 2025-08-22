@@ -34,7 +34,7 @@
             justify-content: center;
             align-items: center;
 
-            gap: 7px;            
+            gap: 7px;
 
             .widget {
                 width: 100%;
@@ -42,7 +42,7 @@
 
                 >*.bodies {
                     padding: 7px;
-                    overflow-y: scroll; 
+                    overflow-y: scroll;
                 }
 
 

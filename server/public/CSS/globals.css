@@ -64,7 +64,7 @@ h2 {
     font-size: medium;
 }
 
-auto-scroll{
+auto-scroll {
     font-size: inherit;
     font-weight: inherit;
     font-family: inherit;
@@ -643,27 +643,27 @@ body {
         >div.popup-container {
             position: absolute;
             top: 100%;
-           
+
             right: 0px;
             width: fit-content;
             height: min-content;
 
-            > * {
+            >* {
                 padding: 6px;
                 padding-right: 20px;
                 font-size: small;
                 text-align: right;
                 position: relative;
-                
+
                 border: var(--err-color-3) 1px solid;
-                background-color: rgba(var(--err-color-3-rgb),0.5);
-                
-                
+                background-color: rgba(var(--err-color-3-rgb), 0.5);
+
+
                 transition: background 0.2s ease-in-out;
-                
+
                 backdrop-filter: blur(4px);
-                
-                .popup-closeButton{
+
+                .popup-closeButton {
                     position: absolute;
                     top: 3px;
                     right: 3px;
@@ -671,11 +671,12 @@ body {
                     user-select: none;
                 }
             }
-            
-            
+
+
         }
-        >div.popup-container>*:has(.popup-closeButton:hover){
-            background-color: rgba(var(--err-color-3-rgb),0.9);
+
+        >div.popup-container>*:has(.popup-closeButton:hover) {
+            background-color: rgba(var(--err-color-3-rgb), 0.9);
         }
 
         >div.right {
@@ -739,9 +740,11 @@ body {
             display: none;
         }
     }
-    >div.header:has(.popup.error){
+
+    >div.header:has(.popup.error) {
         border-color: var(--err-color-3);
     }
+
     div.header.error {
         border-bottom-color: red;
 
@@ -802,7 +805,8 @@ body {
             rotate: -180deg;
         }
     }
-    .slider-slider{
+
+    .slider-slider {
         flex: 1 1 auto;
         display: flex;
         justify-content: center;
@@ -815,7 +819,7 @@ body {
 
     }
 
-    
+
 }
 
 
@@ -885,10 +889,10 @@ body {
     }
 }
 
-.tab-switcher{
-    
+.tab-switcher {
 
-    >.head{
+
+    >.head {
         border-bottom: var(--bg-color-3) 2px solid;
         display: flex;
         padding: 3px;
@@ -912,15 +916,17 @@ body {
             background-color: var(--bg-color-3)
         }
     }
-    >.bodies{
-        >*{
+
+    >.bodies {
+        >* {
             display: none;
             background-color: var(--bg-color-2);
             height: 100%;
         }
-        >*.active{
+
+        >*.active {
             display: flex;
         }
     }
-    
+
 }

@@ -1,71 +1,80 @@
-#Macros-Widget{
+#Macros-Widget {
   grid-row: span 2;
-  
-  .macros-data-container{
+
+  .macros-data-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    
+
     border-bottom: var(--bg-color-4) 1px solid;
-    
+
     margin: 0;
-    *{
+
+    * {
       margin: 0;
       box-sizing: border-box;
       white-space: nowrap;
     }
-    
-    
+
+
   }
-  .selected-script-state-container{
-    .macros-data{
+
+  .selected-script-state-container {
+    .macros-data {
       color: var(--bg-color-5);
     }
-    .running{
+
+    .running {
       color: var(--acc-color-3);
     }
-    .stopped{
+
+    .stopped {
       color: var(--warn-color-3);
     }
   }
-  
-  .macro-gallery-label{
-      border-bottom: none;
-      .macros-data{
-        color: var(--bg-color-4);
-        font-size: small;
-      }
+
+  .macro-gallery-label {
+    border-bottom: none;
+
+    .macros-data {
+      color: var(--bg-color-4);
+      font-size: small;
+    }
   }
 
-  .macro-gallery-grid-container{
+  .macro-gallery-grid-container {
     min-height: 200px;
     overflow-y: scroll;
-    
-    
-    
-    .macro-gallery-grid{
+
+
+
+    .macro-gallery-grid {
       display: grid;
       /* flex-wrap: wrap; */
       grid-template-columns: repeat(2, 1fr);
       height: min-content;
       grid-gap: 5px;
-      
+
       grid-gap: 5px;
-      >*{
+
+      >* {
         min-width: 30%;
         flex-grow: 1;
-        white-space:nowrap;
+        white-space: nowrap;
       }
-      
-      >*.active{
+
+      >*.active {
         background-color: var(--acc-color-1);
       }
-      >*.active:hover{
-        background-color: var(--acc-color-2) !important;;
+
+      >*.active:hover {
+        background-color: var(--acc-color-2) !important;
+        ;
       }
-      
+
     }
-    *{
+
+    * {
       box-sizing: border-box;
     }
   }

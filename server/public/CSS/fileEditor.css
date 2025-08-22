@@ -1,7 +1,8 @@
 .fileEditor {
     display: flex;
 
-    .fileEditor-browser, .fileEditor-browser-folders  {
+    .fileEditor-browser,
+    .fileEditor-browser-folders {
         background: var(--bg-color-2);
         color: var(--text-color-light);
         padding: 3px;
@@ -10,7 +11,8 @@
         width: 200px;
         min-width: 200px;
 
-        .search-bar, .fileEditor-browser-folders-search-bar {
+        .search-bar,
+        .fileEditor-browser-folders-search-bar {
             border-bottom: var(--acc-color-1) 2px solid;
             display: flex;
             padding: 5px;
@@ -40,28 +42,30 @@
                 display: flex;
                 flex-direction: column;
                 border: var(--bg-color-4) 1px solid;
-                
-                >*{
+
+                >* {
                     border: transparent 1px solid;
                     transition: background 0.2s ease-in-out, border 0.2s ease-in-out;
-                    
+
                 }
-                
-                >*:not(:last-child){
+
+                >*:not(:last-child) {
                     border-bottom-color: var(--bg-color-4);
                 }
-                
-                >button{
+
+                >button {
                     color: var(--text-color-light);
                     background: none;
                     padding: 5px;
                     cursor: pointer;
                 }
-                >button:hover{
+
+                >button:hover {
                     background: var(--bg-color-3);
                     border-color: var(--acc-color-3);
                 }
-                >button:active{
+
+                >button:active {
                     transition: none;
                     background: var(--bg-color-1);
                 }
@@ -88,12 +92,14 @@
                     cursor: pointer;
                     padding: 5px;
                 }
-                img:hover{
+
+                img:hover {
                     scale: 1.2;
                 }
             }
 
-            .add-button:has(img:hover), .add-button.activated {
+            .add-button:has(img:hover),
+            .add-button.activated {
                 background: var(--bg-color-3);
                 border-color: var(--acc-color-3);
             }
@@ -114,7 +120,8 @@
 
 
 
-        .fileEditor-list, .fileEditor-browser-folders-list {
+        .fileEditor-list,
+        .fileEditor-browser-folders-list {
             padding: 5px;
 
             height: 100%;
@@ -134,7 +141,7 @@
                     justify-content: space-between;
                     align-items: center;
 
-                    >div{
+                    >div {
                         padding: 2px;
                         display: flex;
                         justify-content: space-between;
@@ -142,24 +149,28 @@
                         gap: 5px;
                         height: 100%;
                     }
-                    >.folderTitle-left{
+
+                    >.folderTitle-left {
                         width: 100%;
-                        >h2{
+
+                        >h2 {
                             margin: 0;
                             width: 100%;
                         }
-                        >.folderTitle-collapser{
+
+                        >.folderTitle-collapser {
                             rotate: 0deg;
                             transition: rotate 0.2s ease-in-out;
                         }
                     }
-                    >.folderTitle-right{
-                        padding-left:4px;
-                        padding-right:4px;
+
+                    >.folderTitle-right {
+                        padding-left: 4px;
+                        padding-right: 4px;
                     }
-                    
-                    
-                    
+
+
+
                 }
 
                 >li {
@@ -193,12 +204,12 @@
                     .fileEditor-browser-folderTitle {
                         border-bottom: none;
 
-                        >.folderTitle-left{
+                        >.folderTitle-left {
                             >.folderTitle-collapser {
                                 rotate: 180deg;
                             }
                         }
-}
+                    }
                 }
             }
 
@@ -229,10 +240,11 @@
             ul:has(li.active) {
                 border-left-color: var(--acc-color-4);
             }
-            
 
 
-            li.active, ul.active {
+
+            li.active,
+            ul.active {
                 border-right: var(--acc-color-4) 2px solid;
                 border-left: var(--acc-color-4) 2px solid;
             }
@@ -241,23 +253,25 @@
             */
         }
     }
-    .fileEditor-browser-folders{
+
+    .fileEditor-browser-folders {
         border: var(--bg-color-4) 1px solid;
         border-style: none solid;
-        
-        .fileEditor-browser-folders-list{
-            >ul{
-                ul{
-                    div{
+
+        .fileEditor-browser-folders-list {
+            >ul {
+                ul {
+                    div {
                         >.folderTitle-collapser {
                             rotate: 0deg !important;
                         }
                     }
                 }
-                
+
             }
         }
     }
+
     .fileEditor-editor,
     .fileEditor-runtime {
         width: 100%;
@@ -468,10 +482,12 @@
                 >*.called {
                     background-color: var(--acc-color-1)
                 }
-                >*.called1{
+
+                >*.called1 {
                     background-color: var(--acc-color-2);
                 }
-                >*.called2{
+
+                >*.called2 {
                     background-color: var(--acc-color-1);
                 }
             }
