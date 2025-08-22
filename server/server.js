@@ -496,6 +496,18 @@ app.patch('/test-combined', (req, res) => {
 app.get('/timeout-test', (req, res) => {
 })
 
+app.get('*', async (req, res) => {
+    if (global.SMBR_debugMode === true) {
+        try {
+            let fileContents = fs.readFileSync("debug_endpoints/"+req.url+".json");
+            res.status(200).send(""+fileContents);
+            return
+        } catch (error) {
+            console.error("an unknown debug endpoint was called: "+req.url);
+        }
+    }
+    res.status(404).send(`Site "${req.url}" Not Found`);
+});
 
 
 
