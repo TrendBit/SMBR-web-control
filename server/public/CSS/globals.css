@@ -379,7 +379,7 @@ body {
 }
 
 .table-widget-segment {
-    border-spacing: 5px;
+    border-spacing: 0 5px;
 
     thead {
         * {
@@ -388,6 +388,7 @@ body {
             border: var(--bg-color-3) 1px solid;
             border-style: none solid none none;
             padding-right: 5px;
+            padding-left: 5px;
             white-space: nowrap;
         }
 
