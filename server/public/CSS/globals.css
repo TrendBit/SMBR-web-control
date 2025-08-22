@@ -21,11 +21,19 @@
     --acc-color-4: rgb(154, 219, 0);
     --acc-color-4-rgb: 154, 219, 0;
 
+    --err-color-2: rgb(125, 28, 11);
+    --err-color-2-rgb: 125, 28, 11;
     --err-color-3: rgb(173, 39, 15);
     --err-color-3-rgb: 173, 39, 15;
+    --err-color-4: rgb(220, 63, 25);
+    --err-color-4-rgb: 220, 63, 25;
 
+    --warn-color-2: rgb(171, 146, 33);
+    --warn-color-2-rgb: 171, 146, 33;
     --warn-color-3: rgb(228, 194, 44);
     --warn-color-3-rgb: 228, 194, 44;
+    --warn-color-4: rgb(255, 236, 70);
+    --warn-color-4-rgb: 255, 236, 70;
 
 
     --text-color-light: rgb(252, 249, 247);
