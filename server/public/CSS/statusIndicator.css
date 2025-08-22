@@ -5,13 +5,16 @@
     padding: 0;
     margin: 0;
     position: relative;
+    --acc-color-local2: var(--acc-color-2);
+    --acc-color-local3: var(--acc-color-3);
+    --acc-color-local4: var(--acc-color-4);
 
 
     .status-indicator-container {
         overflow: hidden;
         position: absolute;
-        background-color: var(--acc-color-2);
-        border: 3px var(--acc-color-3);
+        background-color: var(--acc-color-local2);
+        border: 3px var(--acc-color-local3);
         border-style: none none solid solid;
         border-radius: 0 0 0 15px;
         box-sizing: border-box;
@@ -52,7 +55,7 @@
         align-items: center;
         justify-content: center;
         user-select: none;
-
+        padding: 5px;
         
 
         >* {
@@ -146,7 +149,7 @@
     .status-indicator-container:not(.open):hover,
     .status-indicator-container.open {
         background: var(--bg-color-4);
-        border-color: var(--acc-color-4);
+        border-color: var(--acc-color-local4);
     }
 
     .status-indicator-container.open {
@@ -168,4 +171,17 @@
             visibility: hidden;
         }
 }
+}
+
+.status-indicator.status-indicator-warning{
+    --acc-color-local2: var(--warn-color-2);
+    --acc-color-local3: var(--warn-color-3);
+    --acc-color-local4: var(--warn-color-4);
+}
+
+
+.status-indicator.status-indicator-error{
+    --acc-color-local2: var(--err-color-2);
+    --acc-color-local3: var(--err-color-3);
+    --acc-color-local4: var(--err-color-4);
 }
