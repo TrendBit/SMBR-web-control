@@ -130,7 +130,22 @@
 
                     background: var(--bg-color-2);
                     height: 100%;
-                }
+                    
+                    padding: 10px 5px;
+                    
+                    max-height: 100%;
+                    overflow: hidden scroll;
+                                    > .errors{
+                        tr:first-child td{
+                            border-top: 3px solid var(--err-color-2);
+                        }
+                    }
+                    > .warnings{
+                        tr:first-child td{
+                            border-top: 3px solid var(--warn-color-2);
+                        }
+                    }
+}
             }
         }
 
@@ -171,6 +186,12 @@
             visibility: hidden;
         }
 }
+    
+    .warnings-tbody, .errors-tbody{
+        tr td{
+            border-bottom: 1px solid var(--bg-color-4);
+        }
+    }
 }
 
 .status-indicator.status-indicator-warning{

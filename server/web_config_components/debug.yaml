@@ -24,7 +24,10 @@
 #graph
 #   
 
-
+Hotbar:
+  StatusIndicator:
+    resource: "/system"
+    port: 80
 DevicePanel:
   DeviceInfoWidget:
     header:

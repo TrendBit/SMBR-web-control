@@ -1,4 +1,8 @@
-<div class="handler status-indicator api-fetcher" handler-id="StatusInfoPanelHandler">
+<div    class="handler status-indicator api-fetcher" 
+        handler-id="StatusInfoPanelHandler" 
+        resource="<%= Hotbar.StatusIndicator.resource %>" 
+        port="<%= Hotbar.StatusIndicator.port %>">
+
     <div class="status-indicator-container">
         <div class="status-indicator-closed container" onclick="getHandlerObj(this,'StatusInfoPanelHandler').open()">
             <div>
@@ -30,7 +34,7 @@
                                     <th>type</th>
                                     <th>id</th>
                                     <th>message</th>
-                                    <th>current</th>
+                                    <th>detail</th>
                                 </tr>
                             </thead>
                             <tbody class="warnings-tbody">
@@ -51,7 +55,7 @@
                                     <th>type</th>
                                     <th>id</th>
                                     <th>message</th>
-                                    <th>current</th>
+                                    <th>detail</th>
                                 </tr>
                             </thead>
                             <tbody class="errors-tbody">
@@ -63,4 +67,126 @@
             <div class="status-indicator-close-btn" onclick="getHandlerObj(this,'StatusInfoPanelHandler').close()"><i class="material-icons">close</i></div>
         </div>
     </div>
+    <script>
+        handlers["StatusInfoPanelHandler"] = class StatusInfoPanelHandler extends BaseHandler{
+            constructor(element) {
+                super(element)
+
+                this.container = element.getElementsByClassName("status-indicator-container")[0];
+
+                this.errorCount = element.getElementsByClassName("errors-count")[0];
+                this.warningCount = element.getElementsByClassName("warnings-count")[0];
+
+                this.errorTable = element.getElementsByClassName("errors-tbody")[0];
+                this.warningTable = element.getElementsByClassName("warnings-tbody")[0];
+
+                this.errors = []
+                this.warnings = []
+
+                this.updatedValues = 0;
+                this.errorEncountered = false;
+
+                console.log(this)
+            }
+
+            afterFetchDone(){
+                if(this.updatedValues<2 || this.errorEncountered){
+                    return
+                }
+                this.errorCount.classList.remove("api-fetcher-error");
+                this.warningCount.classList.remove("api-fetcher-error");
+                this.updateTable(this.errorTable,this.errors);
+                this.updateTable(this.warningTable,this.warnings);
+                this.errorCount.innerHTML = this.errors.length;
+                this.warningCount.innerHTML = this.warnings.length;
+                this.updateClasses();
+            }
+
+            onErrorEncountered(){
+                this.errorEncountered = true;
+                
+                this.errorCount.innerHTML = "Null";
+                this.errorCount.classList.add("api-fetcher-error");
+
+                this.warningCount.innerHTML = "Null";
+                this.warningCount.classList.add("api-fetcher-error");
+            }
+
+            updateClasses(){
+                this.element.classList.remove("status-indicator-error");
+                this.element.classList.remove("status-indicator-warning");
+
+                let errorLevel = 0;
+                if(this.warnings.length > 0){
+                    errorLevel = 1;
+                }
+                if(this.errors.length > 0){
+                    errorLevel = 2;
+                }
+
+                switch (errorLevel) {
+                    case 1:
+                        this.element.classList.add("status-indicator-warning");
+                        break;
+                    case 2:
+                        this.element.classList.add("status-indicator-error");
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            open(){
+                this.container.classList.add("open")
+            }
+            close(){
+                this.container.classList.remove("open")
+            }
+
+            updateTable(table, entries){
+                let newInnerHTML = ""
+                for (let i = 0; i < entries.length; i++) {
+                    newInnerHTML += this.getFormatedTableEntry(entries[i])
+                }
+                if(table.innerHTML != newInnerHTML){
+                    table.innerHTML = newInnerHTML;
+                }
+            }
+
+            getFormatedTableEntry(entry){
+                return`<tr entry-id="${entry.id}"><td>${entry.type}</td><td>${entry.id}</td><td>${entry.message}</td><td>${entry.detail}</td></tr>`
+            }
+
+            async update(){
+                this.updatedValues = 0;
+                this.errorEncountered = false;
+                fetchDataAsJson(":"+this.element.getAttribute("port")+this.element.getAttribute("resource")+"/errors").then(response => {
+                    this.updatedValues++;
+
+                    if(response.message == undefined){
+                        this.errors=response;
+                    }else{
+                        this.errors=[];
+                    }
+
+                    this.afterFetchDone();
+                }).catch(err => {
+                    this.onErrorEncountered();
+                })
+                fetchDataAsJson(":"+this.element.getAttribute("port")+this.element.getAttribute("resource")+"/warnings").then(response => {
+                    this.updatedValues++;
+
+                    if(response.message == undefined){
+                        this.warnings=response;
+                    }else{
+                        this.warnings=[];
+                    }
+
+                    this.afterFetchDone();
+                }).catch(err => {
+                    this.onErrorEncountered();
+                })
+            }
+        }
+    </script>
 </div>

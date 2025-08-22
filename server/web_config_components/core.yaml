@@ -1,3 +1,7 @@
+Hotbar:
+  StatusIndicator:
+    resource: "/system"
+    port: 8089
 DashboardPanel: 
   MacrosWidget:
     header:
