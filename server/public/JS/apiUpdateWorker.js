@@ -61,9 +61,9 @@ async function updateSite(root){
             .then(response => {
                 innerVal = ""
                 const responseValue=response[element.getAttribute("component")];
-                if(isNaN(responseValue)){
-                    innerVal = responseValue;
-                }else{
+                console.debug("Numeric/String value: ",responseValue, typeof responseValue == "number")
+                if(typeof responseValue == "number"){
+                    console.debug("Numeric value: ",responseValue)
                     if(responseValue == null){
                         innerVal = "Null";
                     }else{
@@ -75,13 +75,16 @@ async function updateSite(root){
                         
                         innerVal = numberLabel.toFixed(numberOfDecimalPLaces) + " " + element.getAttribute("unit");
                     }
+                }else{
+                    innerVal = String(responseValue);
+                    console.debug("String value: ",innerVal)
                 }
                 
                 
                 if(element.getAttribute("to-placeholder") != undefined){
-                    element.placeholder = innerVal
+                    element.placeholder = String(innerVal)
                 }else{
-                    element.innerHTML = innerVal
+                    element.innerHTML = String(innerVal)
                 }
                 element.classList.remove("error");
 
