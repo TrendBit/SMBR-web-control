@@ -11,12 +11,19 @@ const toml = require('toml');
 
 
 global.SMBR_debugMode = false;
+global.SMBR_apiSimMode = false;
 process.argv.forEach(function (val, index, array) {
     if(val == "-d"){
         console.warn("#######################");
         console.warn("##### DEBUG MODE ######");
         console.warn("#######################");
         global.SMBR_debugMode = true;
+    }
+    if(val == "-a"){
+        console.warn("#########################");
+        console.warn("## API SIMULATION MODE ##");
+        console.warn("#########################");
+        global.SMBR_apiSimMode = true;
     }
 });
 
@@ -70,6 +77,9 @@ app.use(express.json());
 
 //starts the server on port PORT
 app.listen(PORT);
+if (global.global.SMBR_apiSimMode) {
+    app.listen(8089);
+}
 
 
 app.set('views', './views');
@@ -497,7 +507,7 @@ app.get('/timeout-test', (req, res) => {
 })
 
 app.get('*', async (req, res) => {
-    if (global.SMBR_debugMode === true) {
+    if (global.SMBR_apiSimMode === true) {
         try {
             let fileContents = fs.readFileSync("debug_endpoints/"+req.url+".json");
             res.status(200).send(""+fileContents);
