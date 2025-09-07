@@ -12,6 +12,7 @@ const toml = require('toml');
 
 global.SMBR_debugMode = false;
 global.SMBR_apiSimMode = false;
+SMBR_verboseMode = false;
 process.argv.forEach(function (val, index, array) {
     if(val == "-d"){
         console.warn("#######################");
@@ -25,10 +26,15 @@ process.argv.forEach(function (val, index, array) {
         console.warn("#########################");
         global.SMBR_apiSimMode = true;
     }
+    if(val == "-v"){
+        console.warn("########################");
+        console.warn("##### VERBOSE MODE #####");
+        console.warn("########################");
+        SMBR_verboseMode = true;
+    }
 });
 
-//colors all error outputs RED and warn outputs in YELLOW
-//colors all error outputs RED and warn outputs in YELLOW
+//colors all error outputs RED and warn outputs in YELLOW and debug in GREY (debug is not printed at all when verbose mode isn't on)
 import("chalk").then(chalk => {
     const originalError = console.error;
     console.error = (...args) => {
@@ -37,6 +43,12 @@ import("chalk").then(chalk => {
     const originalWarn = console.warn;
     console.warn = (...args) => {
         originalWarn(chalk.default.yellow(...args));
+    };
+    const originalDebug = console.debug;
+    console.debug = (...args) => {
+        if (SMBR_verboseMode){
+            originalDebug(chalk.default.gray(...args));
+        }
     };
 });
 

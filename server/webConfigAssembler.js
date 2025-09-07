@@ -1,7 +1,6 @@
 const fs = require('fs');
 const yaml = require('js-yaml');
 const axios = require('axios');
-const { networkInterfaces } = require('os');
 
 
 var loadedModules = [];
@@ -20,42 +19,35 @@ var assembledConfig = {};
 
 const allwaysRebuildConfig = false;
 
-var localIP = "";
+var connectedToApi = false;
 
 var fluoroCurve  = {};
 
 
-async function initialize() {
-    //const nets = networkInterfaces();
-    //const results = [];
+function initialize() {
     console.log("looking for apiServer");
-    try {
-        console.log("  trying ","http://"+"127.0.0.1"+":8089/system/modules")
-        const response = await axios.get("http://"+"127.0.0.1"+":8089/system/modules", {timeout: 5000});
+    console.log("  trying http://127.0.0.1:8089/system/modules")
+    axios.get("http://"+"127.0.0.1"+":8089/system/modules", {timeout: 500})
+    .then( res => {
         console.log("    API DETECTED");  
-        localIP = "127.0.0.1";
-    } catch (error) {
-        console.log("    no api");  
-    }
-
-    if(!localIP){
-        console.error("api is not connected");
-        buildWebConfig();
-    }
-    else{
+        connectedToApi = true;
         loadedModules = [];
         reloadModules();
-    }
-
-    
-    global.initialized = true;
+    })
+    .catch( err => {
+        console.log("    no api");  
+        console.error("could not connect to API (http://127.0.0.1:8089/system/modules returned code:",err.code,")");
+        connectedToApi = false;
+        buildWebConfig();
+    })
+    .finally(() => {
+        if (!global.initialized){
+            setInterval(reloadModules, 15000);
+            global.initialized = true;
+        }
+    })
 }
 initialize()
-
-
-
-
-setInterval(reloadModules, 15000);
 
 var lastConfigRefresh = new Date(0);
 
@@ -66,17 +58,6 @@ module.exports = {
             lastConfigRefresh = currTime;
             buildWebConfig();
         }
-        /*try {
-            const result = yaml.load(fs.readFileSync("webConfig.yaml"));    
-            return result;
-        } catch (error) {
-            console.error(reqHostname+": error while trying to read the config file, sending an empty one");
-            return {Errors: [
-                {
-                    description: "unable to build web config, check your configuration and try again"
-                }
-            ]};
-        }*/
         return assembledConfig;
     },
     getLoadedModules: function() {
@@ -92,14 +73,12 @@ module.exports = {
     }
 }
 
-//reloadModules();
-
 
 
 
 var unsuccessfullReloads = 0;
 async function reloadModules(){
-    if(!localIP){
+    if(!connectedToApi){
         if(unsuccessfullReloads++ >= 10){
             unsuccessfullReloads = 0;
             initialize();
@@ -109,7 +88,7 @@ async function reloadModules(){
         return 
     }
     try {
-        const response = await axios.get('http://'+localIP+':8089/system/modules', {});
+        const response = await axios.get('http://'+"127.0.0.1"+':8089/system/modules', {});
         if(response.status == 200){
             var change = false;
     
@@ -130,7 +109,7 @@ async function reloadModules(){
             }
         }
         else{
-            localIP = "";
+            connectedToApi = false;
             throw new Error({code:response.status});
         }
     } catch (error) {
@@ -218,7 +197,7 @@ function buildWebConfig(){
 
         return aVal-bVal;
     });
-    console.log("\nbuilding a new web config file...\n"+
+    console.debug("\nbuilding a new web config file...\n"+
         "loaded modules: \n"
         +yaml.dump(loadedModules));
 
@@ -277,7 +256,7 @@ function buildWebConfig(){
                     var configComponent = "";
                     var loaded = false;
                     try {
-                        console.log("loading \"web_config_components/"+element.module_type+".yaml\"");
+                        console.debug("loading \"web_config_components/"+element.module_type+".yaml\"");
                         const configComponentUnfinished = fs.readFileSync("web_config_components/"+element.module_type+".yaml", 'utf8');
     
                         configComponent = yaml.load(configComponentUnfinished);
@@ -303,7 +282,7 @@ function buildWebConfig(){
                     break;
             }
         }else{
-            console.log("skipping \"web_config_components/"+element.module_type+".yaml\"");
+            console.debug("skipping \"web_config_components/"+element.module_type+".yaml\"");
         }
     });
 
@@ -314,7 +293,6 @@ function buildWebConfig(){
 
 function censor(censor) {
     var i = 0;
-    
     return function(key, value) {
       if(i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value) 
         return '[Circular]'; 

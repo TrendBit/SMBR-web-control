@@ -145,7 +145,6 @@ function deepEqual(x, y) {
 var loadedConfig = {DashboardPanel:{TemperatureWidget:{rows:[]}}};
 var currentModuleTemps = {};
 async function temperatureGraphFetch(){
-    
     const newConfig = webConfigAssembler.getConfig("[internal readings logger]");
     if(!deepEqual(newConfig,loadedConfig)){
         loadedConfig = newConfig;
@@ -219,7 +218,6 @@ async function temperatureGraphReload(){
 }
 
 
-temperatureGraphFetch();
 setTimeout(()=>{
     setInterval(() => temperatureGraphReload(),readingDelay);
 },1000);
