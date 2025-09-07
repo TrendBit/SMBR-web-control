@@ -40,6 +40,7 @@ run server
 ```
 npm start --prefix ~/path/to/the/server/directory &
 ```
+
 __the server does not support HTTPS protocol__
 ___
 

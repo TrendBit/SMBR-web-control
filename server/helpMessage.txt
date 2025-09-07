@@ -1,0 +1,16 @@
+Usage: node [options]
+
+Simple Node.js server providing a web interface to control the API.
+
+Options:
+  -v      Enable verbose output
+  -h      Show this help message and exit
+  -d      Run server in debug mode with extended error info
+  -a      Simulate API endpoints for testing
+
+Examples:
+  node-server -v -d -a
+  node-server -d
+  node-server -a
+
+Warning, in order to run this server, the user needs to have permission to use the port 80 (and 8089 if api-sim mode is enabled)

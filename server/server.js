@@ -32,6 +32,14 @@ process.argv.forEach(function (val, index, array) {
         console.warn("########################");
         SMBR_verboseMode = true;
     }
+    if(val == "-h"){
+        try {
+            console.log(fs.readFileSync("./helpMessage.txt",'utf8'))
+        } catch (error) {
+            console.error("ERROR cannot display help message helpMessage.txt is MISSING!!")
+        }
+        process.exit()
+    }
 });
 
 //colors all error outputs RED and warn outputs in YELLOW and debug in GREY (debug is not printed at all when verbose mode isn't on)
