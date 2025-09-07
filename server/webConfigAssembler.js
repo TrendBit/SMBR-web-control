@@ -24,20 +24,6 @@ var localIP = "";
 
 var fluoroCurve  = {};
 
-function reloadFluoroCurve(){
-    try {
-        console.log("loading fluoro curve");
-        const fluoroCurveString = fs.readFileSync("./storage/FluoroCurve.json");
-        fluoroCurve = JSON.parse(fluoroCurveString);
-    } catch (error) {
-        console.error("CANNOT LOAD FLUORO CURVE!");
-    }
-}
-
-function refetchFluoroCurve(){
-
-}
-
 
 async function initialize() {
     //const nets = networkInterfaces();
@@ -63,7 +49,6 @@ async function initialize() {
 
     
     global.initialized = true;
-    reloadFluoroCurve();
 }
 initialize()
 
