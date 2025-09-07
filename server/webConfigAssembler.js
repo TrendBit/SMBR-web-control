@@ -113,8 +113,7 @@ async function reloadModules(){
             throw new Error({code:response.status});
         }
     } catch (error) {
-        console.error("Error while loading module list, code: ", error.code, "more info in server/errorDump.log");
-        fs.writeFileSync("errorDump.log",JSON.stringify(error));
+        console.error("Error while loading module list, code: ", error.code);
     }
     
         
