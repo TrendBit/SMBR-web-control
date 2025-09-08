@@ -163,25 +163,18 @@
                 fetchDataAsJson(":"+this.element.getAttribute("port")+this.element.getAttribute("resource")+"/errors").then(response => {
                     this.updatedValues++;
 
-                    if(response.message == undefined){
-                        this.errors=response;
-                    }else{
-                        this.errors=[];
-                    }
+                    this.errors=response.problems;
 
                     this.afterFetchDone();
                 }).catch(err => {
                     this.onErrorEncountered();
                 })
+
                 fetchDataAsJson(":"+this.element.getAttribute("port")+this.element.getAttribute("resource")+"/warnings").then(response => {
                     this.updatedValues++;
 
-                    if(response.message == undefined){
-                        this.warnings=response;
-                    }else{
-                        this.warnings=[];
-                    }
-
+                    this.warnings=response.problems;
+                    
                     this.afterFetchDone();
                 }).catch(err => {
                     this.onErrorEncountered();
