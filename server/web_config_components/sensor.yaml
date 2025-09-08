@@ -77,7 +77,7 @@ DashboardPanel:
       - name: "Spectrophotometer"
         port: 8089
         icon: "wb_incandescent"
-        resource: "/sensor/spectrophotometer/emitor_temperature"
+        resource: "/sensor/spectrophotometer/emitor/temperature"
         component: "temperature"
         charted: false
         decimalPlaces: 2
