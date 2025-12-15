@@ -1,0 +1,34 @@
+<div class="widget" id="DevicePanel-CanBusInfo">
+    <div class="header">
+        <h1>Can-Bus information</h1>
+        <button class="reset_button button1 hoverSpin" onclick="apiUpdateWorkerUpdate(this.parentNode.parentNode.parentNode)">
+            <p class="material-icons filled" title="refresh all values">autorenew</p>
+        </button>
+        <div class="popup-container">
+</div>
+    </div>
+    <table class="table-widget-segment">
+        <thead>
+            <tr>
+                <th>field</th>
+                <th>value</th>
+            </tr>
+        </thead>
+        <tbody id="DevicePanel-CanBusInfo-table">
+            <%if(DevicePanel.CanBusInfoWidget) DevicePanel.CanBusInfoWidget.rows.forEach(element => {%>
+                <tr>
+                    <td class="table-name"><%= element.name %></td>
+                    <td class="api-fetcher table-dataField"
+                        unit="<% if(element.unit){%><%=element.unit%><%}else{%><%=""%><%} %>" 
+                        resource="<%= element.resource %>" 
+                        component="<%= element.component %>"
+                        port="<%= element.port%>"
+                        decimal-places="<%= element.decimalPlaces %>"
+                        output-multiplier="<%= element.outputMultiplier %>"
+                        device-path="info/<%= element.name %>"
+                    ></td>
+                </tr>
+            <%});%>
+        </tbody>
+    </table>
+</div>

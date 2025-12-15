@@ -63,6 +63,37 @@ DevicePanel:
       - name: "Supply power_draw"
         port: 8089
         resource: "/core/supply/power_draw"
+  CanBusInfoWidget:
+    header:
+    rows:
+      - name: rx_packets
+        port: 8089
+        resource: "/system/can/rx_packets"
+        component: "rx_packets"
+      - name: tx_packets
+        port: 8089
+        resource: "/system/can/tx_packets"
+        component: "tx_packets"
+      - name: rx_errors
+        port: 8089
+        resource: "/system/can/rx_errors"
+        component: "rx_errors"
+      - name: tx_errors
+        port: 8089
+        resource: "/system/can/tx_errors"
+        component: "tx_errors"
+      - name: rx_dropped
+        port: 8089
+        resource: "/system/can/rx_dropped"
+        component: "rx_dropped"
+      - name: tx_dropped
+        port: 8089
+        resource: "/system/can/tx_dropped"
+        component: "tx_dropped"
+      - name: collisions
+        port: 8089
+        resource: "/system/can/collisions"
+        component: "collisions"
 DashboardPanel:
   TemperatureWidget:
     header: 
