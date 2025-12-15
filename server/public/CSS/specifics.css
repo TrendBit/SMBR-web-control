@@ -250,12 +250,16 @@
             max-width: 100%;
         }
 
-        #DevicePanel-DeviceInfo {
-            max-width: max-content;
+        #DevicePanel-DeviceInfo, #DevicePanel-CanBusInfo {
             grid-row: span 2;
 
             td.table-dataField {
                 min-width: 40px;
+                text-align: right;
+            }
+            
+            td.table-name{
+                text-align: left;
             }
         }
     }
