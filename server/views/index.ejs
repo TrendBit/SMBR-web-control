@@ -117,7 +117,7 @@
             <p id="hotbar-clock">16:22</p>
             <p id="hotbar-date">11.07.2024</p>
         </div>
-        <%- include('misc/statusIndicator.ejs') %>
+        <% if(locals.Hotbar){if(Hotbar.StatusIndicator){%><%- include('misc/statusIndicator.ejs') %><%}}%>
         
     </header>
 
