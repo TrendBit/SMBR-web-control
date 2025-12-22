@@ -163,7 +163,7 @@
                 fetchDataAsJson(":"+this.element.getAttribute("port")+this.element.getAttribute("resource")+"/errors").then(response => {
                     this.updatedValues++;
 
-                    this.errors=response.problems;
+                    this.errors=(response.problems)?response.problems:[];
 
                     this.afterFetchDone();
                 }).catch(err => {
@@ -173,7 +173,7 @@
                 fetchDataAsJson(":"+this.element.getAttribute("port")+this.element.getAttribute("resource")+"/warnings").then(response => {
                     this.updatedValues++;
 
-                    this.warnings=response.problems;
+                    this.warnings=(response.problems)?response.problems:[];
                     
                     this.afterFetchDone();
                 }).catch(err => {
