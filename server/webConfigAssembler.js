@@ -47,24 +47,16 @@ function initialize() {
         }
     })
 }
-initialize()
 
-var lastConfigRefresh = new Date(0);
 
 module.exports = {
-    getConfig: function(reqHostname) {
-        var currTime = new Date();
-        if((currTime.getTime() - lastConfigRefresh.getTime()) > 30000 || allwaysRebuildConfig){
-            lastConfigRefresh = currTime;
-            buildWebConfig();
-        }
+    getConfig: function() {
         return assembledConfig;
     },
     getLoadedModules: function() {
         return loadedModules;
     },
     getLoadedModulesRefresh: async function() {
-        unsuccessfullReloads = 500000;
         await reloadModules();
         return loadedModules;
     },
@@ -87,6 +79,7 @@ async function reloadModules(){
         }
         return 
     }
+
     try {
         const response = await axios.get('http://'+"127.0.0.1"+':8089/system/modules', {});
         if(response.status == 200){
@@ -103,8 +96,6 @@ async function reloadModules(){
     
             if(change){
                 console.warn("changes in configuration detected");
-                
-
                 buildWebConfig();
             }
         }
@@ -304,3 +295,5 @@ function censor(censor) {
       return value;  
     }
   }
+
+initialize()
