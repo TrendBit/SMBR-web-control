@@ -91,15 +91,11 @@
                     this.setHeaderPopup("error", "Error,<br>no response from server");
                     return true
                 }
-                if(response.status != 200){
-                    var messageBody=await streamToString(response.body);
-                    console.error('Error code('+response.status+'):',messageBody);
-                    if(response.status == 500){
-                        this.setHeaderPopup("error",messageBody);
-                    }else{
-                        this.setHeaderPopup("error", 'Error('+response.status+'):<br>'+messageBody);
-                    }
-                    return true
+                try {
+                    await checkResponse(response);
+                } catch (error) {
+                    this.setHeaderPopup("error",error.responseMessage ?? "unknown error");
+                    return true;
                 }
                 return false
             }
@@ -150,7 +146,7 @@
             }
 
             async launchMacro(macroFullName){
-                const response1 = await sendData(":8089/scheduler/recipe",`\"${macroFullName}\"`).catch(err => {
+                const response1 = await sendData(":8089/scheduler/recipe/"+encodeURIComponent(macroFullName),"").catch(err => {
                     console.error('Unable to select script: ', err);
                     this.setHeaderPopup("error", "Unable to select script: \n" + err);
                     return

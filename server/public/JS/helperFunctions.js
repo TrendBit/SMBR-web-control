@@ -129,6 +129,13 @@ async function fetchDataAsJson(urlIn,additionalHeaders = {}, setMethod="GET") {
     if(response.status != 200){
         err = Error("server responded with code: "+response.status);
         err.response = response;
+        err.responseMessage = undefined;
+        try {
+            const responseParsed = await err.response.json();
+            err.responseMessage = responseParsed.message;
+        } catch (error) {
+            console.error("server responded with an incordwadwa dwa dwa dawdaw",error);
+        }
         err.fetchErrorCode = true;
         throw err;
     }
@@ -149,9 +156,26 @@ async function fetchData(urlIn,additionalHeaders = {}, setMethod="GET") {
                                 }
                             }
                         );
+    
     //console.log(response);
     return response
 
+}
+
+async function checkResponse(response) {
+    if(response.status != 200){
+        err = Error("server responded with code: "+response.status);
+        err.response = response;
+        err.responseMessage = undefined;
+        try {
+            const responseParsed = await err.response.json();
+            err.responseMessage = responseParsed.message;
+        } catch (error) {
+            
+        }
+        err.fetchErrorCode = true;
+        throw err;
+    }
 }
 
 async function sendData(urlIn, data,additionalHeaders = {}, setMethod="POST") {

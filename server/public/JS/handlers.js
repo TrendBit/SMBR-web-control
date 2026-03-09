@@ -542,12 +542,11 @@ handlers["FileEditorHandler"] = class FileEditorHandler  extends BaseHandler{
             this.fileEditor.fileName.innerHTML="ERROR WHILE OPENING FILE"
             this.fileEditor.code.setValue("");
             this.fileEditor.code.refresh();
-            if(err.response != undefined){
-                this.handleResponseError(err.response);
+            if(err.responseMessage){
+                this.setHeaderPopup("error", "error while opening the file:<br>" + err.responseMessage);
             }else{
                 this.setHeaderPopup("error", "error while opening the file:<br>" + err);
             }
-            
             return;
         })
         if(response == undefined) return
@@ -589,13 +588,12 @@ handlers["FileEditorHandler"] = class FileEditorHandler  extends BaseHandler{
     }
     async sendFile(fileName,fileData){
         const fileDataObj = {
-            name:fileName,
             content:fileData
         }
 
         const response = await sendData(this.url+"/"+encodeURIComponent(fileName), JSON.stringify(fileDataObj),undefined,"PUT").catch(err => {
             console.error('Error while uploading file:', err);
-            this.setHeaderPopup("error", "Error while uploading file:<br>" + err);
+            this.setHeaderPopup("error", "Error while uploading file:<br>" + (err.responseMessage ?? err));
             return 1;
         })
         if(await this.handleResponseError(response)){
@@ -661,15 +659,11 @@ handlers["FileEditorHandler"] = class FileEditorHandler  extends BaseHandler{
             this.setHeaderPopup("error", "Error,<br>no response from server");
             return true
         }
-        if(response.status != 200){
-            var messageBody=await streamToString(response.body);
-            if(response.status == 500){
-                this.setHeaderPopup("error",messageBody);
-            }else{
-                this.setHeaderPopup("error", 'Error('+response.status+'):<br>'+messageBody);
-            }
-            console.error('Error('+response.status+'):',messageBody);
-            return true
+        try {
+            await checkResponse(response);
+        } catch (error) {
+            this.setHeaderPopup("error",error.responseMessage ?? "unknown error");
+            return true;
         }
         return false
     }
@@ -817,15 +811,11 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler extends BaseHandler{
             this.setHeaderPopup("error", "Error,<br>no response from server");
             return true
         }
-        if(response.status != 200){
-            var messageBody=await streamToString(response.body);
-            console.error('Error code('+response.status+'):',messageBody);
-            if(response.status == 500){
-                this.setHeaderPopup("error",messageBody);
-            }else{
-                this.setHeaderPopup("error", 'Error('+response.status+'):<br>'+messageBody);
-            }
-            return true
+        try {
+            await checkResponse(response);
+        } catch (error) {
+            this.setHeaderPopup("error",error.responseMessage ?? "unknown error");
+            return true;
         }
         return false
     }
@@ -910,7 +900,7 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler extends BaseHandler{
         }
         const response = await fetchDataAsJson(this.url+"/runtime").catch(err => {
             console.error('Error while getting runtime info:', err);
-            this.setHeaderPopup("error", "error while getting runtime info:<br>" + err);
+            this.setHeaderPopup("error", "error while getting runtime info:<br>" + (err.responseMessage??err));
             return
         })
         if(response == undefined) return
@@ -939,7 +929,7 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler extends BaseHandler{
         if(this.scriptLoaded){
             const response = await fetchDataAsJson(this.url+"/recipe").catch(err => {
                 console.error('Error while getting file:', err);
-                this.setHeaderPopup("error", "error while opening the file:<br>" + err);
+                this.setHeaderPopup("error", "error while opening the file:<br>" + (err.responseMessage??err));
                 return
             })
             if(response == undefined) return
@@ -1000,7 +990,7 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler extends BaseHandler{
 
         const response = await fetchDataAsJson(this.url+"/recipe").catch(err => {
             console.error('Error while connecting to file editor:', err);
-            this.setHeaderPopup("error", "Error while connecting to file editor:<br>" + err);
+            this.setHeaderPopup("error", "Error while connecting to file editor:<br>" + (err.responseMessage??err));
             return
         })
         if(response == undefined){
@@ -1015,9 +1005,9 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler extends BaseHandler{
     }
 
     async assignFile(fileName){
-        const response = await sendData(this.url+"/recipe", '"'+fileName+'"').catch(err => {
+        const response = await fetchData(this.url+"/recipe/"+encodeURIComponent(fileName),{},"POST").catch(err => {
             console.error('Unable to assign file:', err);
-            this.setHeaderPopup("error", "Error while assigning file:<br>" + err);
+            this.setHeaderPopup("error", "Error while assigning file:<br>" + (err.responseMessage??err));
             return
         })
         
@@ -1035,7 +1025,7 @@ handlers["RuntimeInfoHandler"] = class RuntimeInfoHandler extends BaseHandler{
     async reloadScriptPreview(){
         const response = await fetchDataAsJson(this.url+"/recipe").catch(err => {
             console.error('Unable to get selected script content:', err);
-            this.setHeaderPopup("error", "Error while getting selected script content:<br>" + err);
+            this.setHeaderPopup("error", "Error while getting selected script content:<br>" + (err.responseMessage??err));
             return
         })
         if(response == undefined){

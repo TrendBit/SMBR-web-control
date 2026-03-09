@@ -390,7 +390,9 @@ app.get('/config-files/:userPath', async (req, res) => {
     const fileName = req.params.userPath;
     const fileNameSplit = fileName.split("|");
     if(configFiles_FileNameSecurityCheck(fileName)){
-        res.status(403).send("ILLEGAL ACCESS DETECTED");
+        res.status(403).send(
+            JSON.stringify({message:"insufficient permissions"})
+        );
         console.warn("[config-files] Illegal acces to file:",fileName,"detected!!!");
         return;
     } 
@@ -399,13 +401,16 @@ app.get('/config-files/:userPath', async (req, res) => {
     try {
         fileData = fs.readFileSync(path.join(configFilesPath,...fileNameSplit),'utf8');
     } catch (error) {
-        res.status(500).send("file cannot be opened");
+        res.status(500).send(
+            JSON.stringify({message:"unable to open file: "+error.message})
+        );
         return;
     }
     returnObj = {
         name: fileName,
         content: fileData
     };
+    
     res.status(200).send(JSON.stringify(returnObj));
     return;
 });
@@ -413,19 +418,18 @@ app.put('/config-files/:userPath', async (req, res) => {
     const fileName = req.params.userPath;
     const fileNameSplit = fileName.split("|");
     if(configFiles_FileNameSecurityCheck(fileName)){
-        res.status(403).send("ILLEGAL ACCESS DETECTED");
+        res.status(403).send(
+            JSON.stringify({message:"insufficient permissions"})
+        );
         console.warn("Illegal acces to file: ",fileName,"detected!!!");
         return;
     } 
-    const maxBodySize = 500000;
 
-    if(req.body.name!=fileName){
-        res.status(400).send("invalid request body");
-        return;
-    }
     fileData = "";
-    if(req.body.content == undefined){
-        res.status(400).send("invalid request body");
+    if(req.body.content === undefined){
+        res.status(400).send(
+            JSON.stringify({message:"invalid request body"})
+        );
         return; 
     }else{
         fileData = req.body.content;
@@ -433,27 +437,37 @@ app.put('/config-files/:userPath', async (req, res) => {
     try {
         fs.writeFileSync(path.join(configFilesPath,...fileNameSplit), fileData);
     } catch (error) {
-        res.status(500).send("unable to write to file: "+error.message);
+        res.status(500).send(
+            JSON.stringify({message:"unable to write to file: "+error.message})
+        );
         return
     }
-    res.status(200).send("file transfer successfull");
+    res.status(200).send(
+        JSON.stringify({message:"file transfer successfull"})
+    );
     configFiles_reloadFileListFromDisk();
 });
 app.delete('/config-files/:userPath', async (req, res) => {
     const fileName = req.params.userPath;
     const fileNameSplit = fileName.split("|");
     if(configFiles_FileNameSecurityCheck(fileName)){
-        res.status(403).send("ILLEGAL ACCESS DETECTED");
+        res.status(403).send(
+            JSON.stringify({message:"insufficient permissions"})
+        );
         console.warn("Illegal acces to file: ",fileName,"detected!!!");
         return;
     } 
     try {
         fs.unlinkSync(path.join(configFilesPath,...fileNameSplit));
     } catch (error) {
-        res.status(500).send("failed to delete file: "+error.message);
+        res.status(500).send(
+            JSON.stringify({message:"unable to delete file: "+error.message})
+        );
         return;
     }
-    res.status(200).send("file deleted successfully");
+    res.status(200).send(
+        JSON.stringify({message:"file transfer successfull"})
+    );
     configFiles_reloadFileListFromDisk();
 });
 
