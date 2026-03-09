@@ -1,6 +1,12 @@
 # Changelog SMBR Web Control
 This version number is trying to stick to the __MAJOR__.__MINOR__ identifiers but there are some exceptions (marked with a prefix # in the MINOR part).
 
+# 0.2.6
+- minor bug fixes
+- updated module errors / warnings to new API specs
+- updated `File Editor` to new API specs
+- updated `Quick launch` widget to new API specs
+
 # 0.2.5
 - most of the NodeJS server command line outputs were disabled (can be shown by running the server with the -v option)
 - fixed information being displayed in wrong format (for instance, short ID "8e67" being displayed as "8e+67")
